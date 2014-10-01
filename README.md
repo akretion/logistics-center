@@ -11,6 +11,7 @@ Allow to exchange file datas between Odoo ERP and external warehouses
 Required Code
 ---------------
 
-https://code.launchpad.net/~akretion-team/file-exchange/file-exchange
+https://github.com/akretion/file-exchange
+
 https://code.launchpad.net/~akretion-team/+junk/poc-import-data
 
