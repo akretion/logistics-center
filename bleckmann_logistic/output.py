@@ -168,8 +168,9 @@ class RepositoryTask(orm.Model):
                              task, context=None):
         file_doc_id = super(RepositoryTask, self).create_file_document(
             cr, uid, file_doc_vals, ids_from_model, task, context=None)
-        if not DEBUG_DISPLAY_COLUMN and task.method in \
-                ['export_delivery_shipment', 'export_incoming_shipment']:
+        if (not DEBUG_DISPLAY_COLUMN and
+                task.method in ['export_delivery_order',
+                                'export_incoming_shipment']):
             vals = {'log_out_file_doc_id': file_doc_id}
             self.pool['stock.picking'].write(
                 cr, uid, ids_from_model, vals, context=context)
