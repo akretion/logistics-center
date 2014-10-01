@@ -1,0 +1,6 @@
+id,name,repository_id:id,direction,file_name,method,model_id:id,folder
+bleckmann_delivery_order,Delivery order,bleckmann_ftp,out,Delivery_order,export_delivery_order,model_logistic_backend,In
+bleckmann_catalog,Catalogue,bleckmann_ftp,out,Catalogue,export_catalog,model_logistic_backend,In
+bleckmann_incoming_shipment,Incoming shipment,bleckmann_ftp,out,Incoming_shipment,export_incoming_shipment,model_logistic_backend,In
+bleckmann_delivery_reply,Delivery reply,bleckmann_ftp,in,BELSPEED-CONTAINER,,model_logistic_backend,Out
+bleckmann_shipment_reply,Shipment reply,bleckmann_ftp,in,BELSPEED-PREADVICE,,model_logistic_backend,Out

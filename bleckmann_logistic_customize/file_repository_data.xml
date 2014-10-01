@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data noupdate="1">
+        
+        <record id="bleckmann_logistic.bleckmann_ftp" model="file.repository">
+            <field name="username">my_name</field>
+            <field name="password">my_password</field>
+        </record>
+        
+    </data>
+</openerp>

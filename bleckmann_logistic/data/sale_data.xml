@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+
+    <data noupdate="0">
+
+        <record id="excep_no_country_alpha3_in_delivery_address"
+                model="sale.exception">
+            <field name="name">No alpha3 code field in the delivery country </field>
+            <field name="description">ISO 3166-1 require a three letters code named 'alpha 3'.
+The specified country (if exist) by 'Delivery address' needs this code
+            </field>
+            <field name="sequence">30</field>
+            <field name="model">sale.order</field>
+            <field name="code">
+failed = order.check_country_code()
+            </field>
+            <!--You may alter 'active' value in your own module
+                or in openerp interface-->
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="excep_no_matching_logistic_backend_to_logistic_center"
+                model="sale.exception">
+            <field name="name">No matching product logistic binding with logistic center</field>
+            <field name="description">No matching product connector logistic
+            binding with choosen logistic center
+            </field>
+            <field name="sequence">30</field>
+            <field name="model">sale.order.line</field>
+            <field name="code">
+failed = line.distinct_logistic_backend_version()
+            </field>
+            <!--You may alter 'active' value in your own module
+                or in openerp interface-->
+            <field name="active" eval="True"/>
+        </record>
+
+
+        <record id="excep_product_data_older_than_logistic_center_info"
+                model="sale.exception">
+            <field name="name">Logistic center product datas have expired</field>
+            <field name="description">Logistic center does not have
+matching data updates for 1 or more products:
+To solve it :
+- Connectors / Logistic Backends / [Your logistic center]
+- Run 'Catalogue' task
+            </field>
+            <field name="sequence">50</field>
+            <field name="model">sale.order.line</field>
+            <field name="code">
+failed = line.logistic_center_catalog_outofdate(line, 'export_catalog')
+            </field>
+            <!--You may alter 'active' value in your own module
+                or in openerp interface-->
+            <field name="active" eval="True"/>
+        </record>
+
+    </data>
+</openerp>

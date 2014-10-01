@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data noupdate="0">
+        
+        <!--Type field is defined in automatic.task (inheritance).
+        Csv import don't allow to set a value for this field
+        -->
+        <record id="bleckmann_delivery_order" model="repository.task">
+            <field name="type">logistic</field>
+        </record>
+        <record id="bleckmann_incoming_shipment" model="repository.task">
+            <field name="type">logistic</field>
+        </record>
+        <record id="bleckmann_catalog" model="repository.task">
+            <field name="type">logistic</field>
+        </record>
+        <record id="bleckmann_shipment_reply" model="repository.task">
+            <field name="type">logistic_incoming</field>
+        </record>
+        <record id="bleckmann_delivery_reply" model="repository.task">
+            <field name="type">logistic_delivery</field>
+        </record>
+
+    </data>
+</openerp>

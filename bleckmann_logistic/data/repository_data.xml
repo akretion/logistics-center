@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="bleckmann_ftp" model="file.repository">
+            <field name="name">Bleckmann</field>
+            <field name="location">webmail.belspeed.eu</field>
+            <field name="home_folder">Test</field>
+            <field name="type">ftp</field>
+        </record>
+
+    </data>
+</openerp>
