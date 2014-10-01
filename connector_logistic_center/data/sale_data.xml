@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <record id="sale_exceptions.excep_no_zip" model="sale.exception">
+            <field name="active" eval="True"/>
+        </record>
+    </data>
+
+    <data noupdate="0">
+
+        <record id="excep_wrong_delivery_address" model="sale.exception">
+            <field name="name">Wrong delivery address</field>
+            <field name="description">One of the field 'delivery address',
+            'street' or 'city' is not specfied.</field>
+            <field name="sequence">10</field>
+            <field name="model">sale.order</field>
+            <field name="code">
+if order.logistic_center and order.logistic_center != 'internal':
+    if order.partner_shipping_id:
+        sh = order.partner_shipping_id
+        if sh.street == False or sh.city == False:
+            failed = True
+    else:
+        failed = True</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="excep_no_country_in_delivery_address" model="sale.exception">
+            <field name="name">No country in delivery address</field>
+            <field name="description"></field>
+            <field name="sequence">20</field>
+            <field name="model">sale.order</field>
+            <field name="code">
+if order.partner_shipping_id:
+    sh = order.partner_shipping_id
+    if not sh.country_id or not sh.country_id.code:
+        failed = True
+else:
+    failed = True
+            </field>
+            <!--You may alter 'active' value in your own module
+                or in opernerp interface-->
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="excep_product_default_code_is_false"
+                model="sale.exception">
+            <field name="name">Product 'Internal Reference' is not defined</field>
+            <field name="description">There is no 'Internal Reference' on 1 or more products, consider to add one if you want to exchange some datas with a logistic center
+            </field>
+            <field name="sequence">20</field>
+            <field name="model">sale.order.line</field>
+            <field name="code">
+if line.product_id.default_code is False:
+    failed = True
+            </field>
+            <field name="active" eval="True"/>
+        </record>
+
+    </data>
+</openerp>

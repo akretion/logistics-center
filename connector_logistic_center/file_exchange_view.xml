@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+<record id="view_repository_task_form" model="ir.ui.view">
+    <field name="model">repository.task</field>
+    <field name="inherit_id" ref="file_repository.view_repository_task_form"/>
+    <field name="arch" type="xml">
+        <field name="active" position="before">
+            <field name="model_id"
+                   attrs="{'invisible': [('direction', '!=', 'out')]}"/>
+            <field name="method"
+                   attrs="{'invisible': [('direction', '!=', 'out')]}"/>
+            <field name="file_doc_id"/>
+        </field>
+    </field>
+</record>
+
+<record id="view_file_repository_form" model="ir.ui.view">
+    <field name="model">file.repository</field>
+    <field name="inherit_id" ref="file_repository.view_file_repository_form"/>
+    <field name="arch" type="xml">
+        <field name="name" position="before">
+            <field name="logistic_backend_id" attrs="{'invisible': True}"/>
+        </field>
+    </field>
+</record>
+
+
+    </data>
+</openerp>

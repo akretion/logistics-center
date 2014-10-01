@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+<record id="view_logistic_backend_form" model="ir.ui.view">
+  <field name="model">logistic.backend</field>
+  <field name="arch" type="xml">
+    <form string="Logistic Backend" version="7.0">
+      <sheet>
+        <h1>Logistic center :
+          <field name="file_repository_id" class="oe_inline"
+                 on_change="onchange_repository(file_repository_id)"/>
+        </h1>
+        <group name="logistic" col="4"
+               string="Logistic configuration">
+          <field name="version"/>
+          <field name="warehouse_id"/>
+        </group>
+        <notebook>
+          <page name="task" string="Tasks">
+            <group colspan="6">
+              <field name="task_ids" nolabel="1"
+                     context="{'logistic_id': active_id, 'active_test': False}">
+                <tree>
+                  <button name="run" string="Run"
+                          icon="gtk-go-forward"
+                          type="object"
+                          attrs="{'invisible': [('active', '=', False)]}"/>
+                  <field name="name" />
+                  <button name="open_file_document_button" string="Open file document"
+                          icon="STOCK_JUMP_TO"
+                          type="object"
+                          attrs="{'invisible': [('file_doc_id', '=', False)]}"/>
+                  <field name="last_exe_date" />
+                  <field name="direction" />
+                  <field name="type" />
+                  <field name="file_name" />
+                  <field name="folder" />
+                  <field name="active" />
+                  <field name="file_doc_id" attrs="{'invisible': True}" string=""/>
+                </tree>
+              </field>
+            </group>
+          </page>
+          <page name="infos" string="Informations"
+                attrs="{'invisible': True}">
+              <field name="name"/>
+          </page>
+        </notebook>
+      </sheet>
+    </form>
+  </field>
+</record>
+
+<record id="view_logistic_backend_tree" model="ir.ui.view">
+  <field name="model">logistic.backend</field>
+  <field name="arch" type="xml">
+    <tree string="Logistic Backend" version="7.0">
+      <field name="name"/>
+      <field name="warehouse_id"/>
+      <field name="version"/>
+    </tree>
+  </field>
+</record>
+
+<record id="action_logistic_backend" model="ir.actions.act_window">
+  <field name="name">Logistic Backends</field>
+  <field name="res_model">logistic.backend</field>
+  <field name="view_type">form</field>
+  <field name="view_mode">tree,form</field>
+  <field name="view_id" ref="view_logistic_backend_tree"/>
+</record>
+
+<menuitem id="menu_logistic_root"
+          parent="connector.menu_connector_root"
+          name="Logistic"
+          sequence="10"
+          groups="connector.group_connector_manager"/>
+
+<menuitem id="menu_logistic_backend"
+          name="Backends"
+          parent="menu_logistic_root"
+          action="action_logistic_backend"/>
+
+<menuitem id="menu_logistic_file_document"
+          name="File document"
+          parent="menu_logistic_root"
+          action="file_document.action_file_document"/>
+
+
+<!-- After installation of the module, open the related menu -->
+<record id="action_logistic_backend" model="ir.actions.client">
+  <field name="name">Open Logistic backend menu</field>
+  <field name="tag">reload</field>
+  <field name="params" eval="{'menu_id': ref('menu_logistic_backend')}"/>
+</record>
+<record id="base.open_menu" model="ir.actions.todo">
+  <field name="action_id" ref="action_logistic_backend"/>
+  <field name="state">open</field>
+</record>
+
+    </data>
+</openerp>

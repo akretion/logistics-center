@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+<record id="view_picking_form_logis_in" model="ir.ui.view">
+    <field name="model">stock.picking.in</field>
+    <field name="inherit_id"
+           ref="connector_logistic_center.view_picking_form_logis_in"/>
+    <field name="arch" type="xml">
+        <field name="log_in_file_doc_id" position="before">
+            <group col="8" colspan="8"
+                   attrs="{'invisible': ['|',('log_out_file_doc_id', '=', False),('log_in_file_doc_id', '!=', False)]}">
+                <button name="button_simulate_logistic_response"
+                        string="Simulate logistic response"
+                        colspan="4"
+                        type="object"/>
+                <field name="qty_lower"/>
+                <field name="qty_upper"/>
+            </group>
+        </field>
+    </field>
+</record>
+
+<record id="view_picking_form_logis_out" model="ir.ui.view">
+    <field name="model">stock.picking.out</field>
+    <field name="inherit_id"
+           ref="connector_logistic_center.view_picking_form_logis_out"/>
+    <field name="arch" type="xml">
+        <field name="log_in_file_doc_id" position="before">
+            <group col="8" colspan="8"
+                   attrs="{'invisible': ['|',('log_out_file_doc_id', '=', False),('log_in_file_doc_id', '!=', False)]}">
+                <button name="button_simulate_logistic_response"
+                        string="Simulate logistic response"
+                        type="object" colspan="1"/>
+                <field name="qty_upper"/>
+                <field name="qty_lower"/>
+            </group>
+        </field>
+    </field>
+</record>
+
+<record id="view_logistic_backend_form" model="ir.ui.view">
+    <field name="model">logistic.backend</field>
+    <field name="inherit_id" ref="connector_logistic_center.view_logistic_backend_form"/>
+    <field name="arch" type="xml">
+        <field name="warehouse_id" position="after">
+            <field name="logistic_debug"/>
+            <field name="column_in_file"/>
+        </field>
+    </field>
+</record>
+
+<record id="file_document_view_form" model="ir.ui.view">
+    <field name="model">file.document</field>
+    <field name="inherit_id" ref="file_document.file_document_view_form"/>
+    <field name="arch" type="xml">
+        <button name="run" position="attributes">
+            <attribute name="attrs">{'invisible': [('direction','=', 'output')]}</attribute>
+        </button>
+    </field>
+</record>
+
+
+    </data>
+</openerp>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+<record id="view_picking_form_logis" model="ir.ui.view">
+    <field name="model">stock.picking.in</field>
+    <field name="inherit_id" ref="stock.view_picking_in_form"/>
+    <field name="arch" type="xml">
+        <field name="move_lines" position="attributes">
+            <attribute name="context">{'logistic_center': logistic_center, 'address_in_id': partner_id, 'picking_type': 'in', 'form_view_ref':'stock.view_move_picking_form', 'tree_view_ref':'stock.view_move_picking_tree'}</attribute>
+        </field>
+    </field>
+</record>
+
+<record id="view_picking_form_logis" model="ir.ui.view">
+    <field name="model">stock.picking</field>
+    <field name="inherit_id" ref="stock.view_picking_form"/>
+    <field name="arch" type="xml">
+        <field name="stock_journal_id" position="after">
+            <field name="logistic_center"
+                   attrs="{'readonly':
+                   [('state', 'in', ('confirmed', 'assigned', 'done'))]}"/>
+            <field name="log_out_file_doc_id"
+                   attrs="{'invisible': [('logistic_center', 'in', ('internal', False))]}"/>
+            <field name="log_in_file_doc_id"
+                   attrs="{'invisible': [('log_out_file_doc_id', '=', False)]}"/>
+        </field>
+    </field>
+</record>
+
+<record id="view_picking_form_logis_in" model="ir.ui.view">
+    <field name="model">stock.picking.in</field>
+    <field name="inherit_id" ref="stock.view_picking_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="/form/header/button[@name='action_process']" position="before">
+            <span title="wait for cron task time OR click on 'Incoming shipment' task (Connectors/backend logistic menu) to trigger it"
+                  attrs="{'invisible': ['|', '|', ('state','!=','assigned'), ('logistic_center', '=', 'internal'), ('log_out_file_doc_id', '!=', False)]}"
+                  class="oe_highlight">. Waiting for sending file 'incoming shipment' to logistic center .
+            </span>
+            <span title="wait for cron task time OR clic on 'backend logistic' task (Connectors menu) to trigger it"
+                  attrs="{'invisible': ['|', '|', '|', ('state','!=','assigned'), ('logistic_center', '=', 'internal'), ('log_out_file_doc_id', '=', False), ('log_in_file_doc_id', '!=', False)]}"
+                  class="oe_highlight">. Waiting for 'incoming shipment' reply .
+            </span>
+            <span title="Wait for cron task time import OR run 'Logistic Doc. In' to create job import and run this job (Connectors menu) to trigger import"
+                  attrs="{'invisible': ['|', '|', ('state','!=','assigned'), ('logistic_center', '=', 'internal'), ('log_in_file_doc_id', '=', False)]}"
+                  class="oe_highlight">. Waiting for external file datas import .
+            </span>
+        </xpath>
+        <field name="stock_journal_id" position="after">
+            <field name="logistic_center"
+                   attrs="{'readonly':
+                   [('state', 'in', ('confirmed', 'assigned', 'done'))]}"/>
+            <field name="log_out_file_doc_id"
+                   attrs="{'invisible': [('logistic_center', 'in', ('internal', False))]}"/>
+            <field name="log_in_file_doc_id"
+                   attrs="{'invisible': [('log_out_file_doc_id', '=', False)]}"/>
+        </field>
+    </field>
+</record>
+
+<record id="view_picking_form_logis_out" model="ir.ui.view">
+    <field name="model">stock.picking.out</field>
+    <field name="inherit_id" ref="stock.view_picking_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="/form/header/button[@name='action_process']" position="before">
+            <span title="wait for cron task time OR click on 'Delivery order' task (Connectors > backend > logistic menu) to trigger it"
+                  attrs="{'invisible': ['|', '|', ('state','!=','assigned'), ('logistic_center', '=', 'internal'), ('log_in_file_doc_id', '!=', False)]}"
+                  class="oe_highlight">Waiting for logistic center </span>
+            <span title="Wait for cron task time import OR run 'Logistic Doc. In' to create job import and run this job (Connectors / Jobs menu) to trigger import"
+                  attrs="{'invisible': ['|', '|', ('state','!=','assigned'), ('logistic_center', '=', 'internal'), ('log_in_file_doc_id', '=', False)]}"
+                  class="oe_highlight">Waiting for external file import </span>
+        </xpath>
+        <field name="stock_journal_id" position="after">
+            <field name="logistic_center"
+                   attrs="{'readonly':
+                   [('state', 'in', ('confirmed', 'assigned', 'done'))]}"/>
+            <field name="log_out_file_doc_id"
+                   attrs="{'invisible': [('logistic_center', 'in', ('internal', False))]}"/>
+            <field name="log_in_file_doc_id"
+                   attrs="{'invisible': [('log_out_file_doc_id', '=', False)]}"/>
+        </field>
+    </field>
+</record>
+
+<record id="view_picking_out_form" model="ir.ui.view">
+    <field name="model">stock.picking.out</field>
+    <field name="inherit_id" ref="stock.view_picking_out_form"/>
+    <field name="arch" type="xml">
+         <xpath expr="/form/header//button[@name='action_process']" position="attributes">
+            <attribute name="states"></attribute>
+            <attribute name="attrs">{'invisible': ['|',('logistic_center', 'not in', ('internal', False)), ('state', 'not in', ('assigned'))]}</attribute>
+         </xpath>
+    </field>
+</record>
+
+    </data>
+</openerp>

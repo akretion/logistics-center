@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+<record id="view_order_form" model="ir.ui.view">
+    <field name="model">sale.order</field>
+    <field name="inherit_id" ref="sale.view_order_form"/>
+    <field name="arch" type="xml">
+        <field name="client_order_ref" position="before">
+            <field name="logistic_center"
+                   attrs="{'readonly': [('state', 'not in', ('draft', 'sent', 'waiting_date', 'progress'))]}"/>
+        </field>
+    </field>
+</record>
+
+    </data>
+</openerp>

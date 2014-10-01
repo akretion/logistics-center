@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_logistic_backend_connector_mng,access_logistic_backend,model_logistic_backend,connector.group_connector_manager,1,1,1,1
+access_logistic_product_product_user,access_logistic_product_product,model_logistic_product_product,base.group_user,1,1,1,1
+access_abstract_logistic_flow_user,access_abstract_logistic_flow,model_abstract_logistic_flow,base.group_user,1,1,1,1
+access_connector_logistic_center_installed_user,access_connector_logistic_center_installed,model_connector_logistic_center_installed,base.group_user,1,1,1,1
+access_logistic_binding_user,access_logistic_binding,model_logistic_binding,,1,1,1,1
