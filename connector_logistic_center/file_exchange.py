@@ -148,7 +148,7 @@ class RepositoryTask(orm.Model):
                 vals = self.update_doc_vals(
                     cr, uid, task, kwargs, context=context)
                 vals = {'file_doc_id': self.create_file_document(
-                    cr, uid, vals, ids_from_model, task, context=None)}
+                    cr, uid, vals, ids_from_model, task, context=context)}
                 self.write(cr, uid, [task.id], vals, context=context)
         return True
 
