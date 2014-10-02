@@ -211,8 +211,7 @@ Fill the right type in Task and in File Document and click on run again"""
 @job
 def import_one_line_from_file(
         sess, model_name, fields, buffer_id, file_doc_id, priority=None):
-    connectorBuffer = sess.browse('connector.buffer', buffer_id)
-    datas = connectorBuffer.get_data(model_name)
+    datas = sess.browse('connector.buffer', buffer_id).data
     for picking_id in datas:
         sess.pool[model_name].run_job(
             sess.cr, sess.uid, picking_id, buffer_id, file_doc_id,
