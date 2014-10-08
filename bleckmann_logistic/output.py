@@ -21,6 +21,7 @@
 ###############################################################################
 
 import re
+import pycountry
 from openerp.osv import orm
 from openerp.tools.translate import _
 from openerp.addons.connector_logistic_center.logistic import (
@@ -33,7 +34,7 @@ from .data.flow_incoming import incoming_head, incoming_line
 
 _logger = logging.getLogger(__name__)
 
-# Required logistic_center_dev if you want to use logistic debug mode
+# Required logistics_center_dev if you want to use logistic debug mode
 LOGISTIC_DEBUG = False
 # see logistic_center_dev for more information
 DEBUG_DISPLAY_COLUMN = False
@@ -149,15 +150,13 @@ class SaleOrder(orm.Model):
         order = self.browse(cr, uid, ids, context=context)[0]
         failed = False
         if backend and backend.version:
-            if backend.version and backend.version[:8] == 'bleckmann':
+            if backend.version and backend.version[:9] == 'bleckmann':
+                failed = True
                 if order.partner_shipping_id:
                     sh = order.partner_shipping_id
-                    if sh.country_id and sh.country_id.alpha3:
-                        failed = False
-                    else:
-                        failed = True
-                else:
-                    failed = True
+                    if sh.country_id:
+                        if pycountry.countries.get(alpha2=sh.country_id.code):
+                            failed = False
         return failed
 
 
@@ -252,11 +251,9 @@ class Bleckmann(Logistic):
                 res = ''    # bleckmann requirements
         return res
 
-    def get_partner_infos(self, browse_model, addr_complement=None):
+    def get_partner_infos(self, browse_model):
         vals = {}
         addr_fields = ['street', 'street2', 'zip', 'city']
-        if addr_complement:
-            addr_fields.extend(addr_complement)
         parent = browse_model.partner_id.parent_id
         partner = browse_model.partner_id
         vals['contact_name'] = partner.name
@@ -270,13 +267,15 @@ class Bleckmann(Logistic):
         if partner.use_parent_address is True:
             browse_partner = browse_model['partner_id']['parent_id']
         for field in addr_fields:
-            #TODO replace by safe_eval when I would understood how it works
+            #TODO replace by safe_eval when when I have figured out how it works
             browse_field_addr = eval('browse_partner.' + field)
             if browse_field_addr:
                 value = sanitize(browse_field_addr)
             else:
                 value = ''
             vals.update({field: value})
+        vals['alpha3'] = pycountry.countries.get(
+            alpha2=browse_partner.country_id.code)
         return vals
 
     def _get_values(self, main_values, definition_fields):
@@ -334,7 +333,7 @@ class Bleckmann(Logistic):
         }
 
     def prepare_picking(self, picking, delivery_head):
-        part = self.get_partner_infos(picking, ['country_id.alpha3'])
+        part = self.get_partner_infos(picking)
         return {
             'Record Type': 'ODH',
             'Merge Action': 'A',
@@ -346,7 +345,7 @@ class Bleckmann(Logistic):
             'Address2': part['street2'],
             'Town': part['city'],
             'Postcode': part['zip'],
-            'Country': part['country_id.alpha3'],
+            'Country': part['alpha3'],
             'Owner Id': '01',
             'Client Id': self.CLIENT_ID,
             'Status': 'Released',

@@ -5,9 +5,10 @@
 
         <record id="excep_no_country_alpha3_in_delivery_address"
                 model="sale.exception">
-            <field name="name">No alpha3 code field in the delivery country </field>
-            <field name="description">ISO 3166-1 require a three letters code named 'alpha 3'.
-The specified country (if exist) by 'Delivery address' needs this code
+            <field name="name">No alpha3 code for this delivery country </field>
+            <field name="description">ISO 3166-1 require a valid three letters code named 'alpha 3'.
+see http://en.wikipedia.org/wiki/ISO_3166-1_alpha-3#Officially_assigned_code_elements
+The specified country (if exist) by 'Delivery address' needs a country with an alpha3 code
             </field>
             <field name="sequence">30</field>
             <field name="model">sale.order</field>
@@ -21,9 +22,9 @@ failed = order.check_country_code()
 
         <record id="excep_no_matching_logistic_backend_to_logistic_center"
                 model="sale.exception">
-            <field name="name">No matching product logistic binding with logistic center</field>
+            <field name="name">No matching product logistics binding with logistic center</field>
             <field name="description">No matching product connector logistic
-            binding with choosen logistic center
+            binding with choosen logistics center
             </field>
             <field name="sequence">30</field>
             <field name="model">sale.order.line</field>
@@ -42,7 +43,7 @@ failed = line.distinct_logistic_backend_version()
             <field name="description">Logistic center does not have
 matching data updates for 1 or more products:
 To solve it :
-- Connectors / Logistic Backends / [Your logistic center]
+- Connectors / Logistic Backends / [Your logistics center]
 - Run 'Catalogue' task
             </field>
             <field name="sequence">50</field>

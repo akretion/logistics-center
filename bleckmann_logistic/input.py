@@ -174,7 +174,7 @@ class FileDocument(orm.Model):
             flow_type = FLOW_PARAMS.keys()
             LOGISTIC_TYPE_ERROR = _("""
 The File Document type (file_type) '%s' doesn't match these types %s
-Probably, you don't have correctly fill tasks in the logistic backend
+Probably, you don't have correctly fill tasks in the 'logistics backend'
 with the right type.
 Fill the right type in Task and in File Document and click on run again"""
                                     % (file_doc.file_type, flow_type))
