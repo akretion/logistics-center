@@ -36,7 +36,7 @@ class LogisticBackend(orm.Model):
         'column_in_file': fields.boolean(
             'Column name ',
             help="Allow to display column names in csv files if implemented by "
-            "your logistic module (file.document must be created "
+            "your logistics module (file.document must be created "
             "with active filed to False)"),
     }
 
@@ -46,6 +46,8 @@ class LogisticBackend(orm.Model):
     }
 
     def logistic_debug_mode(self, cr, uid, ids, context=None):
+        # TODO define a new behavior for this mode:
+        # ie prevent to send by ftp/sftp
         for backend in self.browse(cr, uid, ids, context=context):
             if backend.logistic_debug:
                 self.LOGISTIC_DEBUG = True

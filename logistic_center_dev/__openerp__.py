@@ -24,21 +24,21 @@
     'version': '0.5',
     'category': 'stock',
     'sequence': 10,
-    'summary': "Add features to help coding a new logistic center",
+    'summary': "Add features to help coding a new logistics center",
     'description': """
 This module allows to :
 
   - **simulate logistic center reply** by adding a button on stock picking out
     and incoming views to trigger a file reception in file.document.
     You have to override defined methods to format this reply
-    for your own logistic center.
+    for your own logistics center.
   - **provide a debug mode** in backend.logistic : in this mode,
     file.document are created  with 'active' field to False
     (it'll not be sent by cron).
     You may implement a customized behavior, as define column names
     in data produced files and add 'required' field mark
-    example: see 'set_header_file' method in Belspeed class
-    (module belspeed_logistic/output.py).
+    example: see 'set_header_file' method in Bleckmann class
+    (module bleckmann_logistics/output.py).
   - **inactive some crons** (ie 'queue job') at the installation of this module
     and reactivate them (if they were active) at the module uninstall step.
     """,

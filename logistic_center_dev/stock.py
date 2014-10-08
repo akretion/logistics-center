@@ -35,11 +35,11 @@ class AbstractStockPicking(orm.AbstractModel):
     _columns = {
         'qty_upper': fields.boolean(
             'qty+1',
-            help="Upper quantity replied, by logistic center, for the first line"
+            help="Upper quantity replied, by logistics center, for the first line"
         ),
         'qty_lower': fields.boolean(
             'qty-1',
-            help="Lower quantity replied, by logistic center, for the second line"
+            help="Lower quantity replied, by logistics center, for the second line"
         ),
     }
 
@@ -72,7 +72,7 @@ class StockPickingOut(orm.Model):
             for move in picking.move_lines:
                 fbuffer += tpl + str(move.product_id.id) + ','
                 fbuffer += str(move.product_qty) + ',_,my_carrier,\n'
-            name = 'my logistic center deliveries' + \
+            name = 'my logistics center deliveries' + \
                 datetime.now().strftime('%Y%m%d%H%M%S')
             vals = {
                 'name': name,
@@ -107,7 +107,7 @@ class StockPickingIn(orm.Model):
             for move in picking.move_lines:
                 fbuffer += tpl + str(move.product_id.id) + ','
                 fbuffer += str(move.product_qty) + ',_,\n'
-            name = 'my logistic center incoming' + \
+            name = 'my logistics center incoming' + \
                 datetime.now().strftime('%Y%m%d%H%M%S')
             vals = {
                 'name': name,

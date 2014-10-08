@@ -11,7 +11,7 @@
             <group col="8" colspan="8"
                    attrs="{'invisible': ['|',('log_out_file_doc_id', '=', False),('log_in_file_doc_id', '!=', False)]}">
                 <button name="button_simulate_logistic_response"
-                        string="Simulate logistic response"
+                        string="Simulate logistics response"
                         colspan="4"
                         type="object"/>
                 <field name="qty_lower"/>
@@ -30,7 +30,7 @@
             <group col="8" colspan="8"
                    attrs="{'invisible': ['|',('log_out_file_doc_id', '=', False),('log_in_file_doc_id', '!=', False)]}">
                 <button name="button_simulate_logistic_response"
-                        string="Simulate logistic response"
+                        string="Simulate logistics response"
                         type="object" colspan="1"/>
                 <field name="qty_upper"/>
                 <field name="qty_lower"/>
