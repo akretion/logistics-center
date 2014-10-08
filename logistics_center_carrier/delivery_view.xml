@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+<record id="view_logistic_backend_form" model="ir.ui.view">
+    <field name="model">logistic.backend</field>
+    <field name="inherit_id"
+           ref="connector_logistics_center.view_logistic_backend_form"/>
+    <field name="arch" type="xml">
+        <page name="infos" position="attributes">
+            <attribute name="attrs">{'invisible': False}</attribute>
+        </page>
+        <xpath expr="//page[@name='infos']" position="inside">
+            <group name="carrier" string="Carriers">
+                <field name="logistics_carrier_ids" nolabel="1">
+                    <tree editable="top">
+                        <field name="name_ext"/>
+                        <field name="erp_id"/>
+                        <field name="logistics_id" string="Logistic carrier id"/>
+                    </tree>
+                </field>
+            </group>
+        </xpath>
+    </field>
+</record>
+
+<!-- After installation of the module, open the related menu -->
+<record id="action_client_connector_logistics_menu" model="ir.actions.client">
+    <field name="name">Open logistics connector menu</field>
+    <field name="tag">reload</field>
+    <field name="params"
+           eval="{'menu_id': ref('connector_logistics_center.menu_logistic_backend')}"/>
+</record>
+<record id="base.open_menu" model="ir.actions.todo">
+    <field name="action_id" ref="action_client_connector_logistics_menu"/>
+    <field name="state">open</field>
+</record>
+
+    </data>
+</openerp>
