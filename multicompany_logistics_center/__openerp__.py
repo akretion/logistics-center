@@ -33,6 +33,7 @@ Description
 -----------
 
 Allow to use the same logistics backend for several companies.
+Backend warehouse field becomes a property field.
 
     """,
     'author': 'Akretion',
