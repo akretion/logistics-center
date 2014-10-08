@@ -20,13 +20,13 @@
 ###############################################################################
 
 {
-    'name': 'Bleckmann logistic customize',
+    'name': 'Bleckmann logistics customize',
     'version': '0.1',
     'category': '',
     'sequence': 10,
-    'summary': "Bleckmann logistic customization",
+    'summary': "Bleckmann logistics customization",
     'description': """
-Bleckmann logistic customization
+Bleckmann logistics customization
     """,
     'author': 'Akretion',
     'website': 'http://www.akretion.com',
