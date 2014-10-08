@@ -28,7 +28,7 @@ import base64
 from datetime import datetime
 from openerp.tools.translate import _
 from openerp.osv import orm, fields
-from .connector import logistic_binding # noqa
+from .connector import logistic_binding
 
 
 _logger = logging.getLogger(__name__)
@@ -47,7 +47,7 @@ class Logistic(object):
     @classmethod
     def parser_for(cls, parser_name):
         """
-        Override this method for every new logistic center
+        Override this method for every new logistics center
         return the good class from his name.
         """
         return False
@@ -200,7 +200,7 @@ class LogisticBackend(orm.Model):
             string='Version',
             required=True,
             help="Version must be added by modules dealing with "
-            "logistic center synchronization. Install one of these"),
+            "logistics center synchronization. Install one of these"),
         'name': fields.char('Name', size=32),
         'partner_id': fields.many2one(
             'res.partner',
@@ -216,7 +216,7 @@ class LogisticBackend(orm.Model):
             'Warehouse',
             required=True,
             ondelete="cascade",
-            help="Warehouse of the logistic center"),
+            help="Warehouse of the logistics center"),
     }
 
     _sql_constraints = [
@@ -275,7 +275,7 @@ ORDER BY pp.default_code ASC """ % {'backend_id': backend_id,
                                  % (backend.name, model._name, model_ids))
 
     def logistic_debug_mode(self, cr, uid, ids, context=None):
-        "Implement in your logistic center module"
+        "Implement in your logistics center module"
         return
 
 
@@ -287,7 +287,7 @@ class AbstractLogisticFlow(orm.AbstractModel):
 
     def get_logistic(self, cr, uid, context=None):
         """ 'logistic_center' field is not a m2o because it must be a required
-        field but may be with no external logistic center : for internal use
+        field but may be with no external logistics center : for internal use
         """
         res = []
         res.append(('internal', 'Internal'))
@@ -310,7 +310,7 @@ class AbstractLogisticFlow(orm.AbstractModel):
     }
 
     def get_logistic_backend(self, cr, uid, ids, origin='order', context=None):
-        """return logistic backend id (if exists)
+        """return logistics backend id (if exists)
             according to sale/purchase order id"""
         assert len(ids) == 1, "Will only take one resource id"
         if origin == 'order':

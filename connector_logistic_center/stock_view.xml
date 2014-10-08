@@ -33,9 +33,9 @@
     <field name="inherit_id" ref="stock.view_picking_form"/>
     <field name="arch" type="xml">
         <xpath expr="/form/header/button[@name='action_process']" position="before">
-            <span title="Wait for cron task time. However hurried people can click on 'Incoming shipment' task (Connectors/backend logistic menu) to manually trigger it"
+            <span title="Wait for cron task time. However hurried people can click on 'Incoming shipment' task (Connectors/backend logistics menu) to manually trigger it"
                   attrs="{'invisible': ['|', '|', ('state','!=','assigned'), ('logistic_center', '=', 'internal'), ('log_out_file_doc_id', '!=', False)]}"
-                  class="oe_highlight">. Waiting for sending file 'incoming shipment' to logistic center .</span>
+                  class="oe_highlight">. Waiting for sending file 'incoming shipment' to logistics center .</span>
             <span title="wait for cron task time OR clic on 'backend logistic' task (Connectors menu) to trigger it"
                   attrs="{'invisible': ['|', '|', '|', ('state','!=','assigned'), ('logistic_center', '=', 'internal'), ('log_out_file_doc_id', '=', False), ('log_in_file_doc_id', '!=', False)]}"
                   class="oe_highlight">. Waiting for 'incoming shipment' reply .</span>
@@ -60,9 +60,9 @@
     <field name="inherit_id" ref="stock.view_picking_form"/>
     <field name="arch" type="xml">
         <xpath expr="/form/header/button[@name='action_process']" position="before">
-            <span title="Wait for cron task time. However hurried people can click on 'Delivery order' task (Connectors > backend > logistic menu) to manually trigger it"
+            <span title="Wait for cron task time. However hurried people can click on 'Delivery order' task (Connectors > backend > logistics menu) to manually trigger it"
                   attrs="{'invisible': ['|', '|', ('state','!=','assigned'), ('logistic_center', '=', 'internal'), ('log_in_file_doc_id', '!=', False)]}"
-                  class="oe_highlight">. Waiting for logistic center .</span>
+                  class="oe_highlight">. Waiting for logistics center .</span>
             <span title="Wait for cron task time import OR run 'Logistic Doc. In' to create job import and run this job (Connectors / Jobs menu) to trigger import"
                   attrs="{'invisible': ['|', '|', ('state','!=','assigned'), ('logistic_center', '=', 'internal'), ('log_in_file_doc_id', '=', False)]}"
                   class="oe_highlight">. Waiting for external file import .</span>

@@ -31,10 +31,12 @@ class SaleOrderLine(orm.Model):
     _inherit = 'sale.order.line'
 
     def distinct_logistic_backend_version(self, cr, uid, ids, context=None):
-        """ Check if sale order 'logistic center' version match with
-            the product logistic backend version
+        """ Check if sale order 'logistics center' version match with
+            the product logistics backend version
         """
         line = self.browse(cr, uid, ids, context=context)[0]
+        if line.product_id.type == 'service':
+            return False
         backend = line.order_id.get_logistic_backend()
         if backend:
             if not line.product_id.logistic_bind_ids:

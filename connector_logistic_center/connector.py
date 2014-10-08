@@ -43,7 +43,7 @@ class logistic_binding(orm.AbstractModel):
             'Logistic Backend',
             required=True,
             ondelete='restrict'),
-        # some logistic center may not use it
+        # some logistics center may not use it
         'logistic_id': fields.char('ID on Logistic center'),
     }
 

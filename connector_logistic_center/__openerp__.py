@@ -20,19 +20,19 @@
 ###############################################################################
 
 {
-    'name': 'Connector logistic center',
+    'name': 'Connector logistics center',
     'version': '0.8',
     'category': 'Warehouse',
     'sequence': 10,
-    'summary': "Common module for logistic center and external warehouse",
+    'summary': "Common module for logistics center and external warehouse",
     'description': """
-Connector logistic center
-=========================
+Connector logistics center
+==========================
 
 Description
 -----------
 
-Common module for logistic center and external warehouse management with csv file
+Common module for logistics center and external warehouse management with csv file
 
 Export :
 

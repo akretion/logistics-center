@@ -47,7 +47,7 @@ else:
         <record id="excep_product_default_code_is_false"
                 model="sale.exception">
             <field name="name">Product 'Internal Reference' is not defined</field>
-            <field name="description">There is no 'Internal Reference' on 1 or more products, consider to add one if you want to exchange some datas with a logistic center
+            <field name="description">There is no 'Internal Reference' on 1 or more products, consider to add one if you want to exchange some datas with a logistics center
             </field>
             <field name="sequence">20</field>
             <field name="model">sale.order.line</field>
