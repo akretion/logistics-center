@@ -37,7 +37,7 @@
                   <field name="file_name" />
                   <field name="folder" />
                   <field name="active" />
-                  <field name="file_doc_id" attrs="{'invisible': True}" string=""/>
+                  <field name="file_doc_id" attrs="{'invisible': True}"/>
                 </tree>
               </field>
             </group>
