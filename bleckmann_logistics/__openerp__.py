@@ -32,7 +32,7 @@ Bleckmann logistics center
 Description
 -----------
 
-Logistic Bleckmann exchange management :
+Bleckmann Logistics exchange management :
 
 Export :
 
@@ -68,7 +68,7 @@ How to use
     'website': 'http://www.akretion.com',
     'depends': [
         'sale_stock',
-        'connector_logistic_center',
+        'connector_logistics_center',
     ],
     'external_dependencies': {
         'Python': [

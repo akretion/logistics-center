@@ -31,7 +31,7 @@ Bleckmann logistics customization
     'author': 'Akretion',
     'website': 'http://www.akretion.com',
     'depends': [
-        'bleckmann_logistic',
+        'bleckmann_logistics',
         'file_repository',
     ],
     'data': [
