@@ -45,7 +45,7 @@ This module allows to :
     'author': 'Akretion',
     'website': 'http://www.akretion.com',
     'depends': [
-        'connector_logistic_center',
+        'connector_logistics_center',
     ],
     'data': [
         'logistic_view.xml',

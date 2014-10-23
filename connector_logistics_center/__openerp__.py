@@ -32,7 +32,8 @@ Connector logistics center
 Description
 -----------
 
-Common module for logistics center and external warehouse management with csv file
+Common module for logistics center and external warehouse management
+with csv file
 
 Export :
 
@@ -49,13 +50,9 @@ Import :
 
 Implementation example
 ----------------------
-see module Belspeed Logistic in the same branch
+see Bleckmann Logistics module in the same branch
 
 
-Branch dependencies
--------------------
-* lp:file-exchange
-* lp:~akretion-team/+junk/poc-import-data
 
     """,
     'author': 'Akretion',
