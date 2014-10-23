@@ -44,7 +44,7 @@ failed = line.distinct_logistic_backend_version()
 matching data updates for 1 or more products:
 To solve it :
 - Connectors / Logistic Backends / [Your logistics center]
-- Run 'Catalogue' task
+- Run 'Catalog' task
             </field>
             <field name="sequence">50</field>
             <field name="model">sale.order.line</field>
