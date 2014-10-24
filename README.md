@@ -8,16 +8,16 @@ Allow to exchange file datas between Odoo ERP and external warehouses
 
 
 
-Required Code
-,,,,,,,,,,,,,,,
+#### Required Code
+
 
 https://github.com/akretion/file-exchange
 
 https://github.com/akretion/connector-import-data
 
 
-Module names to change
-,,,,,,,,,,,,,,,,,,,,,,,,
+#### Module names to change
+
 
 If you installed these module before 2014-10-23:
 
