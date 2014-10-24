@@ -24,7 +24,7 @@ import re
 import pycountry
 from openerp.osv import orm
 from openerp.tools.translate import _
-from openerp.addons.connector_logistic_center.logistic import (
+from openerp.addons.connector_logistics_center.logistic import (
     Logistic,)
 from .common import LogisticDialect, BACKEND_VERSION
 import logging
