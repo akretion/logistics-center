@@ -39,7 +39,7 @@ Backend warehouse field becomes a property field.
     'author': 'Akretion',
     'website': 'http://www.akretion.com',
     'depends': [
-        'connector_logistic_center',
+        'connector_logistics_center',
     ],
     'external_dependencies': {
         'Python': [],

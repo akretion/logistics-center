@@ -4,20 +4,23 @@ odoo-logistic-center
 Allow to exchange file datas between Odoo ERP and external warehouses
 
 
-![Logistics Connector](/connector_logistic_center/doc/logistics_connector.png "Logitics Center Connector")
+![Logistics Connector](/connector_logistics_center/doc/logistics_connector.png "Logitics Center Connector")
 
 
 
 Required Code
----------------
+,,,,,,,,,,,,,,,
 
 https://github.com/akretion/file-exchange
 
-https://code.launchpad.net/~akretion-team/+junk/poc-import-data
+https://github.com/akretion/connector-import-data
 
 
-Change module name
--------------------
+Module names to change
+,,,,,,,,,,,,,,,,,,,,,,,,
+
+If you installed these module before 2014-10-23:
+
 update ir_module_module set name = 'connector_logistics_center' where name = 'connector_logistic_center';
 
 update ir_module_module_dependency set name = 'connector_logistics_center' where name = 'connector_logistic_center';
