@@ -19,7 +19,7 @@
 #
 ###############################################################################
 
-from openerp.addons.bleckmann_logistic.output import BACKEND_VERSION
+from openerp.addons.bleckmann_logistics.output import BACKEND_VERSION
 
 
 BACKEND_VERSION = BACKEND_VERSION + '_myname'

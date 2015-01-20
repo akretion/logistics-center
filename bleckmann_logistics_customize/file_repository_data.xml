@@ -2,7 +2,7 @@
 <openerp>
     <data noupdate="1">
         
-        <record id="bleckmann_logistic.bleckmann_ftp" model="file.repository">
+        <record id="bleckmann_logistics.bleckmann_ftp" model="file.repository">
             <field name="username">my_name</field>
             <field name="password">my_password</field>
         </record>

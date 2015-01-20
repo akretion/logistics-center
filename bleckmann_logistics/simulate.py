@@ -22,7 +22,6 @@
 
 import base64
 from openerp.osv import orm
-#from openerp.osv.osv import except_osv
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 from datetime import datetime
 import logging
@@ -48,7 +47,7 @@ class StockPickingOut(orm.Model):
         name = 'BELSPEED-CONTAINER-' + \
             datetime.now().strftime('%Y%m%d%H%M%S')
         model, res_id = self.pool['ir.model.data'].get_object_reference(
-            cr, uid, 'bleckmann_logistic', 'bleckmann_ftp')
+            cr, uid, 'bleckmann_logistics', 'bleckmann_ftp')
         vals = {
             'name': name,
             'sequence': '200',
@@ -85,7 +84,7 @@ class StockPickingIn(orm.Model):
         name = 'BELSPEED-EXTRACT-' + \
             datetime.now().strftime('%Y%m%d%H%M%S')
         model, res_id = self.pool['ir.model.data'].get_object_reference(
-            cr, uid, 'bleckmann_logistic', 'bleckmann_ftp')
+            cr, uid, 'bleckmann_logistics', 'bleckmann_ftp')
         vals = {
             'name': name,
             'sequence': '200',

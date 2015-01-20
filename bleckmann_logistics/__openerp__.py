@@ -53,7 +53,7 @@ Settings
     * Create a new Logistic backend (menu connector/logistic/backend)
       by selecting the existing 'file repository' ('Bleckmann')
     * Select the created warehouse in this logistics center and
-      set a version or create a new one (see module bleckmann_logistic_customize)
+      set a version or create a new one (see module bleckmann_logistics_customize)
     * Add one cron for each input task in the backend
     * You may add several crons in one click to have multiple executions
       per input task.

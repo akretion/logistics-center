@@ -20,7 +20,7 @@
 ###############################################################################
 
 from openerp.osv import orm
-from openerp.addons.bleckmann_logistic.output import Bleckmann, sanitize
+from openerp.addons.bleckmann_logistics.output import Bleckmann, sanitize
 from .log_center import BACKEND_VERSION
 
 
