@@ -8,29 +8,23 @@ Allow to exchange file datas between Odoo ERP and external warehouses
 
 
 
-#### Required Code
-
+Required Code
+-----------------
 
 https://github.com/akretion/file-exchange
 
 https://github.com/akretion/connector-import-data
 
 
-#### Module names to change
+Quick Start
+--------------
+
+* Install bleckmann_logistics_customize
+* Menu Connectors > Logistics > Backends
+* Click to create a new backend 
+* Select 'Bleckmann' as Logistics Center field
+* Select 'Version' and 'Warehouse' under 'Logistics configuration'
 
 
-If you installed these module before 2014-10-23:
-
-update ir_module_module set name = 'connector_logistics_center' where name = 'connector_logistic_center';
-
-update ir_module_module_dependency set name = 'connector_logistics_center' where name = 'connector_logistic_center';
-
-update ir_model_data set module = 'connector_logistics_center' where module = 'connector_logistic_center';
-
-
-idem for theses modules:
-
-* bleckmann_logistics
-* bleckmann_logistics_customize
-* logistics_center_dev
+![Logistics Connector](/connector_logistics_center/doc/logistics_task.png "Logitics Center Connector")
 

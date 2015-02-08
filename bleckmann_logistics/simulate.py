@@ -44,7 +44,7 @@ class StockPickingOut(orm.Model):
                 cr, uid, ids, count, move, picking, context=context)
             fbuffer += tpl + str(move.product_id.id) + '.ZZ;990099;'
             fbuffer += str(replied_qty) + ';_;DHL;_;;Complete\n'
-        name = 'BELSPEED-CONTAINER-' + \
+        name = 'BLECKMANN-CONTAINER-' + \
             datetime.now().strftime('%Y%m%d%H%M%S')
         model, res_id = self.pool['ir.model.data'].get_object_reference(
             cr, uid, 'bleckmann_logistics', 'bleckmann_ftp')
@@ -81,7 +81,7 @@ class StockPickingIn(orm.Model):
             fbuffer += str(move.product_id.id) + '.ZZ;990099;'
             fbuffer += str(move.product_qty) + ';' + str(replied_qty)
             fbuffer += ';_\n'
-        name = 'BELSPEED-EXTRACT-' + \
+        name = 'BLECKMANN-EXTRACT-' + \
             datetime.now().strftime('%Y%m%d%H%M%S')
         model, res_id = self.pool['ir.model.data'].get_object_reference(
             cr, uid, 'bleckmann_logistics', 'bleckmann_ftp')

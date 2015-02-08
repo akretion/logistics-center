@@ -7,12 +7,12 @@
   <field name="arch" type="xml">
     <form string="Logistic Backend" version="7.0">
       <sheet>
-        <h1>Logistic center :
+        <h1>Logistics center :
           <field name="file_repository_id" class="oe_inline"
                  on_change="onchange_repository(file_repository_id)"/>
         </h1>
         <group name="logistic" col="4"
-               string="Logistic configuration">
+               string="Logistics configuration">
           <field name="version"/>
           <field name="warehouse_id"/>
         </group>
@@ -64,7 +64,7 @@
 </record>
 
 <record id="action_logistic_backend" model="ir.actions.act_window">
-  <field name="name">Logistic Backends</field>
+  <field name="name">Logistics Backends</field>
   <field name="res_model">logistic.backend</field>
   <field name="view_type">form</field>
   <field name="view_mode">tree,form</field>
@@ -73,7 +73,7 @@
 
 <menuitem id="menu_logistic_root"
           parent="connector.menu_connector_root"
-          name="Logistic"
+          name="Logistics"
           sequence="10"
           groups="connector.group_connector_manager"/>
 
@@ -90,7 +90,7 @@
 
 <!-- After installation of the module, open the related menu -->
 <record id="action_logistic_backend" model="ir.actions.client">
-  <field name="name">Open Logistic backend menu</field>
+  <field name="name">Open Logistics backend menu</field>
   <field name="tag">reload</field>
   <field name="params" eval="{'menu_id': ref('menu_logistic_backend')}"/>
 </record>
