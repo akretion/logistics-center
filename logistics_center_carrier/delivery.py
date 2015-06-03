@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #  licence AGPL version 3 or later
-#  see licence in __openerp__.py or http://www.gnu.org/licenses/agpl-3.0.txt
+#  see license in __openerp__.py or http://www.gnu.org/licenses/agpl-3.0.txt
 #  Copyright (C) 2014 Akretion (http://www.akretion.com).
 #  @author David BEAL <david.beal@akretion.com>
 #
@@ -12,7 +12,7 @@ from openerp.osv import orm, fields
 from openerp.tools.translate import _
 
 
-class LogisticDeliveryCarrier(orm.Model):
+class LogisticsDeliveryCarrier(orm.Model):
     _name = 'logistics.delivery.carrier'
     _inherit = 'logistic.binding'
     _inherits = {'delivery.carrier': 'erp_id'}
@@ -35,7 +35,7 @@ class LogisticDeliveryCarrier(orm.Model):
     _sql_constraints = [
         ('logistic_uniq', 'unique(backend_id, name_ext)',
          _("A delivery carrier with the same name on this logistics center "
-         "already exists.")),
+           "already exists.")),
     ]
 
 
@@ -49,12 +49,12 @@ class DeliveryCarrier(orm.Model):
     }
 
 
-class LogisticBackend(orm.Model):
+class LogisticsBackend(orm.Model):
     _inherit = 'logistic.backend'
 
     _columns = {
         'logistics_carrier_ids': fields.one2many(
             'logistics.delivery.carrier',
             'backend_id',
-            'Logistic carriers',),
+            'Logistics carriers',),
     }

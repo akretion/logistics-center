@@ -33,10 +33,10 @@ _logger = logging.getLogger(__name__)
 # TODO BUG active false in task view
 
 LOGISTIC_TYPES = (
-    ('logistic', 'Logistic'),
-    ('logistic_inventory', 'Logistic inventory'),
-    ('logistic_incoming', 'Logistic incoming'),
-    ('logistic_delivery', 'Logistic delivery'),
+    ('logistic', 'Logistics'),
+    ('logistic_inventory', 'Logistics inventory'),
+    ('logistic_incoming', 'Logistics incoming'),
+    ('logistic_delivery', 'Logistics delivery'),
 )
 
 

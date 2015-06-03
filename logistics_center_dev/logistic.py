@@ -23,20 +23,20 @@
 from openerp.osv import orm, fields
 
 
-class LogisticBackend(orm.Model):
+class LogisticsBackend(orm.Model):
     _inherit = 'logistic.backend'
 
     DEBUG_DISPLAY_COLUMN = False
 
     _columns = {
         'logistic_debug': fields.boolean(
-            'Logistic Debug',
+            'Logistics Debug',
             help="Allow to generate 'File document' in debug mode"
             "(see module description for more help)"),
         'column_in_file': fields.boolean(
             'Column name ',
-            help="Allow to display column names in csv files if implemented by "
-            "your logistics module (file.document must be created "
+            help="Allow to display column names in csv files if implemented by"
+            " your logistics module (file.document must be created "
             "with active filed to False)"),
     }
 
@@ -55,4 +55,3 @@ class LogisticBackend(orm.Model):
                 self.LOGISTIC_DEBUG = False
             if backend.column_in_file:
                 self.DEBUG_DISPLAY_COLUMN = True
-

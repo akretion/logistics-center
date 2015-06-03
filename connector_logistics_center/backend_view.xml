@@ -22,12 +22,14 @@
               <field name="task_ids" nolabel="1"
                      context="{'logistic_id': active_id, 'active_test': False}">
                 <tree>
-                  <button name="run" string="Run"
+                  <button name="run"
+                          string="Execute the task according to direction (file creation or file import)"
                           icon="gtk-go-forward"
                           type="object"
                           attrs="{'invisible': [('active', '=', False)]}"/>
                   <field name="name" />
-                  <button name="open_file_document_button" string="Open file document"
+                  <button name="open_file_document_button"
+                          string="Access to generated files"
                           icon="STOCK_JUMP_TO"
                           type="object"
                           attrs="{'invisible': [('file_doc_id', '=', False)]}"/>

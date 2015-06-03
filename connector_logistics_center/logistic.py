@@ -141,9 +141,9 @@ class ProductProduct(orm.Model):
     }
 
 
-class LogisticProductProduct(orm.Model):
+class LogisticsProductProduct(orm.Model):
     _name = 'logistic.product.product'
-    _description = "Logistic product"
+    _description = "Logistics product"
     _inherit = 'logistic.binding'
 
     _columns = {
@@ -155,14 +155,14 @@ class LogisticProductProduct(orm.Model):
 
     _sql_constraints = [
         ('logistic_uniq', 'unique(backend_id, openerp_id)',
-         "Logistic Backend with the same id already exists on this product: "
+         "Logistics Backend with the same id already exists on this product: "
          "must be unique"),
     ]
 
 
 class LogisticBackend(orm.Model):
     _name = 'logistic.backend'
-    _description = 'Logistic Backend'
+    _description = 'Logistics Backend'
 
     _inherit = 'connector.backend'
     _inherits = {'file.repository': 'file_repository_id'}
@@ -279,7 +279,7 @@ ORDER BY pp.default_code ASC """ % {'backend_id': backend_id,
         return
 
 
-class AbstractLogisticFlow(orm.AbstractModel):
+class AbstractLogisticsFlow(orm.AbstractModel):
     _name = 'abstract.logistic.flow'
 
     WAREHOUSE_LOGISTIC_EXCEPTION = _("The warehouse '%s' have a wrong settings "
@@ -303,10 +303,10 @@ class AbstractLogisticFlow(orm.AbstractModel):
     _columns = {
         'logistic_center': fields.selection(
             _get_logistic,
-            string='Logistic Center',
+            string='Logistics Center',
             required=True,
             oldname="logistic",
-            help="Logistic center choosen to deliver the order"),
+            help="Logistics center choosen to deliver the order"),
     }
 
     def get_logistic_backend(self, cr, uid, ids, origin='order', context=None):

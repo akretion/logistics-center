@@ -20,7 +20,7 @@
 ###############################################################################
 
 {
-    'name': 'Logistic center development tool',
+    'name': 'Logistics center development tool',
     'version': '0.5',
     'category': 'stock',
     'sequence': 10,

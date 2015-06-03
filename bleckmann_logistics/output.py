@@ -275,7 +275,7 @@ class Bleckmann(Logistic):
                 value = ''
             vals.update({field: value})
         vals['alpha3'] = pycountry.countries.get(
-            alpha2=browse_partner.country_id.code)
+            alpha2=browse_partner.country_id.code).alpha3
         return vals
 
     def _get_values(self, main_values, definition_fields):

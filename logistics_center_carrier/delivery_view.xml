@@ -16,7 +16,7 @@
                     <tree editable="top">
                         <field name="name_ext"/>
                         <field name="erp_id"/>
-                        <field name="logistics_id" string="Logistic carrier id"/>
+                        <field name="logistics_id" string="Logistics carrier id"/>
                     </tree>
                 </field>
             </group>
