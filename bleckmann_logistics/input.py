@@ -24,9 +24,11 @@ from openerp.osv import orm
 from openerp.tools.translate import _
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.session import ConnectorSession
-#from openerp.astructons.connector.exception import FailedJobError
+# from openerp.astructons.connector.exception import FailedJobError
 from .common import LogisticDialect as dialect
 import logging
+import base64
+
 
 _logger = logging.getLogger(__name__)
 
@@ -47,11 +49,16 @@ FLOW_PARAMS = {
     },
 }
 
+FILE_FLOWS = {
+    'PAH': 'logistic_incoming',
+    'ODH': 'logistic_delivery',
+}
+
 
 def is_numeric(data):
     try:
         data = str(data)
-    except Exception, e:
+    except Exception:
         return False
     return all(char in "0123456789.+-" for char in data)
 
@@ -82,6 +89,15 @@ class FileDocument(orm.Model):
                 "The file document id '%s' is empty, "
                 "no need to create import" % file_doc.id)
         return lines
+
+    def create(self, cr, uid, vals, context=None):
+        if 'datas' in vals:
+            tmp = base64.b64decode(vals['datas'])
+            file_flow = tmp[:3]
+            del tmp
+            if file_flow in FILE_FLOWS:
+                vals.update({'file_type': FILE_FLOWS[file_flow]})
+        return super(FileDocument, self).create(cr, uid, vals, context=context)
 
     def get_product_id(self, cr, uid, product, file_doc, line, context=None):
         """ Bleckmann require an extension to product (e.g. .ZZ)
@@ -117,15 +133,15 @@ class FileDocument(orm.Model):
                 cr, uid, file_doc, flow['fields'], dialect, context=context):
             line_number += 1
             self.check_bleckmann_data(cr, uid, file_doc, line['picking'],
-                                     'd_order', line_number, context=context)
+                                      'd_order', line_number, context=context)
             picking_id = int(line['picking'])
             self.check_bleckmann_data(cr, uid, file_doc, line['qty'],
-                                     'quantity', line_number, context=context)
+                                      'quantity', line_number, context=context)
             move = {'product_id': self.get_product_id(
                     cr, uid, line['product_id'], file_doc, line_number,
                     context=context),
                     'product_qty': float(line['qty']),
-                    #'ean': int(line['ean']),
+                    # 'ean': int(line['ean']),
                     'carrier': line['carrier']}
             picking = {}
             if line['tracking'] != '':
@@ -159,7 +175,7 @@ class FileDocument(orm.Model):
                         cr, uid, line['product_id'], file_doc, line_number,
                         context=context),
                         'product_qty': float(line['real_qty']),
-                        'ean': int(line['ean']),
+                        'ean': int(line['ean'] or 0),
                         }
                 picking = {}
                 if picking_id in struct:
@@ -186,10 +202,10 @@ Fill the right type in Task and in File Document and click on run again"""
         method = 'import_' + file_doc.file_type[9:]
         struct = getattr(self, method)(
             cr, uid, file_doc, flow, session, context=context)
-        #if file_doc.file_type == 'logistic_delivery':
+        # if file_doc.file_type == 'logistic_delivery':
         #    struct = self.import_delivery(cr, uid, file_doc, flow, session,
         #                                  context=context)
-        #elif file_doc.file_type == 'logistic_incoming':
+        # elif file_doc.file_type == 'logistic_incoming':
         #    struct = self.import_incoming(cr, uid, file_doc, flow, session,
         #                                  context=context)
         if struct:
@@ -200,6 +216,7 @@ Fill the right type in Task and in File Document and click on run again"""
                     'data': {picking_id: struct[picking_id]},
                 })
                 session.context['buffer_id'] = buffer_id
+                # import pdb; pdb.set_trace()
                 import_one_line_from_file.delay(
                     session, flow['model_table'], fields, buffer_id,
                     file_doc.id, priority=priority)

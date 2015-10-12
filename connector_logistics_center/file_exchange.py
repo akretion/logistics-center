@@ -23,8 +23,8 @@
 from openerp.osv import orm, fields
 import logging
 import base64
-#from csv import Dialect
-#from _csv import QUOTE_NONNUMERIC
+# from csv import Dialect
+# from _csv import QUOTE_NONNUMERIC
 from cStringIO import StringIO
 import unicodecsv
 
@@ -92,7 +92,7 @@ class FileRepository(orm.Model):
 
 class RepositoryTask(orm.Model):
     _inherit = 'repository.task'
-    #TODO : define tasks to display inactive tasks too
+    # TODO : define tasks to display inactive tasks too
 
     def _get_method(self, cr, uid, context=None):
         return self.get_method(cr, uid, context=context)
