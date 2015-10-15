@@ -41,7 +41,7 @@
                   class="oe_highlight">. Waiting for 'incoming shipment' reply .</span>
             <span title="Wait for cron task time import OR run 'Logistic Doc. In' to create job import and run this job (Connectors menu) to trigger import"
                   attrs="{'invisible': ['|', '|', ('state','!=','assigned'), ('logistic_center', '=', 'internal'), ('log_in_file_doc_id', '=', False)]}"
-                  class="oe_highlight">. Waiting for external file datas import .</span>
+                  class="oe_highlight">. Waiting for external file data import .</span>
         </xpath>
         <field name="stock_journal_id" position="after">
             <field name="logistic_center"
@@ -54,6 +54,22 @@
         </field>
     </field>
 </record>
+
+<record id="view_picking_form" model="ir.ui.view">
+    <field name="model">stock.picking</field>
+    <field name="inherit_id" ref="stock.view_picking_form"/>
+    <field name="arch" type="xml">
+         <xpath expr="//button[@name='action_process']" position="attributes">
+            <attribute name="states"></attribute>
+            <attribute name="attrs">{'invisible': ['|',('logistic_center', 'not in', ('internal', False)), ('state', 'not in', ('assigned'))]}</attribute>
+         </xpath>
+         <xpath expr="//button[@name='draft_validate']" position="attributes">
+            <attribute name="states"></attribute>
+            <attribute name="attrs">{'invisible': ['|',('logistic_center', 'not in', ('internal', False)), ('state', 'not in', ('assigned'))]}</attribute>
+         </xpath>
+    </field>
+</record>
+
 
 <record id="view_picking_form_logis_out" model="ir.ui.view">
     <field name="model">stock.picking.out</field>
@@ -91,6 +107,19 @@
             <attribute name="states"></attribute>
             <attribute name="attrs">{'invisible': ['|',('logistic_center', 'not in', ('internal', False)), ('state', 'not in', ('assigned'))]}</attribute>
          </xpath>
+    </field>
+</record>
+
+
+
+<!-- Tree views -->
+<record id="view_picking_out_tree" model="ir.ui.view">
+    <field name="model">stock.picking.out</field>
+    <field name="inherit_id" ref="stock.view_picking_out_tree"/>
+    <field name="arch" type="xml">
+        <field name="state" position="before">
+            <field name="logistic_center"/>
+        </field>
     </field>
 </record>
 

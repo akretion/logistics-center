@@ -81,6 +81,7 @@ How to use
         'data/repository_data.xml',
         'data/repository.task.csv',
         'data/backend_data.xml',
+        'data/cron_data.xml',
     ],
     'demo': [
     ],

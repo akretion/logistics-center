@@ -3,9 +3,7 @@
 #
 #   Copyright (C) 2014-TODAY Akretion <http://www.akretion.com>.
 #     All Rights Reserved
-#     @author Benoit GUILLOT <benoit.guillot@akretion.com>
 #     @author David BEAL <david.beal@akretion.com>
-#     @author Sebastien BEAU <sebastien.beau@akretion.com>
 #   This program is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU Affero General Public License as
 #   published by the Free Software Foundation, either version 3 of the
@@ -51,8 +49,8 @@ class StockMove(orm.Model):
         'location_dest_id': _select_location_dest_id
     }
 
-    #TODO : do it works : context don't pass
-    #def onchange_product_id(self, cr, uid, ids, prod_id=False, loc_id=False,
+    # TODO : do it works : context don't pass
+    # def onchange_product_id(self, cr, uid, ids, prod_id=False, loc_id=False,
     #                        loc_dest_id=False, partner_id=False, context=None):
     #    values = super(StockMove, self).onchange_product_id(
     #        cr, uid, ids, prod_id=prod_id, loc_id=loc_id,
@@ -79,14 +77,14 @@ class AbstractStockPicking(orm.AbstractModel):
     _columns = {
         'log_out_file_doc_id': fields.many2one(
             'file.document',
-            'Logistic Doc. Out',
+            'Logistics Doc. Out',
             readonly=True,
             help="Refers the 'File document' object which "
                  "contains informations to send to "
                  "Logistic center for synchronisation purpose."),
         'log_in_file_doc_id': fields.many2one(
             'file.document',
-            'Logistic Doc. In',
+            'Logistics Doc. In',
             readonly=True,
             help="Refers the 'File document' object which "
                  "contains informations sent by "
@@ -146,8 +144,8 @@ class AbstractStockPicking(orm.AbstractModel):
                     product_details = self.pool['product.product'].read(
                         cr, uid, [item], ['uom_id', 'name'])[0]
                     # use read instead of building a uom dict in
-                    #for movelines because extra product
-                    #can be in no planned move
+                    # for movelines because extra product
+                    # can be in no planned move
                     move_to_create ={
                         "name": "EXTRA DELIVERY : " + str(item) + " : " +
                         product_details['name'],
@@ -167,9 +165,10 @@ class AbstractStockPicking(orm.AbstractModel):
                         'product_uom': move.product_uom.id}
                 # move out raise an alert
                 else:
-                    raise orm.except_orm(_('Warning !'),
-                                         _("Too much product delivered "
-                                         "for picking '%s'" % (picking.name)))
+                    raise orm.except_orm(
+                        _('Warning !'),
+                        _("Too much product delivered for picking '%s' (id %s)"
+                          % (picking.name, picking.id)))
         self.do_partial(cr, uid, [picking.id], partial_datas)
         return True
 

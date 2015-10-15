@@ -51,7 +51,7 @@ FLOW_PARAMS = {
 
 FILE_FLOWS = {
     'PAH': 'logistic_incoming',
-    'ODH': 'logistic_delivery',
+    'ORH': 'logistic_delivery',
 }
 
 
@@ -161,12 +161,12 @@ class FileDocument(orm.Model):
             line_number += 1
             if line['type'] == 'PAL':
                 self.check_bleckmann_data(cr, uid, file_doc, line['picking'],
-                                         'i_order', line_number, context=context)
+                                          'i_order', line_number, context=context)
                 picking_id = int(line['picking'])
                 self.check_bleckmann_data(cr, uid, file_doc, line['qty_due'],
-                                         'quantity', line_number, context=context)
+                                          'quantity', line_number, context=context)
                 self.check_bleckmann_data(cr, uid, file_doc, line['real_qty'],
-                                         'quantity', line_number, context=context)
+                                          'quantity', line_number, context=context)
                 if line['qty_due'] != line['real_qty']:
                     _logger.info(
                         "\nReal qty '%s' is different from due qty '%s'"
@@ -202,12 +202,6 @@ Fill the right type in Task and in File Document and click on run again"""
         method = 'import_' + file_doc.file_type[9:]
         struct = getattr(self, method)(
             cr, uid, file_doc, flow, session, context=context)
-        # if file_doc.file_type == 'logistic_delivery':
-        #    struct = self.import_delivery(cr, uid, file_doc, flow, session,
-        #                                  context=context)
-        # elif file_doc.file_type == 'logistic_incoming':
-        #    struct = self.import_incoming(cr, uid, file_doc, flow, session,
-        #                                  context=context)
         if struct:
             priority = 100
             fields = filter_field_names(flow['fields'])
@@ -216,7 +210,6 @@ Fill the right type in Task and in File Document and click on run again"""
                     'data': {picking_id: struct[picking_id]},
                 })
                 session.context['buffer_id'] = buffer_id
-                # import pdb; pdb.set_trace()
                 import_one_line_from_file.delay(
                     session, flow['model_table'], fields, buffer_id,
                     file_doc.id, priority=priority)

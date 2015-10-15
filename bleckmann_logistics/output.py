@@ -23,7 +23,6 @@
 import re
 import pycountry
 from openerp.osv import orm
-from openerp.tools.translate import _
 from openerp.addons.connector_logistics_center.logistic import (
     Logistic,)
 from .common import LogisticDialect, BACKEND_VERSION
@@ -55,7 +54,8 @@ FLOWS = {
 def sanitize(string):
     if isinstance(string, (str, unicode)):
         if '\n' in string:
-            # \n can't be in string because there is QUOTING_NONE in csv dialect
+            # \n can't be in string because there is
+            # QUOTING_NONE in csv dialect
             string.replace('\n', ' ')
         if ';' in string:
             # ; is the delimiter and must not be in string
@@ -76,8 +76,9 @@ class LogisticBackend(orm.Model):
         selected.append((BACKEND_VERSION, BACKEND_VERSION.capitalize()))
         return selected
 
-    def get_datas_to_export(self, cr, uid, backend_ids, model, model_ids,
-                            export_method, flow, backend_version, context=None):
+    def get_datas_to_export(
+            self, cr, uid, backend_ids, model, model_ids,
+            export_method, flow, backend_version, context=None):
         self.logistic_debug_mode(cr, uid, backend_ids, context=context)
         LOGISTIC_DEBUG = self.LOGISTIC_DEBUG
         if hasattr(self, 'DEBUG_DISPLAY_COLUMN'):
@@ -86,10 +87,12 @@ class LogisticBackend(orm.Model):
             cr, uid, backend_ids, model, model_ids, export_method, flow,
             backend_version, context=context)
 
-    def _prepare_doc_vals(self, cr, uid, backend_version, file_datas, model_ids,
-                          flow, context=None):
+    def _prepare_doc_vals(
+            self, cr, uid, backend_version, file_datas, model_ids,
+            flow, context=None):
         vals = super(LogisticBackend, self)._prepare_doc_vals(
-            cr, uid, backend_version, file_datas, model_ids, flow, context=context)
+            cr, uid, backend_version, file_datas, model_ids, flow,
+            context=context)
         if DEBUG_DISPLAY_COLUMN:
             vals.update({'active': False})
         return vals
@@ -118,7 +121,8 @@ class LogisticBackend(orm.Model):
         if picking_ids:
             kwargs = self.get_datas_to_export(
                 cr, uid, ids, picking_m, picking_ids, 'export_delivery_order',
-                FLOWS['export_delivery_order'], BACKEND_VERSION, context=context)
+                FLOWS['export_delivery_order'], BACKEND_VERSION,
+                context=context)
             return kwargs
         return True
 
@@ -175,6 +179,18 @@ class RepositoryTask(orm.Model):
                 cr, uid, ids_from_model, vals, context=context)
         return file_doc_id
 
+    def logistics_flow_trigger(self, cr, uid, flow, context=None):
+        """ Crons calls this method """
+        if not context:
+            context = {}
+        _, res_id = self.pool['ir.model.data'].get_object_reference(
+            cr, uid, 'bleckmann_logistics', flow)
+        if res_id:
+            task = self.browse(cr, uid, res_id, context=context)
+            context['logistic_id'] = task.repository_id.id
+            print '     ::::::::', res_id, task
+            return self.generate_file_document(cr, uid, task, context=context)
+
 
 class Bleckmann(Logistic):
     INCLUDED_HEADER_MASTER = False
@@ -219,8 +235,9 @@ class Bleckmann(Logistic):
     def convert_date(self, string_date):
         " date format is YYYYMMDDHHMMSS"
         if string_date:
-            return string_date.replace(' ', '').replace('-', '').replace(':', '')
-        else: return ''
+            return string_date.replace(
+                ' ', '').replace('-', '').replace(':', '')
+        return ''
 
     def get_allowed_values(self, allowed):
         res = []
@@ -237,7 +254,7 @@ class Bleckmann(Logistic):
     def get_default_value(self, field):
         res = ''
         alloweds = self.get_allowed_values(field['Allowed Values'])
-        #'\xc2\xa0' is non break char in bleckmann file
+        # '\xc2\xa0' is non break char in bleckmann file
         default = field['Default'].strip("'").strip().replace('\xc2\xa0', '')
         if default in alloweds:
             res = default
@@ -267,7 +284,8 @@ class Bleckmann(Logistic):
         if partner.use_parent_address is True:
             browse_partner = browse_model['partner_id']['parent_id']
         for field in addr_fields:
-            #TODO replace by safe_eval when when I have figured out how it works
+            # TODO replace by safe_eval when when
+            # I have figured out how it works
             browse_field_addr = eval('browse_partner.' + field)
             if browse_field_addr:
                 value = sanitize(browse_field_addr)

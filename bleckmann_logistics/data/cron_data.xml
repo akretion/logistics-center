@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data noupdate="0">
+
+
+<record model="ir.cron" id="cron_logistics_exp_deliv">
+    <field name="name">Logistics: Export Delivery Order</field>
+    <field name="interval_number">1</field>
+    <field name="active" eval="False"/>
+    <field name="user_id" ref="base.user_root"/>
+    <field name="interval_number">1</field>
+    <field name="interval_type">minutes</field>
+    <field name="numbercall">-1</field>
+    <field name="doall" eval="False"/>
+    <field name="model" eval="'repository.task'"/>
+    <field name="function" eval="'logistics_flow_trigger'"/>
+    <field name="args" eval="('bleckmann_delivery_order',)"/>
+</record>
+
+
+    </data>
+</openerp>
