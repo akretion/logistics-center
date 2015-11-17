@@ -24,7 +24,6 @@ from openerp.osv import orm
 from openerp.tools.translate import _
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.session import ConnectorSession
-# from openerp.astructons.connector.exception import FailedJobError
 from .common import LogisticDialect as dialect
 import logging
 import base64
@@ -112,10 +111,12 @@ class FileDocument(orm.Model):
     def check_bleckmann_data(
             self, cr, uid, file_doc, data, dtype, line, context=None):
         message = (_(" '%s' return by bleckmann file "
-                     "(file.document id '%s' at line %s) should be numeric type")
+                     "(file.document id '%s' at line %s) "
+                     "should be numeric type")
                    % (data, file_doc.id, line))
         if dtype == 'product' and not is_numeric(data):
-            raise orm.except_orm(_("Product id error"), _("Product id") + message)
+            raise orm.except_orm(
+                _("Product id error"), _("Product id") + message)
         elif dtype == 'quantity' and not is_numeric(data):
             raise orm.except_orm(_("Quantity error"), _("Quantity") + message)
         elif dtype == 'd_order' and not is_numeric(data):
@@ -151,6 +152,10 @@ class FileDocument(orm.Model):
             else:
                 struct.update({picking_id: {'moves': [move]}})
             struct[picking_id].update({'picking': picking})
+        if struct:
+            _logger.info(" >>> 'import_delivery' IMPORT data")
+        else:
+            _logger.info(" >>> 'import_delivery' no data")
         return struct
 
     def import_incoming(self, cr, uid, file_doc, flow, session, context=None):
@@ -160,13 +165,16 @@ class FileDocument(orm.Model):
                 cr, uid, file_doc, flow['fields'], dialect, context=context):
             line_number += 1
             if line['type'] == 'PAL':
-                self.check_bleckmann_data(cr, uid, file_doc, line['picking'],
-                                          'i_order', line_number, context=context)
+                self.check_bleckmann_data(
+                    cr, uid, file_doc, line['picking'],
+                    'i_order', line_number, context=context)
                 picking_id = int(line['picking'])
-                self.check_bleckmann_data(cr, uid, file_doc, line['qty_due'],
-                                          'quantity', line_number, context=context)
-                self.check_bleckmann_data(cr, uid, file_doc, line['real_qty'],
-                                          'quantity', line_number, context=context)
+                self.check_bleckmann_data(
+                    cr, uid, file_doc, line['qty_due'],
+                    'quantity', line_number, context=context)
+                self.check_bleckmann_data(
+                    cr, uid, file_doc, line['real_qty'],
+                    'quantity', line_number, context=context)
                 if line['qty_due'] != line['real_qty']:
                     _logger.info(
                         "\nReal qty '%s' is different from due qty '%s'"
@@ -183,6 +191,10 @@ class FileDocument(orm.Model):
                 else:
                     struct.update({picking_id: {'moves': [move]}})
                 struct[picking_id].update({'picking': picking})
+        if struct:
+            _logger.info(" >>> 'import_incoming' IMPORT data")
+        else:
+            _logger.info(" >>> 'import_incoming' no data")
         return struct
 
     def import_datas(self, cr, uid, file_doc, backend, context=None):

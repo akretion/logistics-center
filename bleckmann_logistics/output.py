@@ -188,7 +188,8 @@ class RepositoryTask(orm.Model):
         if res_id:
             task = self.browse(cr, uid, res_id, context=context)
             context['logistic_id'] = task.repository_id.id
-            print '     ::::::::', res_id, task
+            _logger.info(' >>> logistics_flow_trigger: flow %s, task %s, '
+                         'res %s', flow, task.name, res_id)
             return self.generate_file_document(cr, uid, task, context=context)
 
 
@@ -428,8 +429,10 @@ class Bleckmann(Logistic):
             product_data = self._get_values(vals, sku)
             writer.writerow(product_data)
         if product_data:
+            _logger.info(" >>> 'export_catalog' fct ADD data")
             return True
         else:
+            _logger.info(" >>> 'export_catalog' no data to export")
             return False
 
     def export_delivery_order(self, pickings, writer):
@@ -446,8 +449,10 @@ class Bleckmann(Logistic):
                     move_data = self._get_values(vals, delivery_line)
                     writer.writerow(move_data)
         if move_data:
+            _logger.info(" >>> 'export_delivery_order' ADD picking data")
             return True
         else:
+            _logger.info(" >>> 'export_delivery_order' no data to export")
             return False
 
     def export_incoming_shipment(self, pickings, writer):
@@ -464,6 +469,8 @@ class Bleckmann(Logistic):
                     move_data = self._get_values(vals, incoming_line)
                     writer.writerow(move_data)
         if move_data:
+            _logger.info(" >>> 'export_incoming_shipment' ADD incoming data")
             return True
         else:
+            _logger.info(" >>> 'export_incoming_shipment' no data")
             return False
