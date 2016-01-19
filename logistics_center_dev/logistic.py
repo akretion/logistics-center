@@ -1,43 +1,27 @@
-# -*- coding: utf-8 -*-
-###############################################################################
-#
-#   Copyright (C) 2014-TODAY Akretion <http://www.akretion.com>.
-#     All Rights Reserved
-#     @author David BEAL <david.beal@akretion.com>
-#     @author Sebastien BEAU <sebastien.beau@akretion.com>
-#   This program is free software: you can redistribute it and/or modify
-#   it under the terms of the GNU Affero General Public License as
-#   published by the Free Software Foundation, either version 3 of the
-#   License, or (at your option) any later version.
-#
-#   This program is distributed in the hope that it will be useful,
-#   but WITHOUT ANY WARRANTY; without even the implied warranty of
-#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#   GNU Affero General Public License for more details.
-#
-#   You should have received a copy of the GNU Affero General Public License
-#   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-###############################################################################
+# coding: utf-8
+# © 2015 David BEAL @ Akretion
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from openerp.osv import orm, fields
 
+DEBUG_FIELD_REQUIRED_MARK = '!! Required !!'
 
-class LogisticsBackend(orm.Model):
+
+class LogisticBackend(orm.Model):
     _inherit = 'logistic.backend'
-
-    DEBUG_DISPLAY_COLUMN = False
+    INCLUDED_HEADER_MASTER = False
+    INCLUDED_HEADER_RELATED = False
 
     _columns = {
         'logistic_debug': fields.boolean(
             'Logistics Debug',
             help="Allow to generate 'File document' in debug mode"
-            "(see module description for more help)"),
+                 "(see module description for more help)"),
         'column_in_file': fields.boolean(
             'Column name ',
-            help="Allow to display column names in csv files if implemented by"
-            " your logistics module (file.document must be created "
-            "with active filed to False)"),
+            help="Allow to display column names in csv files if implemented "
+                 "by your logistics module (file.document must be created "
+                 "with active filed to False)"),
     }
 
     _defaults = {
@@ -45,13 +29,55 @@ class LogisticsBackend(orm.Model):
         'column_in_file': False,
     }
 
-    def logistic_debug_mode(self, cr, uid, ids, context=None):
-        # TODO define a new behavior for this mode:
-        # ie prevent to send by ftp/sftp
-        for backend in self.browse(cr, uid, ids, context=context):
-            if backend.logistic_debug:
-                self.LOGISTIC_DEBUG = True
-            else:
-                self.LOGISTIC_DEBUG = False
+    def _prepare_doc_vals(
+            self, cr, uid, backend_version, file_datas, model_ids,
+            flow, context=None):
+        vals = super(LogisticBackend, self)._prepare_doc_vals(
+            cr, uid, backend_version, file_datas, model_ids, flow,
+            context=context)
+        logistics_id = context.get('logistic_id')
+        if logistics_id:
+            backend = self.browse(cr, uid, logistics_id, context=context)
             if backend.column_in_file:
-                self.DEBUG_DISPLAY_COLUMN = True
+                vals.update({'active': False})
+        return vals
+
+    def set_header_file(self, cr, uid, ids, writer, header_type,
+                        definition_fields, context=None):
+        "Only used in debug mode to display header in csv file"
+        for htype in ('MASTER', 'RELATED'):
+            if (header_type == htype and
+                    eval('self.INCLUDED_HEADER_' + htype) is False):
+                num = range(1, len(definition_fields))
+                writer.writerow([])
+                writer.writerow(num)
+                require = []
+                for elm in definition_fields:
+                    if elm['Required'] == 'Required':
+                        require.append(DEBUG_FIELD_REQUIRED_MARK)
+                    else:
+                        require.append('')
+                writer.writerow(require)
+                header = [elm['Name'] for elm in definition_fields]
+                writer.writerow(header)
+                if htype == 'MASTER':
+                    self.INCLUDED_HEADER_MASTER = True
+                else:
+                    self.INCLUDED_HEADER_RELATED = True
+        return True
+
+
+class RepositoryTask(orm.Model):
+    _inherit = 'repository.task'
+
+    def create_file_document(self, cr, uid, file_doc_vals, ids_from_model,
+                             task, context=None):
+        file_doc_id = super(RepositoryTask, self).create_file_document(
+            cr, uid, file_doc_vals, ids_from_model, task, context=None)
+        if (not task.repository_id.logistic_backend_id.column_in_file and
+                task.method in ['export_delivery_order',
+                                'export_incoming_shipment']):
+            vals = {'log_out_file_doc_id': file_doc_id}
+            self.pool['stock.picking'].write(
+                cr, uid, ids_from_model, vals, context=context)
+        return file_doc_id

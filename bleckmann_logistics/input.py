@@ -1,30 +1,13 @@
-# -*- coding: utf-8 -*-
-###############################################################################
-#
-#   Copyright (C) 2014-TODAY Akretion <http://www.akretion.com>.
-#     All Rights Reserved
-#     @author David BEAL <david.beal@akretion.com>
-#     @author Sebastien BEAU <sebastien.beau@akretion.com>
-#   This program is free software: you can redistribute it and/or modify
-#   it under the terms of the GNU Affero General Public License as
-#   published by the Free Software Foundation, either version 3 of the
-#   License, or (at your option) any later version.
-#
-#   This program is distributed in the hope that it will be useful,
-#   but WITHOUT ANY WARRANTY; without even the implied warranty of
-#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#   GNU Affero General Public License for more details.
-#
-#   You should have received a copy of the GNU Affero General Public License
-#   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-###############################################################################
+# coding: utf-8
+# © 2015 David BEAL @ Akretion
+# © 2015 Sebastien BEAU @ Akretion
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from openerp.osv import orm
 from openerp.tools.translate import _
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.session import ConnectorSession
-from .common import LogisticDialect as dialect
+from .common import LogisticDialect as dialect, SKU_SUFFIX
 import logging
 import base64
 
@@ -102,11 +85,19 @@ class FileDocument(orm.Model):
         """ Bleckmann require an extension to product (e.g. .ZZ)
             You may strip this extension with your own method
         """
-        id_position = product.index('.')
-        id = int(product[:id_position])
-        self.check_bleckmann_data(
-            cr, uid, file_doc, id, 'product', line, context=context)
-        return id
+        product_m = self.pool['product.product']
+        suffix_pos = product.index(SKU_SUFFIX)
+        if not suffix_pos:
+            raise orm.except_orm(
+                _("Error in Bleckmann file"),
+                _("Sku column should have this suffix '%s'.\n"
+                  "'%s' found" % (SKU_SUFFIX, product)))
+        product_code = product[:suffix_pos]
+        product_ids = product_m.search(
+            cr, uid, [('default_code', '=', product_code)], context=context)
+        if not product_ids:
+            raise orm.except_orm("Product code error", "")
+        return product_m.browse(cr, uid, product_ids[0], context=context).id
 
     def check_bleckmann_data(
             self, cr, uid, file_doc, data, dtype, line, context=None):

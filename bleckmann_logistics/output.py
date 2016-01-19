@@ -1,42 +1,19 @@
-# -*- coding: utf-8 -*-
-###############################################################################
-#
-#   Copyright (C) 2014-TODAY Akretion <http://www.akretion.com>.
-#     All Rights Reserved
-#     @author David BEAL <david.beal@akretion.com>
-#     @author Sebastien BEAU <sebastien.beau@akretion.com>
-#   This program is free software: you can redistribute it and/or modify
-#   it under the terms of the GNU Affero General Public License as
-#   published by the Free Software Foundation, either version 3 of the
-#   License, or (at your option) any later version.
-#
-#   This program is distributed in the hope that it will be useful,
-#   but WITHOUT ANY WARRANTY; without even the implied warranty of
-#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#   GNU Affero General Public License for more details.
-#
-#   You should have received a copy of the GNU Affero General Public License
-#   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-###############################################################################
+# coding: utf-8
+# © 2015 David BEAL @ Akretion
+# © 2015 Sebastien BEAU @ Akretion
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 import re
 import pycountry
 from openerp.osv import orm
-from openerp.addons.connector_logistics_center.logistic import (
-    Logistic,)
-from .common import LogisticDialect, BACKEND_VERSION
+from openerp.addons.connector_logistics_center.logistic import Logistic
+from .common import LogisticDialect, BACKEND_VERSION, SKU_SUFFIX
 import logging
 from .data.flow_delivery import delivery_head, delivery_line
 from .data.flow_sku import sku
 from .data.flow_incoming import incoming_head, incoming_line
 
 _logger = logging.getLogger(__name__)
-
-# Required logistics_center_dev if you want to use logistic debug mode
-LOGISTIC_DEBUG = False
-# see logistic_center_dev for more information
-DEBUG_DISPLAY_COLUMN = False
 
 FLOWS = {
     'export_catalog':
@@ -76,25 +53,12 @@ class LogisticBackend(orm.Model):
         selected.append((BACKEND_VERSION, BACKEND_VERSION.capitalize()))
         return selected
 
-    def get_datas_to_export(
-            self, cr, uid, backend_ids, model, model_ids,
-            export_method, flow, backend_version, context=None):
-        self.logistic_debug_mode(cr, uid, backend_ids, context=context)
-        LOGISTIC_DEBUG = self.LOGISTIC_DEBUG
-        if hasattr(self, 'DEBUG_DISPLAY_COLUMN'):
-            DEBUG_DISPLAY_COLUMN = self.DEBUG_DISPLAY_COLUMN
-        return super(LogisticBackend, self).get_datas_to_export(
-            cr, uid, backend_ids, model, model_ids, export_method, flow,
-            backend_version, context=context)
-
     def _prepare_doc_vals(
             self, cr, uid, backend_version, file_datas, model_ids,
             flow, context=None):
         vals = super(LogisticBackend, self)._prepare_doc_vals(
             cr, uid, backend_version, file_datas, model_ids, flow,
             context=context)
-        if DEBUG_DISPLAY_COLUMN:
-            vals.update({'active': False})
         return vals
 
     def export_catalog(self, cr, uid, ids, last_exe_date, context=None):
@@ -102,6 +66,13 @@ class LogisticBackend(orm.Model):
             cr, uid, ids[0], last_exe_date, context=context)
         if product_ids:
             product_m = self.pool['product.product']
+            to_immute_product_ids = product_m.search(
+                cr, uid, [
+                    ('sent_to_logistics', '=', False),
+                    ('id', 'in', product_ids)], context=context)
+            product_vals = {'sent_to_logistics': True}
+            product_m.write(
+                cr, uid, to_immute_product_ids, product_vals, context=context)
             kwargs = self.get_datas_to_export(
                 cr, uid, ids, product_m, product_ids, 'export_catalog',
                 FLOWS['export_catalog'], BACKEND_VERSION, context=context)
@@ -145,6 +116,11 @@ class LogisticBackend(orm.Model):
             return kwargs
         return True
 
+    def set_header_file(self, cr, uid, ids, writer, header_type,
+                        definition_fields, context=None):
+        "Only used in debug mode to display header in csv file"
+        pass
+
 
 class SaleOrder(orm.Model):
     _inherit = 'sale.order'
@@ -167,18 +143,6 @@ class SaleOrder(orm.Model):
 class RepositoryTask(orm.Model):
     _inherit = 'repository.task'
 
-    def create_file_document(self, cr, uid, file_doc_vals, ids_from_model,
-                             task, context=None):
-        file_doc_id = super(RepositoryTask, self).create_file_document(
-            cr, uid, file_doc_vals, ids_from_model, task, context=None)
-        if (not DEBUG_DISPLAY_COLUMN and
-                task.method in ['export_delivery_order',
-                                'export_incoming_shipment']):
-            vals = {'log_out_file_doc_id': file_doc_id}
-            self.pool['stock.picking'].write(
-                cr, uid, ids_from_model, vals, context=context)
-        return file_doc_id
-
     def logistics_flow_trigger(self, cr, uid, flow, context=None):
         """ Crons calls this method """
         if not context:
@@ -194,8 +158,6 @@ class RepositoryTask(orm.Model):
 
 
 class Bleckmann(Logistic):
-    INCLUDED_HEADER_MASTER = False
-    INCLUDED_HEADER_RELATED = False
     FROM_SITE_ID = 'FROM_SITE_ID'  # Bleckmann info
     CLIENT_ID = 'CLIENT_ID'        # Bleckmann info
     LOGIS_DATE = 'YYYYMMDDHHMISS'
@@ -208,30 +170,6 @@ class Bleckmann(Logistic):
 
     def __init__(self, *args, **kwargs):
         "It fails if no __init__"
-
-    def set_header_file(self, writer, header_type, definition_fields):
-        "Only used in debug mode to display header in csv file"
-        if DEBUG_DISPLAY_COLUMN:
-            for htype in ('MASTER', 'RELATED'):
-                if header_type == htype and \
-                        eval('self.INCLUDED_HEADER_' + htype) is False:
-                    num = range(1, len(definition_fields))
-                    writer.writerow([])
-                    writer.writerow(num)
-                    require = []
-                    for elm in definition_fields:
-                        if elm['Required'] == 'Required':
-                            require.append(self.DEBUG_FIELD_REQUIRED_MARK)
-                        else:
-                            require.append('')
-                    writer.writerow(require)
-                    header = [elm['Name'] for elm in definition_fields]
-                    writer.writerow(header)
-                    if htype == 'MASTER':
-                        self.INCLUDED_HEADER_MASTER = True
-                    else:
-                        self.INCLUDED_HEADER_RELATED = True
-        return True
 
     def convert_date(self, string_date):
         " date format is YYYYMMDDHHMMSS"
@@ -344,7 +282,7 @@ class Bleckmann(Logistic):
             'Merge Action': 'A',
             'Pre Advice Id': str(move.picking_id.id),
             'Line Id': str(move.id),
-            'Sku Id': str(move.product_id.id) + '.zz',
+            'Sku Id': '%s%s' % (str(move.product_id.default_code), SKU_SUFFIX),
             'Condition Id': 'NBO',
             'Qty Due': move.product_qty,
             'Client Id': self.CLIENT_ID,
@@ -382,7 +320,7 @@ class Bleckmann(Logistic):
             'Merge Action': 'A',
             'Order Id': str(move.picking_id.id),
             'Line Id': str(move.id),
-            'Sku Id': str(move.product_id.id) + '.zz',
+            'Sku Id': '%s%s' % (str(move.product_id.default_code), SKU_SUFFIX),
             'Qty Ordered': move.product_qty,
             'Client Id': self.CLIENT_ID,
             # 'User Def Type 5' is the brand : Inherit this method
@@ -404,7 +342,7 @@ class Bleckmann(Logistic):
             'Merge Action': 'A',
             # you may inherit this method
             # in your own module to change these values
-            'Sku Id': str(product.id) + '.zz',
+            'Sku Id': '%s%s' % (str(product.default_code), SKU_SUFFIX),
             'Description': sanitize(product.default_code),
             'User Def Note 1': sanitize(product.name),
             'User Def Note 2': sanitize(product.description),
@@ -421,10 +359,22 @@ class Bleckmann(Logistic):
             'Family Group': '',
         }
 
+    def _should_i_set_header(self, model_browse):
+        res = (False, False)
+        elm = model_browse
+        logistic_id = elm._context.get('logistic_id')
+        backend = elm._model.pool['logistic.backend'].browse(
+            elm._cr, elm._uid, logistic_id, elm._context)
+        if backend and backend.column_in_file:
+            res = (True, backend)
+        return res
+
     def export_catalog(self, products, writer):
         product_data = []
+        header, backend = self._should_i_set_header(products[0])
         for product in products:
-            self.set_header_file(writer, 'MASTER', sku)
+            if header:
+                backend.set_header_file(writer, 'MASTER', sku)
             vals = self.prepare_catalog(product, sku)
             product_data = self._get_values(vals, sku)
             writer.writerow(product_data)
@@ -437,13 +387,16 @@ class Bleckmann(Logistic):
 
     def export_delivery_order(self, pickings, writer):
         move_data = []
+        header, backend = self._should_i_set_header(pickings[0])
         for picking in pickings:
-            self.set_header_file(writer, 'MASTER', delivery_head)
+            if header:
+                backend.set_header_file(writer, 'MASTER', delivery_head)
             vals = self.prepare_picking(picking, delivery_head)
             picking_data = self._get_values(vals, delivery_head)
             writer.writerow(picking_data)
             for move in picking.move_lines:
-                self.set_header_file(writer, 'RELATED', delivery_line)
+                if header:
+                    backend.set_header_file(writer, 'RELATED', delivery_line)
                 if move.state in ['assigned']:
                     vals = self.prepare_move(move, delivery_line)
                     move_data = self._get_values(vals, delivery_line)
@@ -457,13 +410,16 @@ class Bleckmann(Logistic):
 
     def export_incoming_shipment(self, pickings, writer):
         move_data = []
+        header, backend = self._should_i_set_header(pickings[0])
         for picking in pickings:
-            self.set_header_file(writer, 'MASTER', incoming_head)
+            if header:
+                backend.set_header_file(writer, 'MASTER', incoming_head)
             vals = self.prepare_incoming(picking, incoming_head)
             incoming_data = self._get_values(vals, incoming_head)
             writer.writerow(incoming_data)
             for move in picking.move_lines:
-                self.set_header_file(writer, 'RELATED', incoming_line)
+                if header:
+                    backend.set_header_file(writer, 'RELATED', incoming_line)
                 if move.state in ['assigned']:
                     vals = self.prepare_incoming_line(move, incoming_line)
                     move_data = self._get_values(vals, incoming_line)

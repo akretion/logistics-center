@@ -1,24 +1,7 @@
-# -*- coding: utf-8 -*-
-###############################################################################
-#
-#   Copyright (C) 2014-TODAY Akretion <http://www.akretion.com>.
-#     All Rights Reserved
-#     @author David BEAL <david.beal@akretion.com>
-#     @author Sebastien BEAU <sebastien.beau@akretion.com>
-#   This program is free software: you can redistribute it and/or modify
-#   it under the terms of the GNU Affero General Public License as
-#   published by the Free Software Foundation, either version 3 of the
-#   License, or (at your option) any later version.
-#
-#   This program is distributed in the hope that it will be useful,
-#   but WITHOUT ANY WARRANTY; without even the implied warranty of
-#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#   GNU Affero General Public License for more details.
-#
-#   You should have received a copy of the GNU Affero General Public License
-#   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-###############################################################################
+# coding: utf-8
+# © 2015 David BEAL @ Akretion
+# © 2015 Sebastien BEAU @ Akretion
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 import logging
 from _csv import register_dialect
@@ -71,8 +54,8 @@ class Logistic(object):
         if res:
             csv_file.seek(0)
             return csv_file.read()
-            _logger.info(
-                "\nStart to read datas to put file for the method '%s'" % method)
+            _logger.info("\nStart to read datas to put file "
+                         "for the method '%s'" % method)
         else:
             return False
 
@@ -224,7 +207,8 @@ class LogisticBackend(orm.Model):
          "'File repository' with the same ID already exists : must be unique"),
     ]
 
-    def get_product_ids(self, cr, uid, backend_id, last_exe_date, context=None):
+    def get_product_ids(
+            self, cr, uid, backend_id, last_exe_date, context=None):
         date_clause = ''
         if last_exe_date:
             date_clause = "AND 'update_date' > '%s'" % last_exe_date
@@ -241,8 +225,9 @@ ORDER BY pp.default_code ASC """ % {'backend_id': backend_id,
         cr.execute(query)
         return [id for date, id in cr.fetchall()]
 
-    def _prepare_doc_vals(self, cr, uid, backend_version, file_datas, model_ids,
-                          flow, context=None):
+    def _prepare_doc_vals(
+            self, cr, uid, backend_version, file_datas, model_ids,
+            flow, context=None):
         "You may inherit this method to override these values"
         vals = {}
         now = datetime.strftime(datetime.now(), "%Y-%m-%d_%H-%M-%S")
@@ -258,8 +243,9 @@ ORDER BY pp.default_code ASC """ % {'backend_id': backend_id,
             'ids_from_model': model_ids}
         return vals
 
-    def get_datas_to_export(self, cr, uid, backend_ids, model, model_ids,
-                            export_method, flow, backend_version, context=None):
+    def get_datas_to_export(
+            self, cr, uid, backend_ids, model, model_ids,
+            export_method, flow, backend_version, context=None):
         assert len(backend_ids) == 1, "Will only take one resource id"
         backend = self.browse(cr, uid, backend_ids[0], context=context)
         logistic = get_logistic_parser(backend.version)
@@ -282,8 +268,9 @@ ORDER BY pp.default_code ASC """ % {'backend_id': backend_id,
 class AbstractLogisticsFlow(orm.AbstractModel):
     _name = 'abstract.logistic.flow'
 
-    WAREHOUSE_LOGISTIC_EXCEPTION = _("The warehouse '%s' have a wrong settings "
-                                     " in 'Location Stock' or 'Location Input'")
+    WAREHOUSE_LOGISTIC_EXCEPTION = _(
+        "The warehouse '%s' have a wrong settings "
+        " in 'Location Stock' or 'Location Input'")
 
     def get_logistic(self, cr, uid, context=None):
         """ 'logistic_center' field is not a m2o because it must be a required
