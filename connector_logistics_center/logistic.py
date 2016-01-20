@@ -25,7 +25,6 @@ class Logistic(object):
     from the FileParser instead.
     """
     _dialect = None         # csv dialect
-    DEBUG_FIELD_REQUIRED_MARK = '/!\\'
 
     @classmethod
     def parser_for(cls, parser_name):

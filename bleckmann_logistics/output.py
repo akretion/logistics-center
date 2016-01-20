@@ -365,8 +365,9 @@ class Bleckmann(Logistic):
         logistic_id = elm._context.get('logistic_id')
         backend = elm._model.pool['logistic.backend'].browse(
             elm._cr, elm._uid, logistic_id, elm._context)
-        if backend and backend.column_in_file:
-            res = (True, backend)
+        if backend and hasattr(backend, 'column_in_file'):
+            if backend.column_in_file:
+                res = (True, backend)
         return res
 
     def export_catalog(self, products, writer):
