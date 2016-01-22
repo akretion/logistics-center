@@ -291,6 +291,7 @@ class Bleckmann(Logistic):
 
     def prepare_picking(self, picking, delivery_head):
         part = self.get_partner_infos(picking)
+        sale = picking.sale_id or ''
         return {
             'Record Type': 'ODH',
             'Merge Action': 'A',
@@ -312,6 +313,8 @@ class Bleckmann(Logistic):
             'Contact Email': part['email'],
             'Instructions': sanitize(picking.note) or '',
             'Order Reference': sanitize(picking.origin) or '',
+            'Purchase Order': sale and sale.client_order_ref or '',
+            'Freight Terms': sale and sale.incoterm or '',
         }
 
     def prepare_move(self, move, delivery_line):
@@ -337,17 +340,20 @@ class Bleckmann(Logistic):
 
     def prepare_catalog(self, product, sku):
         "These are required field"
+        description = ''
+        if product.description:
+            description = product.description[:41]
         return {
             'Record Type': 'SKU',
             'Merge Action': 'A',
             # you may inherit this method
             # in your own module to change these values
             'Sku Id': '%s%s' % (str(product.default_code), SKU_SUFFIX),
-            'Description': sanitize(product.default_code),
-            'User Def Note 1': sanitize(product.name),
-            'User Def Note 2': sanitize(product.description),
+            'Description': product.name,
+            'User Def Note 1': sanitize(description),
             'Ean': product.ean13,
             'Each Weight': product.weight,
+            'Each Volume': product.volume,
             'Product Group': self.CLIENT_ID,
             'Putaway Group': self.CLIENT_ID,
             'Client Id': self.CLIENT_ID,
