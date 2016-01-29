@@ -11,7 +11,10 @@ class ProductProduct(orm.Model):
 
     def _check_default_code(self, cr, uid, ids, context=None):
         obj = self.browse(cr, uid, ids[0], context=context)
-        if ';' in obj.default_code or ' ' in obj.default_code:
+        # if ';' in obj.default_code or ' ' in obj.default_code:
+        #     return False
+        if obj.default_code and (
+                ';' in obj.default_code or ' ' in obj.default_code):
             return False
         return True
 

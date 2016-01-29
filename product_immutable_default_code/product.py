@@ -10,7 +10,10 @@ class ProductProduct(orm.Model):
     _inherit = 'product.product'
 
     _columns = {
-        'sent_to_logistics': fields.boolean('Sent To Logistics'),
+        'sent_to_logistics': fields.boolean(
+            'Sent To Logistics',
+            help="Definition of the product has been submit to "
+                 "Logistics center"),
     }
 
     def write(self, cr, uid, ids, vals, context=None):

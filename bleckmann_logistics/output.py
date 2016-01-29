@@ -62,8 +62,10 @@ class LogisticBackend(orm.Model):
         return vals
 
     def export_catalog(self, cr, uid, ids, last_exe_date, context=None):
+        where_clause = " AND pp.default_code != ''"
         product_ids = self.get_product_ids(
-            cr, uid, ids[0], last_exe_date, context=context)
+            cr, uid, ids[0], last_exe_date, where_clause=where_clause,
+            context=context)
         if product_ids:
             product_m = self.pool['product.product']
             to_immute_product_ids = product_m.search(
@@ -314,7 +316,7 @@ class Bleckmann(Logistic):
             'Instructions': sanitize(picking.note) or '',
             'Order Reference': sanitize(picking.origin) or '',
             'Purchase Order': sale and sale.client_order_ref or '',
-            'Freight Terms': sale and sale.incoterm or '',
+            'Freight Terms': sale and sale.incoterm.name or '',
         }
 
     def prepare_move(self, move, delivery_line):

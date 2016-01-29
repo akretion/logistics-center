@@ -207,8 +207,10 @@ class LogisticBackend(orm.Model):
     ]
 
     def get_product_ids(
-            self, cr, uid, backend_id, last_exe_date, context=None):
+            self, cr, uid, backend_id, last_exe_date,
+            where_clause=None, context=None):
         date_clause = ''
+        where_clause = where_clause or ''
         if last_exe_date:
             date_clause = "AND 'update_date' > '%s'" % last_exe_date
         query = """
@@ -219,8 +221,10 @@ FROM product_template pt LEFT JOIN product_product pp
         ON log.openerp_id = pp.id
 WHERE log.backend_id = %(backend_id)s
     %(date_clause)s
+    %(where_clause)s
 ORDER BY pp.default_code ASC """ % {'backend_id': backend_id,
-                                    'date_clause': date_clause, }
+                                    'date_clause': date_clause,
+                                    'where_clause': where_clause}
         cr.execute(query)
         return [id for date, id in cr.fetchall()]
 

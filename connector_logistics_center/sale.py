@@ -26,13 +26,13 @@ class SaleOrderLine(orm.Model):
                 return True
             if backend and backend.version:
                 for bind in line.product_id.logistic_bind_ids:
-                    if bind.backend_id and bind.backend_id.version \
-                            and bind.backend_id.version != backend.version:
+                    if (bind.backend_id and bind.backend_id.version and
+                            bind.backend_id.version != backend.version):
                         return True
         return False
 
-    def logistic_center_catalog_outofdate(self, cr, uid, ids, line,
-                                          task_method, context=None):
+    def logistic_center_catalog_outofdate(
+            self, cr, uid, ids, line, task_method, context=None):
         """Check if product write_date is > last task execution date"""
         backend = line.order_id.get_logistic_backend()
         if backend:
@@ -41,11 +41,11 @@ class SaleOrderLine(orm.Model):
                 ('method', '=', task_method),
             ], context=context)
             assert len(catalog_task_ids) == 1, "Will only take one task id"
-            task = self.pool['repository.task'].browse(cr, uid, catalog_task_ids[0],
-                                                       context=context)
-            if task.last_exe_date:
-                #TODO : evaluate if this query must be applied
-                #on the whole products of the sale order (-> sale.order)
+            task = self.pool['repository.task'].browse(
+                cr, uid, catalog_task_ids[0], context=context)
+            if task.last_exe_date and line.product_id:
+                # TODO : evaluate if this query must be applied
+                # on the whole products of the sale order (-> sale.order)
                 query = """
 SELECT GREATEST (pt.write_date, pp.write_date) AS update_date
 FROM product_template pt LEFT JOIN product_product pp
@@ -69,7 +69,8 @@ class SaleOrder(orm.Model):
                                  date_planned, context=None):
         vals = super(SaleOrder, self)._prepare_order_line_move(
             cr, uid, order, line, picking_id, date_planned, context=context)
-        backend = self.get_logistic_backend(cr, uid, [order.id], context=context)
+        backend = self.get_logistic_backend(
+            cr, uid, [order.id], context=context)
         if backend:
             location_id = backend.warehouse_id.lot_stock_id.id
             location_dest_id = backend.warehouse_id.lot_output_id.id
@@ -92,15 +93,16 @@ class SaleOrder(orm.Model):
     def onchange_shop_id(self, cr, uid, ids, shop_id, context, partner_id,
                          partner_invoice_id, partner_shhipping_id):
         res = super(SaleOrder, self).onchange_shop_id(
-            cr, uid, ids, shop_id, context, partner_invoice_id, partner_shhipping_id)
+            cr, uid, ids, shop_id, context, partner_invoice_id,
+            partner_shhipping_id)
         if shop_id:
             values = res['value']
-            shop = self.pool.get('sale.shop').browse(cr, uid, shop_id, context=context)
+            shop = self.pool['sale.shop'].browse(
+                cr, uid, shop_id, context=context)
             values.update({'logistic_center': 'internal'})
             if shop.warehouse_id:
-                logistic_center = self.get_logistic_backend(
+                logistics_center = self.get_logistic_backend(
                     cr, uid, [shop.warehouse_id.id], origin='warehouse',
                     context=context)
-                res['value'].update({'logistic_center': logistic_center})
+                res['value'].update({'logistic_center': logistics_center})
         return res
-

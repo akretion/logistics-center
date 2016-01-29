@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="product.product_normal_form_view"/>
         <field name="arch" type="xml">
             <field name="default_code" position="after">
-                <field name="sent_to_logistics" invisible="1"/>
+                <field name="sent_to_logistics" readonly="1"/>
             </field>
             <field name="default_code" position="attributes">
                 <attribute name="attrs">{
