@@ -29,6 +29,7 @@ FLOWS = {
 
 
 def sanitize(string):
+    "Make string compatible with bleckmann files"
     if isinstance(string, (str, unicode)):
         if '\n' in string:
             # \n can't be in string because there is
@@ -181,6 +182,7 @@ class Bleckmann(Logistic):
         return ''
 
     def get_allowed_values(self, allowed):
+        """Allowed comes Bleckmann data"""
         res = []
         if allowed.strip() in ['Upper Case', 'Mixed Case']:
             res.append('')
@@ -215,12 +217,15 @@ class Bleckmann(Logistic):
         parent = browse_model.partner_id.parent_id
         partner = browse_model.partner_id
         vals['contact_name'] = partner.name
+        vals['customer_id'] = parent.id or partner.id
         vals['name'] = parent.name or partner.name or ''
         vals['email'] = partner.email or parent.email or ''
         vals['fax'] = partner.fax or parent.fax or ''
         vals['lang'] = partner.lang or parent.lang or ''
-        vals['phone'] = partner.phone or partner.mobile or parent.phone \
-            or parent.mobile or ''
+        vals['county'] = ((partner.state_id and partner.state_id.name) or
+                          (parent.state_id and parent.state_id.name) or '')
+        vals['phone'] = (partner.phone or partner.mobile or
+                         parent.phone or parent.mobile or '')
         browse_partner = browse_model['partner_id']
         if partner.use_parent_address is True:
             browse_partner = browse_model['partner_id']['parent_id']
@@ -299,12 +304,13 @@ class Bleckmann(Logistic):
             'Merge Action': 'A',
             'Order Id': str(picking.id),
             'From Site Id': self.FROM_SITE_ID,
-            'Customer Id': str(picking.partner_id.id),  # TODO parent
-            'Name': part['name'],
-            'Address1': part['street'],
-            'Address2': part['street2'],
+            'Customer Id': str(part['customer_id']),
+            'Name': part['name'][:30],
+            'Address1': part['street'][:35],
+            'Address2': part['street2'][:35],
             'Town': part['city'],
             'Postcode': part['zip'],
+            'County': part['county'],
             'Country': part['alpha3'],
             'Owner Id': '01',
             'Client Id': self.CLIENT_ID,

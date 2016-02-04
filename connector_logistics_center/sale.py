@@ -91,10 +91,10 @@ class SaleOrder(orm.Model):
         return vals
 
     def onchange_shop_id(self, cr, uid, ids, shop_id, context, partner_id,
-                         partner_invoice_id, partner_shhipping_id):
+                         partner_invoice_id, partner_shipping_id):
         res = super(SaleOrder, self).onchange_shop_id(
             cr, uid, ids, shop_id, context, partner_invoice_id,
-            partner_shhipping_id)
+            partner_shipping_id)
         if shop_id:
             values = res['value']
             shop = self.pool['sale.shop'].browse(
