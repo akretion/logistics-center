@@ -49,14 +49,15 @@ class Logistic(object):
         # https://github.com/jdunck/python-unicodecsv
         writer = unicodecsv.writer(csv_file, encoding=encoding,
                                    dialect=self._dialect)
-        res = getattr(self, method)(browse_object, writer)
+        non_compliant_ids = []
+        res = getattr(self, method)(browse_object, writer, non_compliant_ids)
         if res:
             csv_file.seek(0)
-            return csv_file.read()
+            return (csv_file.read(), non_compliant_ids)
             _logger.info("\nStart to read datas to put file "
                          "for the method '%s'" % method)
         else:
-            return False
+            return (False, non_compliant_ids)
 
 
 def itersubclasses(cls, _seen=None):
@@ -253,18 +254,30 @@ ORDER BY pp.default_code ASC """ % {'backend_id': backend_id,
         backend = self.browse(cr, uid, backend_ids[0], context=context)
         logistic = get_logistic_parser(backend.version)
         browse = model.browse(cr, uid, model_ids, context=context)
-        file_datas = logistic.build_csv(browse, export_method)
+        file_datas, ids_to_drop = logistic.build_csv(browse, export_method)
+        if ids_to_drop:
+            # some records are not compliant with logistics specs
+            # they shouldn't be taken account
+            model_ids = [x for x in model_ids if x not in ids_to_drop]
         if file_datas:
             return self._prepare_doc_vals(cr, uid, backend_version, file_datas,
                                           model_ids, flow, context=context)
         else:
-            raise orm.except_orm("Error in '%s': " % export_method,
-                                 "Check backend '%s' with \n%s ids %s, "
-                                 "there is no data to put in file, "
-                                 % (backend.name, model._name, model_ids))
+            flow_title = "Error in '%s': " % export_method
+            if model_ids:
+                raise orm.except_orm(
+                    flow_title,
+                    "Check backend '%s' with \n%s ids %s, "
+                    "there is no data to put in file, "
+                    % (backend.name, model._name, model_ids))
+            else:
+                raise orm.except_orm(
+                    flow_title,
+                    "No compliant data to send with '%s' backend"
+                    % backend.name)
 
     def logistic_debug_mode(self, cr, uid, ids, context=None):
-        "Implement in your logistics center module"
+        "To implement in your logistics center module"
         return
 
 

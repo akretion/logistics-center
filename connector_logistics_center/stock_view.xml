@@ -19,7 +19,7 @@
         <field name="stock_journal_id" position="after">
             <field name="logistics_exception" invisible="1"/>
             <span attrs="{'invisible': ['|', ('logistics_exception','=',False)]}"
-                  class="oe_highlight" colspan="2"> An issue occured which prevent to join this picking to Logistics center. <br/>Check wall messages at the end of this page. </span>
+                  class="oe_highlight" colspan="2"> A data issue occurred which prevented to join this picking to Logistics center. <br/>Check wall messages at the end of this page. </span>
             <field name="logistic_center"
                    attrs="{'readonly':
                    [('state', 'in', ('confirmed', 'assigned', 'done'))]}"/>
@@ -49,7 +49,7 @@
         <field name="stock_journal_id" position="after">
             <field name="logistics_exception" invisible="1"/>
             <span attrs="{'invisible': ['|', ('logistics_exception','=',False)]}"
-                  class="oe_highlight" colspan="2"> An issue occured which prevent to join this picking to Logistics center. <br/>Check wall messages at the end of this page. </span>
+                  class="oe_highlight" colspan="2"> A data issue occurred which prevented to join this picking to Logistics center. <br/>Check wall messages at the end of this page. </span>
             <field name="logistic_center"
                    attrs="{'readonly':
                    [('state', 'in', ('confirmed', 'assigned', 'done'))]}"/>
@@ -92,7 +92,7 @@
         <field name="stock_journal_id" position="after">
             <field name="logistics_exception" invisible="1"/>
             <span attrs="{'invisible': ['|', ('logistics_exception','=',False)]}"
-                  class="oe_highlight" colspan="2"> An issue occured which prevent to join this picking to Logistics center. <br/>Check wall messages at the end of this page. </span>
+                  class="oe_highlight" colspan="2"> A data issue occurred which prevented to join this picking to Logistics center. <br/>Check wall messages at the end of this page. </span>
             <field name="logistic_center"
                    attrs="{'readonly':
                    [('state', 'in', ('confirmed', 'assigned', 'done'))]}"/>

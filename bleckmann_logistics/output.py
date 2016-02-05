@@ -7,6 +7,7 @@ import re
 import pycountry
 import json
 import logging
+from collections import defaultdict
 
 from openerp.osv import orm
 from openerp.addons.connector_logistics_center.logistic import Logistic
@@ -100,6 +101,7 @@ class LogisticBackend(orm.Model):
                 cr, uid, ids, picking_m, picking_ids, 'export_delivery_order',
                 FLOWS['export_delivery_order'], BACKEND_VERSION,
                 context=context)
+            # import pdb; pdb.set_trace()
             return kwargs
         return True
 
@@ -387,25 +389,27 @@ class Bleckmann(Logistic):
                 res = (True, backend)
         return res
 
-    def _check_field_length(self, vals, flow):
+    def _check_field_length(self, vals, flow, flow_name=None):
         "Check if data doesn't overcome the length of the field"
         exceptions = {}
         for field in flow:
             to_collect = False
             fname = field.get('Name')
-            if fname in vals:
+            if vals.get(fname):
                 if field.get('Type') in ('Integer'):
                     if len(str(vals[fname])) > int(field.get('Length')):
                         to_collect = True
                 if field.get('Type') in ('String', 'Flag', 'Date'):
                     if len(vals[fname]) > int(field.get('Length')):
                         to_collect = True
+                # if field.get('Type') in ('Decimal'):  # TODO
                 if to_collect:
-                    exceptions[fname] = {'data': vals[fname],
-                                         'max_length': field.get('Length')}
+                    exceptions[flow_name or '_'] = {fname: {
+                        'data': vals[fname],
+                        'max_length': field.get('Length')}}
         return exceptions
 
-    def export_catalog(self, products, writer):
+    def export_catalog(self, products, writer, non_compliant_ids):
         product_data = []
         header, backend = self._should_i_set_header(products[0])
         for product in products:
@@ -421,38 +425,42 @@ class Bleckmann(Logistic):
             _logger.info(" >>> 'export_catalog' no data to export")
             return False
 
-    def export_delivery_order(self, pickings, writer):
-        move_data = []
-        import pdb; pdb.set_trace()
+    def export_delivery_order(self, pickings, writer, non_compliant_ids):
+        data_to_send = False
         header, backend = self._should_i_set_header(pickings[0])
         for picking in pickings:
-            exceptions = {'head': False, 'line': False}
+            data = []
+            exceptions = defaultdict(dict)
             if header:
                 backend.set_header_file(writer, 'MASTER', delivery_head)
             vals = self.prepare_picking(picking, delivery_head)
-            exceptions.update({'head': self._check_field_length(
-                vals, delivery_head)})
-            picking_data = self._get_values(vals, delivery_head)
-            if not exceptions['head']:
-                writer.writerow(picking_data)
+            exceptions.update(self._check_field_length(
+                    vals, delivery_head, 'head'))
+            data.append(self._get_values(vals, delivery_head))
             for move in picking.move_lines:
                 if header:
                     backend.set_header_file(writer, 'RELATED', delivery_line)
                 if move.state in ['assigned']:
                     vals = self.prepare_move(move, delivery_line)
-                    move_data = self._get_values(vals, delivery_line)
-                    if not exceptions['line']:
-                        writer.writerow(move_data)
-            if exceptions['head'] or exceptions['line']:
-                self.notify_exceptions(picking, exceptions)
-        if move_data:
+                    exceptions.update(
+                        self._check_field_length(vals, delivery_line, 'line'))
+                    data.append(self._get_values(vals, delivery_line))
+            if exceptions:
+                self.notify_exceptions(picking, exceptions, 'stock.picking')
+                non_compliant_ids.append(picking.id)
+            elif data:
+                picking.write({'logistics_exception': False})
+                data_to_send = True
+                for elm in data:
+                    writer.writerow(elm)
+        if data_to_send:
             _logger.info(" >>> 'export_delivery_order' ADD picking data")
             return True
         else:
             _logger.info(" >>> 'export_delivery_order' no data to export")
             return False
 
-    def export_incoming_shipment(self, pickings, writer):
+    def export_incoming_shipment(self, pickings, writer, non_compliant_ids):
         move_data = []
         header, backend = self._should_i_set_header(pickings[0])
         for picking in pickings:
@@ -475,18 +483,14 @@ class Bleckmann(Logistic):
             _logger.info(" >>> 'export_incoming_shipment' no data")
             return False
 
-    def notify_exceptions(self, picking, exceptions):
-            if not exceptions.get('head'):
-                exceptions.pop('head')
-            if not exceptions.get('line'):
-                exceptions.pop('line')
-            mess_vals = {
-                'subject': u"Bleckmann exceptions: Données trop longues",
-                'body': u"Voici les clés problématiques <br/>\n%s"
-                        % json.dumps(exceptions),
-                'model': 'stock.picking',
-                'res_id': picking.id,
-                'type': 'notification'}
-            picking._model.pool['mail.message'].create(
-                picking._cr, picking._uid, mess_vals, picking._context)
-            picking.write({'logistics_exception': True})
+    def notify_exceptions(self, browse, exceptions, model):
+        mess_vals = {
+            'subject': u"Bleckmann exceptions: Données trop longues",
+            'body': u"Voici les clés problématiques <br/>\n%s"
+                    % json.dumps(exceptions),
+            'model': model,
+            'res_id': browse.id,
+            'type': 'notification'}
+        browse._model.pool['mail.message'].create(
+            browse._cr, browse._uid, mess_vals, browse._context)
+        browse.write({'logistics_exception': True})
