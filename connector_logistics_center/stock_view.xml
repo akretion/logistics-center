@@ -17,6 +17,9 @@
     <field name="inherit_id" ref="stock.view_picking_form"/>
     <field name="arch" type="xml">
         <field name="stock_journal_id" position="after">
+            <field name="logistics_exception" invisible="1"/>
+            <span attrs="{'invisible': ['|', ('logistics_exception','=',False)]}"
+                  class="oe_highlight" colspan="2"> An issue occured which prevent to join this picking to Logistics center. <br/>Check wall messages at the end of this page. </span>
             <field name="logistic_center"
                    attrs="{'readonly':
                    [('state', 'in', ('confirmed', 'assigned', 'done'))]}"/>
@@ -44,6 +47,9 @@
                   class="oe_highlight">. Waiting for external file data import .</span>
         </xpath>
         <field name="stock_journal_id" position="after">
+            <field name="logistics_exception" invisible="1"/>
+            <span attrs="{'invisible': ['|', ('logistics_exception','=',False)]}"
+                  class="oe_highlight" colspan="2"> An issue occured which prevent to join this picking to Logistics center. <br/>Check wall messages at the end of this page. </span>
             <field name="logistic_center"
                    attrs="{'readonly':
                    [('state', 'in', ('confirmed', 'assigned', 'done'))]}"/>
@@ -84,6 +90,9 @@
                   class="oe_highlight">. Waiting for external file import .</span>
         </xpath>
         <field name="stock_journal_id" position="after">
+            <field name="logistics_exception" invisible="1"/>
+            <span attrs="{'invisible': ['|', ('logistics_exception','=',False)]}"
+                  class="oe_highlight" colspan="2"> An issue occured which prevent to join this picking to Logistics center. <br/>Check wall messages at the end of this page. </span>
             <field name="logistic_center"
                    attrs="{'readonly':
                    [('state', 'in', ('confirmed', 'assigned', 'done'))]}"/>
@@ -119,6 +128,9 @@
     <field name="arch" type="xml">
         <field name="state" position="before">
             <field name="logistic_center"/>
+            <button icon="gtk-dialog-warning"
+                    attrs="{'invisible': [('logistics_exception', '=', False)]}"/>
+            <field name="logistics_exception" invisible="1"/>
         </field>
     </field>
 </record>

@@ -65,14 +65,19 @@ class AbstractStockPicking(orm.AbstractModel):
             readonly=True,
             help="Refers the 'File document' object which "
                  "contains informations to send to "
-                 "Logistic center for synchronisation purpose."),
+                 "Logistics center for synchronisation purpose."),
         'log_in_file_doc_id': fields.many2one(
             'file.document',
             'Logistics Doc. In',
             readonly=True,
             help="Refers the 'File document' object which "
                  "contains informations sent by "
-                 "Logistic center in response from original message."),
+                 "Logistics center in response from original message."),
+        # Implement your method in your module to check if required
+        'logistics_exception': fields.boolean(
+            'Except',
+            help="Checked if a wrong data prevent you to send "
+                 "the order to your logistics center"),
     }
 
     def run_job(self, cr, uid, picking_id, buffer_id, file_doc_id, moves,

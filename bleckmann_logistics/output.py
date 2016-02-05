@@ -5,10 +5,13 @@
 
 import re
 import pycountry
+import json
+import logging
+
 from openerp.osv import orm
 from openerp.addons.connector_logistics_center.logistic import Logistic
+
 from .common import LogisticDialect, BACKEND_VERSION, SKU_SUFFIX
-import logging
 from .data.flow_delivery import delivery_head, delivery_line
 from .data.flow_sku import sku
 from .data.flow_incoming import incoming_head, incoming_line
@@ -306,8 +309,8 @@ class Bleckmann(Logistic):
             'From Site Id': self.FROM_SITE_ID,
             'Customer Id': str(part['customer_id']),
             'Name': part['name'][:30],
-            'Address1': part['street'][:35],
-            'Address2': part['street2'][:35],
+            'Address1': part['street'],
+            'Address2': part['street2'],
             'Town': part['city'],
             'Postcode': part['zip'],
             'County': part['county'],
@@ -322,7 +325,7 @@ class Bleckmann(Logistic):
             'Instructions': sanitize(picking.note) or '',
             'Order Reference': sanitize(picking.origin) or '',
             'Purchase Order': sale and sale.client_order_ref or '',
-            'Freight Terms': sale and sale.incoterm.name or '',
+            'Freight Terms': sale and sale.incoterm.code or '',
         }
 
     def prepare_move(self, move, delivery_line):
@@ -384,6 +387,24 @@ class Bleckmann(Logistic):
                 res = (True, backend)
         return res
 
+    def _check_field_length(self, vals, flow):
+        "Check if data doesn't overcome the length of the field"
+        exceptions = {}
+        for field in flow:
+            to_collect = False
+            fname = field.get('Name')
+            if fname in vals:
+                if field.get('Type') in ('Integer'):
+                    if len(str(vals[fname])) > int(field.get('Length')):
+                        to_collect = True
+                if field.get('Type') in ('String', 'Flag', 'Date'):
+                    if len(vals[fname]) > int(field.get('Length')):
+                        to_collect = True
+                if to_collect:
+                    exceptions[fname] = {'data': vals[fname],
+                                         'max_length': field.get('Length')}
+        return exceptions
+
     def export_catalog(self, products, writer):
         product_data = []
         header, backend = self._should_i_set_header(products[0])
@@ -402,20 +423,28 @@ class Bleckmann(Logistic):
 
     def export_delivery_order(self, pickings, writer):
         move_data = []
+        import pdb; pdb.set_trace()
         header, backend = self._should_i_set_header(pickings[0])
         for picking in pickings:
+            exceptions = {'head': False, 'line': False}
             if header:
                 backend.set_header_file(writer, 'MASTER', delivery_head)
             vals = self.prepare_picking(picking, delivery_head)
+            exceptions.update({'head': self._check_field_length(
+                vals, delivery_head)})
             picking_data = self._get_values(vals, delivery_head)
-            writer.writerow(picking_data)
+            if not exceptions['head']:
+                writer.writerow(picking_data)
             for move in picking.move_lines:
                 if header:
                     backend.set_header_file(writer, 'RELATED', delivery_line)
                 if move.state in ['assigned']:
                     vals = self.prepare_move(move, delivery_line)
                     move_data = self._get_values(vals, delivery_line)
-                    writer.writerow(move_data)
+                    if not exceptions['line']:
+                        writer.writerow(move_data)
+            if exceptions['head'] or exceptions['line']:
+                self.notify_exceptions(picking, exceptions)
         if move_data:
             _logger.info(" >>> 'export_delivery_order' ADD picking data")
             return True
@@ -445,3 +474,19 @@ class Bleckmann(Logistic):
         else:
             _logger.info(" >>> 'export_incoming_shipment' no data")
             return False
+
+    def notify_exceptions(self, picking, exceptions):
+            if not exceptions.get('head'):
+                exceptions.pop('head')
+            if not exceptions.get('line'):
+                exceptions.pop('line')
+            mess_vals = {
+                'subject': u"Bleckmann exceptions: Données trop longues",
+                'body': u"Voici les clés problématiques <br/>\n%s"
+                        % json.dumps(exceptions),
+                'model': 'stock.picking',
+                'res_id': picking.id,
+                'type': 'notification'}
+            picking._model.pool['mail.message'].create(
+                picking._cr, picking._uid, mess_vals, picking._context)
+            picking.write({'logistics_exception': True})
