@@ -69,7 +69,8 @@ class FileRepository(orm.Model):
 
     _sql_constraints = [
         ('logistic_backend_id_uniq', 'unique(logistic_backend_id)',
-         "'Logistic backend' with the same ID already exists : must be unique"),
+         "'Logistic backend' with the same ID already exists : "
+         "must be unique"),
     ]
 
 
@@ -147,7 +148,8 @@ class RepositoryTask(orm.Model):
         :param task: browse repository.task: allow to
             define specific action according to task.method
         """
-        return self.pool['file.document'].create(cr, uid, vals, context=context)
+        return self.pool['file.document'].create(
+            cr, uid, vals, context=context)
 
     def run(self, cr, uid, ids, context=None):
         """ Execute the repository task.
@@ -180,6 +182,7 @@ class AutomaticTask(orm.Model):
 
     # TODO debug import datas
     def get_task_type(self, cr, uid, context=None):
-        types = super(AutomaticTask, self).get_task_type(cr, uid, context=context)
+        types = super(AutomaticTask, self).get_task_type(
+            cr, uid, context=context)
         types.extend(LOGISTIC_TYPES)
         return types

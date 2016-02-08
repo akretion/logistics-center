@@ -75,7 +75,7 @@ class AbstractStockPicking(orm.AbstractModel):
                  "Logistics center in response from original message."),
         # Implement your method in your module to check if required
         'logistics_exception': fields.boolean(
-            'Except',
+            'Logistics Exception',
             help="Checked if a wrong data prevent you to send "
                  "the order to your logistics center"),
     }
