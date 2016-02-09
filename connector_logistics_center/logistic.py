@@ -260,6 +260,8 @@ ORDER BY pp.default_code ASC """ % {'backend_id': backend_id,
             # they shouldn't be taken account
             model_ids = [x for x in model_ids if x not in ids_to_drop]
         if file_datas:
+            # hack to manage weird behavior of unicode csv with \n chars
+            file_datas = file_datas.replace('\\\n', '\n')
             return self._prepare_doc_vals(cr, uid, backend_version, file_datas,
                                           model_ids, flow, context=context)
         else:
