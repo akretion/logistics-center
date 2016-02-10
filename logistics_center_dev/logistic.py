@@ -67,17 +67,19 @@ class LogisticBackend(orm.Model):
         return True
 
 
-class RepositoryTask(orm.Model):
-    _inherit = 'repository.task'
+# TODO decide wha to do of that
 
-    def create_file_document(self, cr, uid, file_doc_vals, ids_from_model,
-                             task, context=None):
-        file_doc_id = super(RepositoryTask, self).create_file_document(
-            cr, uid, file_doc_vals, ids_from_model, task, context=None)
-        if (not task.repository_id.logistic_backend_id.column_in_file and
-                task.method in ['export_delivery_order',
-                                'export_incoming_shipment']):
-            vals = {'log_out_file_doc_id': file_doc_id}
-            self.pool['stock.picking'].write(
-                cr, uid, ids_from_model, vals, context=context)
-        return file_doc_id
+# class RepositoryTask(orm.Model):
+#     _inherit = 'repository.task'
+
+#     def create_logis_file_doc(self, cr, uid, file_doc_vals, ids_from_model,
+#                              task, context=None):
+#         file_doc_id = super(RepositoryTask, self).create_logis_file_doc(
+#             cr, uid, file_doc_vals, ids_from_model, task, context=None)
+#         if (not task.repository_id.logistic_backend_id.column_in_file and
+#                 task.method in ['export_delivery_order',
+#                                 'export_incoming_shipment']):
+#             vals = {'log_out_file_doc_id': file_doc_id}
+#             self.pool['stock.picking'].write(
+#                 cr, uid, ids_from_model, vals, context=context)
+#         return file_doc_id

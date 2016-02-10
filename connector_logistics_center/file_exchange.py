@@ -131,25 +131,31 @@ class RepositoryTask(orm.Model):
             if 'file_datas' in kwargs and 'datas_fname' in kwargs:
                 vals = self.update_doc_vals(
                     cr, uid, task, kwargs, context=context)
-                vals = {'file_doc_id': self.create_file_document(
+                vals = {'file_doc_id': self.create_logis_file_doc(
                     cr, uid, vals, ids_from_model, task, context=context)}
                 self.write(cr, uid, [task.id], vals, context=context)
         return True
 
-    def create_file_document(self, cr, uid, vals, ids_from_model, task,
-                             context=None):
+    def create_logis_file_doc(self, cr, uid, file_doc_vals, ids_from_model,
+                              task, context=None):
         """You may inherit this method to add behaviour
         after (or before) file doc creation
-        e.g. you may fill in 'stock.picking' model the
-        'log_out_file_doc_id' m2o field (from 'file.document')
 
         :param ids_from_model: list: record ids eventually used to
             apply orm write to have bindings between file content and erp ids
         :param task: browse repository.task: allow to
             define specific action according to task.method
         """
-        return self.pool['file.document'].create(
-            cr, uid, vals, context=context)
+        file_doc_id = self.pool['file.document'].create(
+            cr, uid, file_doc_vals, context=context)
+        if (task.method in ['export_delivery_order',
+                            'export_incoming_shipment']):
+            # fill in 'stock.picking' model the
+            # 'log_out_file_doc_id' m2o field (from 'file.document')
+            vals = {'log_out_file_doc_id': file_doc_id}
+            self.pool['stock.picking'].write(
+                cr, uid, ids_from_model, vals, context=context)
+        return file_doc_id
 
     def run(self, cr, uid, ids, context=None):
         """ Execute the repository task.

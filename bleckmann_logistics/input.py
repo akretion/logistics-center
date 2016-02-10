@@ -73,6 +73,7 @@ class FileDocument(orm.Model):
         return lines
 
     def create(self, cr, uid, vals, context=None):
+        " Guess flow from imported file content to set the right file_type"
         if 'datas' in vals:
             tmp = base64.b64decode(vals['datas'])
             file_flow = tmp[:3]
@@ -82,7 +83,7 @@ class FileDocument(orm.Model):
         return super(FileDocument, self).create(cr, uid, vals, context=context)
 
     def get_product_id(self, cr, uid, product, file_doc, line, context=None):
-        """ Bleckmann require an extension to product (e.g. .ZZ)
+        """ Bleckmann require an extension to product (e.g. .ZZ, .OS)
             You may strip this extension with your own method
         """
         product_m = self.pool['product.product']

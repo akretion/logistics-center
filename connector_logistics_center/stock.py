@@ -78,6 +78,9 @@ class AbstractStockPicking(orm.AbstractModel):
             'Logistics Exception',
             help="Checked if a wrong data prevent you to send "
                  "the order to your logistics center"),
+        'logistics_blocked': fields.boolean(
+            'Logistics Blocked',
+            help="Logistics Delivery Orders can be blocked manually"),
     }
 
     def run_job(self, cr, uid, picking_id, buffer_id, file_doc_id, moves,
@@ -135,7 +138,7 @@ class AbstractStockPicking(orm.AbstractModel):
                     # use read instead of building a uom dict in
                     # for movelines because extra product
                     # can be in no planned move
-                    move_to_create ={
+                    move_to_create = {
                         "name": "EXTRA DELIVERY : " + str(item) + " : " +
                         product_details['name'],
                         "date": time.strftime('%Y-%m-%d %H:%M:%S'),

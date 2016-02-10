@@ -92,6 +92,7 @@ class LogisticBackend(orm.Model):
             cr, uid, [
                 ('state', 'in', ('assigned',)),
                 ('type', '=', 'out'),
+                ('logistics_blocked', '=', False),
                 ('log_out_file_doc_id', '=', False),
                 ('logistic_center', '=', str(ids[0])),
             ],
@@ -101,7 +102,6 @@ class LogisticBackend(orm.Model):
                 cr, uid, ids, picking_m, picking_ids, 'export_delivery_order',
                 FLOWS['export_delivery_order'], BACKEND_VERSION,
                 context=context)
-            # import pdb; pdb.set_trace()
             return kwargs
         return True
 
@@ -112,6 +112,7 @@ class LogisticBackend(orm.Model):
             cr, uid, [
                 ('state', 'in', ('assigned',)),
                 ('type', '=', 'in'),
+                ('logistics_blocked', '=', False),
                 ('log_out_file_doc_id', '=', False),
                 ('logistic_center', '=', str(ids[0])),
             ],

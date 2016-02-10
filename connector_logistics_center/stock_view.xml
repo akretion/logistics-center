@@ -1,145 +1,191 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
-    <data>
+  <data>
 
-<record id="view_picking_form_logis" model="ir.ui.view">
-    <field name="model">stock.picking.in</field>
-    <field name="inherit_id" ref="stock.view_picking_in_form"/>
-    <field name="arch" type="xml">
-        <field name="move_lines" position="attributes">
-            <attribute name="context">{'logistic_center': logistic_center, 'address_in_id': partner_id, 'picking_type': 'in', 'form_view_ref':'stock.view_move_picking_form', 'tree_view_ref':'stock.view_move_picking_tree'}</attribute>
+    <record id="view_picking_form_logis" model="ir.ui.view">
+        <field name="model">stock.picking.in</field>
+        <field name="inherit_id" ref="stock.view_picking_in_form"/>
+        <field name="arch" type="xml">
+            <field name="move_lines" position="attributes">
+                <attribute name="context">{'logistic_center': logistic_center, 'address_in_id': partner_id, 'picking_type': 'in', 'form_view_ref':'stock.view_move_picking_form', 'tree_view_ref':'stock.view_move_picking_tree'}</attribute>
+            </field>
         </field>
-    </field>
-</record>
+    </record>
 
-<record id="view_picking_form_logis" model="ir.ui.view">
-    <field name="model">stock.picking</field>
-    <field name="inherit_id" ref="stock.view_picking_form"/>
-    <field name="arch" type="xml">
-        <field name="stock_journal_id" position="after">
-            <span attrs="{'invisible': ['|', ('logistics_exception','=',False)]}"
-                  class="oe_highlight" colspan="2"> A data issue occurred which prevented to join this picking to Logistics center. <br/>Check wall messages at the end of this page. </span>
-            <field name="logistic_center"
-                   attrs="{'readonly':
-                   [('state', 'in', ('confirmed', 'assigned', 'done'))]}"/>
-            <field name="log_out_file_doc_id"
-                   attrs="{'invisible': [('logistic_center', 'in', ('internal', False))]}"/>
-            <field name="log_in_file_doc_id"
-                   attrs="{'invisible': [('log_out_file_doc_id', '=', False)]}"/>
+    <record id="view_picking_form_logis" model="ir.ui.view">
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <field name="stock_journal_id" position="after">
+                <span attrs="{'invisible': ['|', ('logistics_exception','=',False)]}"
+                      class="oe_highlight" colspan="2"> A data issue occurred which prevented to join this picking to Logistics center. <br/>Check wall messages at the end of this page. </span>
+                <field name="logistic_center"
+                       attrs="{'readonly':
+                       [('state', 'in', ('confirmed', 'assigned', 'done'))]}"/>
+                <field name="log_out_file_doc_id"
+                       attrs="{'invisible': [('logistic_center', 'in', ('internal', False))]}"/>
+                <field name="log_in_file_doc_id"
+                       attrs="{'invisible': [('log_out_file_doc_id', '=', False)]}"/>
+            </field>
+            <field name="auto_picking" position="after">
+                <field name="logistics_exception" readonly="1"/>
+                <field name="logistics_blocked"
+                       attrs="{'invisible': [('type', '=', 'internal')]}"/>
+            </field>
         </field>
-        <field name="auto_picking" position="after">
-            <field name="logistics_exception" readonly="1"/>
+    </record>
+
+    <record id="view_picking_form_logis_in" model="ir.ui.view">
+        <field name="model">stock.picking.in</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="/form/header/button[@name='action_process']" position="before">
+                <span title="Wait for cron task time. However hurried people can click on 'Incoming shipment' task (Connectors/backend logistics menu) to manually trigger it"
+                      attrs="{'invisible': ['|', '|', ('state','!=','assigned'), ('logistic_center', '=', 'internal'), ('log_out_file_doc_id', '!=', False)]}"
+                      class="oe_highlight">. Waiting for sending file 'incoming shipment' to logistics center .</span>
+                <span title="wait for cron task time OR clic on 'backend logistic' task (Connectors menu) to trigger it"
+                      attrs="{'invisible': ['|', '|', '|', ('state','!=','assigned'), ('logistic_center', '=', 'internal'), ('log_out_file_doc_id', '=', False), ('log_in_file_doc_id', '!=', False)]}"
+                      class="oe_highlight">. Waiting for 'incoming shipment' reply .</span>
+                <span title="Wait for cron task time import OR run 'Logistic Doc. In' to create job import and run this job (Connectors menu) to trigger import"
+                      attrs="{'invisible': ['|', '|', ('state','!=','assigned'), ('logistic_center', '=', 'internal'), ('log_in_file_doc_id', '=', False)]}"
+                      class="oe_highlight">. Waiting for external file data import .</span>
+            </xpath>
+            <field name="stock_journal_id" position="after">
+                <span attrs="{'invisible': ['|', ('logistics_exception','=',False)]}"
+                      class="oe_highlight" colspan="2"> A data issue occurred which prevented to join this picking to Logistics center. <br/>Check wall messages at the end of this page. </span>
+                <field name="logistic_center"
+                       attrs="{'readonly':
+                       [('state', 'in', ('confirmed', 'assigned', 'done'))]}"/>
+                <field name="log_out_file_doc_id"
+                       attrs="{'invisible': [('logistic_center', 'in', ('internal', False))]}"/>
+                <field name="log_in_file_doc_id"
+                       attrs="{'invisible': [('log_out_file_doc_id', '=', False)]}"/>
+            </field>
+            <field name="auto_picking" position="after">
+                <field name="logistics_exception" readonly="1"/>
+                <field name="logistics_blocked"
+                       attrs="{'invisible': [('type', '=', 'internal')]}"/>
+            </field>
         </field>
-    </field>
-</record>
+    </record>
 
-<record id="view_picking_form_logis_in" model="ir.ui.view">
-    <field name="model">stock.picking.in</field>
-    <field name="inherit_id" ref="stock.view_picking_form"/>
-    <field name="arch" type="xml">
-        <xpath expr="/form/header/button[@name='action_process']" position="before">
-            <span title="Wait for cron task time. However hurried people can click on 'Incoming shipment' task (Connectors/backend logistics menu) to manually trigger it"
-                  attrs="{'invisible': ['|', '|', ('state','!=','assigned'), ('logistic_center', '=', 'internal'), ('log_out_file_doc_id', '!=', False)]}"
-                  class="oe_highlight">. Waiting for sending file 'incoming shipment' to logistics center .</span>
-            <span title="wait for cron task time OR clic on 'backend logistic' task (Connectors menu) to trigger it"
-                  attrs="{'invisible': ['|', '|', '|', ('state','!=','assigned'), ('logistic_center', '=', 'internal'), ('log_out_file_doc_id', '=', False), ('log_in_file_doc_id', '!=', False)]}"
-                  class="oe_highlight">. Waiting for 'incoming shipment' reply .</span>
-            <span title="Wait for cron task time import OR run 'Logistic Doc. In' to create job import and run this job (Connectors menu) to trigger import"
-                  attrs="{'invisible': ['|', '|', ('state','!=','assigned'), ('logistic_center', '=', 'internal'), ('log_in_file_doc_id', '=', False)]}"
-                  class="oe_highlight">. Waiting for external file data import .</span>
-        </xpath>
-        <field name="stock_journal_id" position="after">
-            <span attrs="{'invisible': ['|', ('logistics_exception','=',False)]}"
-                  class="oe_highlight" colspan="2"> A data issue occurred which prevented to join this picking to Logistics center. <br/>Check wall messages at the end of this page. </span>
-            <field name="logistic_center"
-                   attrs="{'readonly':
-                   [('state', 'in', ('confirmed', 'assigned', 'done'))]}"/>
-            <field name="log_out_file_doc_id"
-                   attrs="{'invisible': [('logistic_center', 'in', ('internal', False))]}"/>
-            <field name="log_in_file_doc_id"
-                   attrs="{'invisible': [('log_out_file_doc_id', '=', False)]}"/>
+    <record id="view_picking_form" model="ir.ui.view">
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+             <xpath expr="//button[@name='action_process']" position="attributes">
+                <attribute name="states"></attribute>
+                <attribute name="attrs">{'invisible': ['|',('logistic_center', 'not in', ('internal', False)), ('state', 'not in', ('assigned'))]}</attribute>
+             </xpath>
+             <xpath expr="//button[@name='draft_validate']" position="attributes">
+                <attribute name="states"></attribute>
+                <attribute name="attrs">{'invisible': ['|',('logistic_center', 'not in', ('internal', False)), ('state', 'not in', ('assigned'))]}</attribute>
+             </xpath>
         </field>
-        <field name="auto_picking" position="after">
-            <field name="logistics_exception" readonly="1"/>
+    </record>
+
+
+    <record id="view_picking_form_logis_out" model="ir.ui.view">
+        <field name="model">stock.picking.out</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="/form/header/button[@name='action_process']" position="before">
+                <span title="Wait for cron task time. However hurried people can click on 'Delivery order' task (Connectors > backend > logistics menu) to manually trigger it"
+                      attrs="{'invisible': ['|', '|', ('state','!=','assigned'), ('logistic_center', '=', 'internal'), ('log_in_file_doc_id', '!=', False)]}"
+                      class="oe_highlight">. Waiting for logistics center .</span>
+                <span title="Wait for cron task time import OR run 'Logistic Doc. In' to create job import and run this job (Connectors / Jobs menu) to trigger import"
+                      attrs="{'invisible': ['|', '|', ('state','!=','assigned'), ('logistic_center', '=', 'internal'), ('log_in_file_doc_id', '=', False)]}"
+                      class="oe_highlight">. Waiting for external file import .</span>
+            </xpath>
+            <field name="stock_journal_id" position="after">
+                <span attrs="{'invisible': ['|', ('logistics_exception','=',False)]}"
+                      class="oe_highlight" colspan="2"> A data issue occurred which prevented to join this picking to Logistics center. <br/>Check wall messages at the end of this page. </span>
+                <field name="logistic_center"
+                       attrs="{'readonly':
+                       [('state', 'in', ('confirmed', 'assigned', 'done'))]}"/>
+                <field name="log_out_file_doc_id"
+                       attrs="{'invisible': [('logistic_center', 'in', ('internal', False))]}"/>
+                <field name="log_in_file_doc_id"
+                       attrs="{'invisible': [('log_out_file_doc_id', '=', False)]}"/>
+            </field>
+            <field name="auto_picking" position="after">
+                <field name="logistics_exception" readonly="1"/>
+                <field name="logistics_blocked"
+                       attrs="{'invisible': [('type', '=', 'internal')]}"/>
+            </field>
         </field>
-    </field>
-</record>
+    </record>
 
-<record id="view_picking_form" model="ir.ui.view">
-    <field name="model">stock.picking</field>
-    <field name="inherit_id" ref="stock.view_picking_form"/>
-    <field name="arch" type="xml">
-         <xpath expr="//button[@name='action_process']" position="attributes">
-            <attribute name="states"></attribute>
-            <attribute name="attrs">{'invisible': ['|',('logistic_center', 'not in', ('internal', False)), ('state', 'not in', ('assigned'))]}</attribute>
-         </xpath>
-         <xpath expr="//button[@name='draft_validate']" position="attributes">
-            <attribute name="states"></attribute>
-            <attribute name="attrs">{'invisible': ['|',('logistic_center', 'not in', ('internal', False)), ('state', 'not in', ('assigned'))]}</attribute>
-         </xpath>
-    </field>
-</record>
-
-
-<record id="view_picking_form_logis_out" model="ir.ui.view">
-    <field name="model">stock.picking.out</field>
-    <field name="inherit_id" ref="stock.view_picking_form"/>
-    <field name="arch" type="xml">
-        <xpath expr="/form/header/button[@name='action_process']" position="before">
-            <span title="Wait for cron task time. However hurried people can click on 'Delivery order' task (Connectors > backend > logistics menu) to manually trigger it"
-                  attrs="{'invisible': ['|', '|', ('state','!=','assigned'), ('logistic_center', '=', 'internal'), ('log_in_file_doc_id', '!=', False)]}"
-                  class="oe_highlight">. Waiting for logistics center .</span>
-            <span title="Wait for cron task time import OR run 'Logistic Doc. In' to create job import and run this job (Connectors / Jobs menu) to trigger import"
-                  attrs="{'invisible': ['|', '|', ('state','!=','assigned'), ('logistic_center', '=', 'internal'), ('log_in_file_doc_id', '=', False)]}"
-                  class="oe_highlight">. Waiting for external file import .</span>
-        </xpath>
-        <field name="stock_journal_id" position="after">
-            <span attrs="{'invisible': ['|', ('logistics_exception','=',False)]}"
-                  class="oe_highlight" colspan="2"> A data issue occurred which prevented to join this picking to Logistics center. <br/>Check wall messages at the end of this page. </span>
-            <field name="logistic_center"
-                   attrs="{'readonly':
-                   [('state', 'in', ('confirmed', 'assigned', 'done'))]}"/>
-            <field name="log_out_file_doc_id"
-                   attrs="{'invisible': [('logistic_center', 'in', ('internal', False))]}"/>
-            <field name="log_in_file_doc_id"
-                   attrs="{'invisible': [('log_out_file_doc_id', '=', False)]}"/>
+    <record id="view_picking_out_form" model="ir.ui.view">
+        <field name="model">stock.picking.out</field>
+        <field name="inherit_id" ref="stock.view_picking_out_form"/>
+        <field name="arch" type="xml">
+             <xpath expr="/form/header//button[@name='action_process']" position="attributes">
+                <attribute name="states"></attribute>
+                <attribute name="attrs">{'invisible': ['|',('logistic_center', 'not in', ('internal', False)), ('state', 'not in', ('assigned'))]}</attribute>
+             </xpath>
+             <xpath expr="/form/header//button[@name='draft_validate']" position="attributes">
+                <attribute name="states"></attribute>
+                <attribute name="attrs">{'invisible': ['|',('logistic_center', 'not in', ('internal', False)), ('state', 'not in', ('assigned'))]}</attribute>
+             </xpath>
         </field>
-        <field name="auto_picking" position="after">
-            <field name="logistics_exception" readonly="1"/>
+    </record>
+
+
+
+    <!-- Tree views -->
+    <record id="view_picking_out_tree" model="ir.ui.view">
+        <field name="model">stock.picking.out</field>
+        <field name="inherit_id" ref="stock.view_picking_out_tree"/>
+        <field name="arch" type="xml">
+            <field name="state" position="before">
+                <field name="logistic_center"/>
+                <button icon="gtk-dialog-warning" name="" type="object"
+                        help="The delivery order has been blocked programmatically (because of non compliance with logistics center)"
+                        attrs="{'invisible': ['|', ('logistic_center', '=', 'internal'), ('logistics_exception', '=', False)]}"/>
+                 <button icon="kanban-pause" name="" type="object"
+                            attrs="{'invisible': ['|', ('logistic_center', '=', 'internal'), ('logistics_blocked', '=', False)]}"
+                            help="The delivery order has been blocked manually"/>
+                 <field name="id"/>
+                 <field name="logistics_exception" invisible="1"/>
+                <field name="logistics_blocked" invisible="1"/>
+            </field>
         </field>
-    </field>
-</record>
+    </record>
 
-<record id="view_picking_out_form" model="ir.ui.view">
-    <field name="model">stock.picking.out</field>
-    <field name="inherit_id" ref="stock.view_picking_out_form"/>
-    <field name="arch" type="xml">
-         <xpath expr="/form/header//button[@name='action_process']" position="attributes">
-            <attribute name="states"></attribute>
-            <attribute name="attrs">{'invisible': ['|',('logistic_center', 'not in', ('internal', False)), ('state', 'not in', ('assigned'))]}</attribute>
-         </xpath>
-         <xpath expr="/form/header//button[@name='draft_validate']" position="attributes">
-            <attribute name="states"></attribute>
-            <attribute name="attrs">{'invisible': ['|',('logistic_center', 'not in', ('internal', False)), ('state', 'not in', ('assigned'))]}</attribute>
-         </xpath>
-    </field>
-</record>
-
-
-
-<!-- Tree views -->
-<record id="view_picking_out_tree" model="ir.ui.view">
-    <field name="model">stock.picking.out</field>
-    <field name="inherit_id" ref="stock.view_picking_out_tree"/>
-    <field name="arch" type="xml">
-        <field name="state" position="before">
-            <field name="logistic_center"/>
-            <button icon="gtk-dialog-warning"
-                    attrs="{'invisible': [('logistics_exception', '=', False)]}"/>
-            <field name="logistics_exception" invisible="1"/>
+    <record id="view_picking_out_search" model="ir.ui.view">
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_out_search"/>
+        <field name="arch" type="xml">
+            <search string="Picking list">
+                <filter name="done" position="after">
+                    <filter name="draft" string="Draft" domain="[('state','=','draft')]"/>
+                </filter>
+            </search>
         </field>
-    </field>
-</record>
+    </record>
 
-    </data>
+
+    <!-- Action / menu -->
+    <record id="action_logistics_delivery_orders" model="ir.actions.act_window">
+        <field name="name">Logistics Delivery Orders</field>
+        <field name="res_model">stock.picking.out</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="stock.view_picking_out_search"/>
+        <field name="domain">[('logistic_center', '!=', 'internal'), ('type', '=', 'out')]</field>
+<!--         <field name="context">{
+          'search_default_assigned': 1,
+          'search_default_draft': 1,
+          'search_default_confirmed': 1,
+          }
+        </field> -->
+    </record>
+
+    <menuitem id="menu_file_exchange_root"
+              action="action_logistics_delivery_orders"
+              sequence="0"
+              parent="stock.menu_stock_warehouse_mgmt"/>
+
+
+  </data>
 </openerp>
