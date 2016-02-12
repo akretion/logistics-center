@@ -38,10 +38,10 @@ def sanitize(string):
         if '\n' in string:
             # \n can't be in string because there is
             # QUOTING_NONE in csv dialect
-            string.replace('\n', ' ')
+            string = string.replace('\n', ' - ')
         if ';' in string:
             # ; is the delimiter and must not be in string
-            string.replace(';', ',')
+            string = string.replace(';', ',')
     else:
         string = ''
     return string
@@ -124,6 +124,11 @@ class LogisticBackend(orm.Model):
                 BACKEND_VERSION, context=context)
             return kwargs
         return True
+
+    def _amend_file_data(self, data):
+        "Allow to modify data before to create file.document"
+        # hack to manage weird behavior of unicode csv with \n chars
+        data = data.replace('\\\n', '\n')
 
     def set_header_file(self, cr, uid, ids, writer, header_type,
                         definition_fields, context=None):

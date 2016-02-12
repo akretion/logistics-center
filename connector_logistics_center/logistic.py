@@ -260,8 +260,7 @@ ORDER BY pp.default_code ASC """ % {'backend_id': backend_id,
             # they shouldn't be taken account
             model_ids = [x for x in model_ids if x not in ids_to_drop]
         if file_datas:
-            # hack to manage weird behavior of unicode csv with \n chars
-            file_datas = file_datas.replace('\\\n', '\n')
+            self._amend_file_data(file_datas)
             return self._prepare_doc_vals(cr, uid, backend_version, file_datas,
                                           model_ids, flow, context=context)
         else:
@@ -277,6 +276,10 @@ ORDER BY pp.default_code ASC """ % {'backend_id': backend_id,
                     flow_title,
                     "No compliant data to send with '%s' backend"
                     % backend.name)
+
+    def _amend_file_data(self, data):
+        "Allow to modify data before to create file.document"
+        pass
 
     def logistic_debug_mode(self, cr, uid, ids, context=None):
         "To implement in your logistics center module"
