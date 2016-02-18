@@ -29,3 +29,8 @@ class ProductProduct(orm.Model):
         ('default_code_uniq', 'unique(default_code)',
          "The Internal Reference must be unique in all companies"),
     ]
+
+    def _require_logistics_check(self, cr, uid, vals, context=None):
+        if 'name' in vals or 'description' in vals:
+            vals['logistics_to_check'] = True
+        return True

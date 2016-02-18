@@ -3,9 +3,12 @@
 # © 2015 Sebastien BEAU @ Akretion
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
+import logging
+
 from openerp.osv import orm
 from openerp.tools.translate import _
-import logging
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+
 
 _logger = logging.getLogger(__name__)
 

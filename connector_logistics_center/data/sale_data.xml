@@ -58,5 +58,23 @@ if line.product_id.default_code is False:
             <field name="active" eval="True"/>
         </record>
 
+        <record id="excep_product_in_logistics_except"
+                model="sale.exception">
+            <field name="name">Products in 'Logistics Exception'</field>
+            <field name="description">Some informations in products are not compatible with logistics center like field size.
+            To solve it:
+            - Check the wall message of the products,
+            - Fix products and click on 'Check Logistics' button
+            - Delete non compliant products in sale lines and rewrite them.
+            </field>
+            <field name="sequence">10</field>
+            <field name="model">sale.order.line</field>
+            <field name="code">
+if line.product_id and line.product_id.logistics_exception:
+    failed = True
+            </field>
+            <field name="active" eval="True"/>
+        </record>
+
     </data>
 </openerp>

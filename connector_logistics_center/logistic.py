@@ -9,6 +9,7 @@ import unicodecsv
 from cStringIO import StringIO
 import base64
 from datetime import datetime
+
 from openerp.tools.translate import _
 from openerp.osv import orm, fields
 from .connector import logistic_binding
@@ -42,6 +43,10 @@ class Logistic(object):
 
     def export_incoming_shipment(self, *args, **kwargs):
         return NotImplementedError
+
+    def check_logistics_data(self, *args, **kwargs):
+        "Write or Create on Products with logistics product comes here"
+        pass
 
     def build_csv(self, browse_object, method, encoding='utf-8'):
         register_dialect("logistic_dialect", self._dialect)
@@ -276,6 +281,16 @@ ORDER BY pp.default_code ASC """ % {'backend_id': backend_id,
                     flow_title,
                     "No compliant data to send with '%s' backend"
                     % backend.name)
+
+    def check_data(self, cr, uid, ids, browse, context=None):
+        "Allow to check"
+        assert len(ids) == 1, "Will only take one resource id"
+        # TODO manage case with several browse values
+        # assert len(browse) == 1, (
+        #     "Will only take one browse to check logistics data")
+        backend = self.browse(cr, uid, ids, context=context)[0]
+        logistic = get_logistic_parser(backend.version)
+        return logistic.check_logistics_data(browse)
 
     def _amend_file_data(self, data):
         "Allow to modify data before to create file.document"

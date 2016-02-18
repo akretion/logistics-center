@@ -140,10 +140,10 @@
         <field name="arch" type="xml">
             <field name="state" position="before">
                 <field name="logistic_center"/>
-                <button icon="gtk-dialog-warning" name="" type="object"
+                <button icon="gtk-dialog-warning" name=""
                         help="The delivery order has been blocked programmatically (because of non compliance with logistics center)"
                         attrs="{'invisible': ['|', ('logistic_center', '=', 'internal'), ('logistics_exception', '=', False)]}"/>
-                 <button icon="kanban-pause" name="" type="object"
+                 <button icon="kanban-pause" name=""
                             attrs="{'invisible': ['|', ('logistic_center', '=', 'internal'), ('logistics_blocked', '=', False)]}"
                             help="The delivery order has been blocked manually"/>
                  <field name="id"/>

@@ -38,7 +38,7 @@ def sanitize(string):
         if '\n' in string:
             # \n can't be in string because there is
             # QUOTING_NONE in csv dialect
-            string = string.replace('\n', ' - ')
+            string = string.replace('\n', ',')
         if ';' in string:
             # ; is the delimiter and must not be in string
             string = string.replace(';', ',')
@@ -228,7 +228,7 @@ class Bleckmann(Logistic):
         parent = browse_model.partner_id.parent_id
         partner = browse_model.partner_id
         vals['contact_name'] = partner.name
-        vals['customer_id'] = parent.id or partner.id
+        vals['customer_id'] = parent.ref or partner.ref or ''
         vals['name'] = parent.name or partner.name or ''
         vals['email'] = partner.email or parent.email or ''
         vals['fax'] = partner.fax or parent.fax or ''
@@ -359,9 +359,6 @@ class Bleckmann(Logistic):
 
     def prepare_catalog(self, product, sku):
         "These are required field"
-        description = ''
-        if product.description:
-            description = product.description[:41]
         return {
             'Record Type': 'SKU',
             'Merge Action': 'A',
@@ -369,7 +366,7 @@ class Bleckmann(Logistic):
             # in your own module to change these values
             'Sku Id': '%s%s' % (str(product.default_code), SKU_SUFFIX),
             'Description': product.name,
-            'User Def Note 1': sanitize(description),
+            'User Def Note 1': sanitize(product.description),
             'Ean': product.ean13,
             'Each Weight': product.weight,
             'Each Volume': product.volume,
@@ -401,6 +398,8 @@ class Bleckmann(Logistic):
         for field in flow:
             to_collect = False
             fname = field.get('Name')
+            # if fname == 'User Def Note 1':
+            #     import pdb; pdb.set_trace()
             if vals.get(fname):
                 if field.get('Type') in ('Integer'):
                     if len(str(vals[fname])) > int(field.get('Length')):
@@ -410,10 +409,27 @@ class Bleckmann(Logistic):
                         to_collect = True
                 # if field.get('Type') in ('Decimal'):  # TODO
                 if to_collect:
-                    exceptions[flow_name or '_'] = {fname: {
+                    key = flow_name or '_'
+                    exceptions.update({key: {fname: {
                         'data': vals[fname],
-                        'max_length': field.get('Length')}}
+                        'max_length': field.get('Length')}}})
         return exceptions
+
+    def check_logistics_data(self, browse):
+        vals2write = {}
+        if browse._name == 'product.product':
+            vals2write['logistics_to_check'] = False
+            vals = self.prepare_catalog(browse, sku)
+            exceptions = self._check_field_length(vals, sku)
+            if exceptions:
+                self.notify_exceptions(browse, exceptions, vals2write)
+            else:
+                # logistics exception on product must be dropped
+                if browse.logistics_exception:
+                    vals2write['logistics_exception'] = False
+        if vals2write:
+            browse.write(vals2write)
+        return True
 
     def export_catalog(self, products, writer, non_compliant_ids):
         product_data = []
@@ -489,14 +505,15 @@ class Bleckmann(Logistic):
             _logger.info(" >>> 'export_incoming_shipment' no data")
             return False
 
-    def notify_exceptions(self, browse, exceptions, model):
+    def notify_exceptions(self, browse, exceptions, values=None, model=None):
         mess_vals = {
-            'subject': u"Bleckmann exceptions: Données trop longues",
-            'body': u"Voici les clés problématiques <br/>\n%s"
+            'subject': u"Bleckmann exceptions: Too wide data",
+            'body': u"Here is problematic keys <br/>\n%s"
                     % json.dumps(exceptions),
-            'model': model,
+            'model': model or browse._name,
             'res_id': browse.id,
             'type': 'notification'}
         browse._model.pool['mail.message'].create(
-            browse._cr, browse._uid, mess_vals, browse._context)
-        browse.write({'logistics_exception': True})
+            browse._cr, browse._uid, mess_vals, context=browse._context)
+        if values:
+            values['logistics_exception'] = True

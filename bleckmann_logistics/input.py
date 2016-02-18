@@ -95,9 +95,13 @@ class FileDocument(orm.Model):
                   "'%s' found" % (SKU_SUFFIX, product)))
         product_code = product[:suffix_pos]
         product_ids = product_m.search(
-            cr, uid, [('default_code', '=', product_code)], context=context)
+            cr, uid, [
+                ('default_code', 'ilike', product_code),
+                ('active', 'in', [True, False])], context=context)
         if not product_ids:
-            raise orm.except_orm("Product code error", "")
+            raise orm.except_orm(
+                "Product code error",
+                "Le product '%s' isn't found in odoo" % product_code)
         return product_m.browse(cr, uid, product_ids[0], context=context).id
 
     def check_bleckmann_data(
