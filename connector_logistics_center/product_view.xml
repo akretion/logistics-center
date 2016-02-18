@@ -49,6 +49,7 @@
         <field name="inherit_id" ref="product.product_product_tree_view"/>
         <field name="arch" type="xml">
             <field name="name" position="after">
+                <field name="logistics_exception" invisible="1"/>
                 <button icon="gtk-dialog-warning" name=""
                         help="Logistics Exception: check message wall on the form"
                         attrs="{'invisible': [('logistics_exception', '=', False)]}"/>

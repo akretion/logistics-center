@@ -398,8 +398,6 @@ class Bleckmann(Logistic):
         for field in flow:
             to_collect = False
             fname = field.get('Name')
-            # if fname == 'User Def Note 1':
-            #     import pdb; pdb.set_trace()
             if vals.get(fname):
                 if field.get('Type') in ('Integer'):
                     if len(str(vals[fname])) > int(field.get('Length')):
