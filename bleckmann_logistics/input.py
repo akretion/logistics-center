@@ -33,7 +33,7 @@ FLOW_PARAMS = {
 
 FILE_FLOWS = {
     'PAH': 'logistic_incoming',
-    'ORH': 'logistic_delivery',
+    'ODC': 'logistic_delivery',
 }
 
 
