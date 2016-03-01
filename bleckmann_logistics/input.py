@@ -10,6 +10,7 @@ from openerp.addons.connector.session import ConnectorSession
 from .common import LogisticDialect as dialect, SKU_SUFFIX
 import logging
 import base64
+import os
 
 
 _logger = logging.getLogger(__name__)
@@ -50,6 +51,15 @@ def filter_field_names(fields):
         fields = list(set(fields))
         del fields[fields.index('_')]
     return fields
+
+
+class RepositoryTask(orm.Model):
+    _inherit = 'repository.task'
+
+    def move_file(self, cr, uid, connection, task, file_name,
+                  folder_path, context=None):
+        new_filename = '_' + file_name.replace('BLECKMANN', '')
+        connection.move(folder_path, folder_path, file_name, new_filename)
 
 
 class FileDocument(orm.Model):
