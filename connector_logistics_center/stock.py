@@ -4,8 +4,13 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 import time
+import logging
+
 from openerp.osv import orm, fields
 from openerp.tools.translate import _
+
+
+_logger = logging.getLogger(__name__)
 
 
 LOGISTIC_FIELDS = [
@@ -85,7 +90,7 @@ class AbstractStockPicking(orm.AbstractModel):
 
     def run_job(self, cr, uid, picking_id, buffer_id, file_doc_id, moves,
                 picking_vals=None, context=None):
-        # picking_id is extract
+        # picking_id is extracted
         picking_id = int(picking_id)
         qty_by_prod = {}
         for move in moves:
@@ -98,10 +103,17 @@ class AbstractStockPicking(orm.AbstractModel):
         self.validate_from_data(
             cr, uid, picking_id, qty_by_prod, context=context)
         if not picking_vals:
-            file_doc = self.pool['file.document'].browse(
-                cr, uid, file_doc_id, context=context)
-            picking_vals = {'log_in_file_doc_id': file_doc.id}
-        self.write(cr, uid, [picking_id], picking_vals, context=context)
+            picking_vals = {}
+        picking_vals['log_in_file_doc_id'] = file_doc_id
+        picking = self.browse(cr, uid, picking_id, context=context)
+        linked_picking = picking
+        if picking.log_out_file_doc_id:
+            picking_vals['log_out_file_doc_id'] = (
+                picking.log_out_file_doc_id.id)
+        if picking.state != 'done' and picking.backorder_id:
+            # we put file doc in backorder if picking validation is partial
+            linked_picking = picking.backorder_id
+        linked_picking.write(picking_vals)
         return True
 
     def validate_from_data(

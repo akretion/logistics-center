@@ -25,7 +25,7 @@
                 <field name="log_out_file_doc_id"
                        attrs="{'invisible': [('logistic_center', 'in', ('internal', False))]}"/>
                 <field name="log_in_file_doc_id"
-                       attrs="{'invisible': [('log_out_file_doc_id', '=', False)]}"/>
+                       attrs="{'invisible': [('log_out_file_doc_id', '=', False), ('log_in_file_doc_id', '=', False)]}"/>
             </field>
             <field name="auto_picking" position="after">
                 <field name="logistics_exception" readonly="1"/>
@@ -59,7 +59,7 @@
                 <field name="log_out_file_doc_id"
                        attrs="{'invisible': [('logistic_center', 'in', ('internal', False))]}"/>
                 <field name="log_in_file_doc_id"
-                       attrs="{'invisible': [('log_out_file_doc_id', '=', False)]}"/>
+                       attrs="{'invisible': [('log_out_file_doc_id', '=', False), ('log_in_file_doc_id', '=', False)]}"/>
             </field>
             <field name="auto_picking" position="after">
                 <field name="logistics_exception" readonly="1"/>
@@ -106,7 +106,7 @@
                 <field name="log_out_file_doc_id"
                        attrs="{'invisible': [('logistic_center', 'in', ('internal', False))]}"/>
                 <field name="log_in_file_doc_id"
-                       attrs="{'invisible': [('log_out_file_doc_id', '=', False)]}"/>
+                       attrs="{'invisible': [('log_out_file_doc_id', '=', False), ('log_in_file_doc_id', '=', False)]}"/>
             </field>
             <field name="auto_picking" position="after">
                 <field name="logistics_exception" readonly="1"/>

@@ -33,9 +33,23 @@ class AbstractStockPicking(orm.AbstractModel):
         replied_qty = move.product_qty
         if count == 1 and picking.qty_upper:
             replied_qty += 1
-        if count == 2 and picking.qty_lower:
+        if count == 2 and picking.qty_lower and move.product_qty > 1:
             replied_qty -= 1
         return replied_qty
+
+    def set_vals4simulate(self, cr, uid, name, fbuffer, context=None):
+        name = name + datetime.now().strftime('%Y%m%d%H%M%S')
+        return {
+            'name': name,
+            'sequence': '200',
+            'datas': base64.encodestring(fbuffer),
+            'active': True,
+            'state': 'waiting',
+            'direction': 'input',
+            'type': 'binary',
+            'datas_fname': name + '.csv',
+            'date': datetime.now().strftime(DEFAULT_SERVER_DATE_FORMAT),
+        }
 
 
 class StockPicking(orm.Model):
@@ -49,33 +63,27 @@ class StockPickOut(orm.Model):
 
     def button_simulate_logistic_response(self, cr, uid, ids, context=None):
         "Override this method in your module"
-        parent = super(StockPickOut, self).button_simulate_logistic_response(
-            cr, uid, ids, context=context)
-        if not parent:
-            picking = self.browse(cr, uid, ids[0], context=context)
-            tpl = str(picking.id) + ','
-            fbuffer = ''
-            for move in picking.move_lines:
-                fbuffer += tpl + str(move.product_id.id) + ','
-                fbuffer += str(move.product_qty) + ',_,my_carrier,\n'
-            name = 'my logistics center deliveries' + \
-                datetime.now().strftime('%Y%m%d%H%M%S')
-            vals = {
-                'name': name,
-                'sequence': '200',
-                'datas': base64.encodestring(fbuffer),
-                'active': True,
-                'state': 'waiting',
-                'direction': 'input',
-                'file_type': 'logistic_delivery',
-                'type': 'binary',
-                'datas_fname': name + '.csv',
-                'date': datetime.now().strftime(DEFAULT_SERVER_DATE_FORMAT),
-            }
-            parent = self.pool['file.document'].create(
-                cr, uid, vals, context=context)
-        vals = {'log_in_file_doc_id': parent}
-        return self.write(cr, uid, ids, vals, context=context)
+        picking = self.browse(cr, uid, ids[0], context=context)
+        tpl = '_;' + str(picking.id) + ';_;'
+        fbuffer = ''
+        count = 0
+        for move in picking.move_lines:
+            count += 1
+            replied_qty = self.get_replied_qty(
+                cr, uid, ids, count, move, picking, context=context)
+            fbuffer += tpl + str(move.product_id.default_code) + '.OS;_;'
+            fbuffer += str(replied_qty) + ';_;my_carrier;\n'
+        vals = self.set_vals4simulate(
+            cr, uid, 'my logistics center deliveries',
+            fbuffer, context=context)
+        backend = self.pool['logistic.backend'].browse(
+            cr, uid, int(picking.logistic_center), context=context)
+        vals.update({
+            'file_type': 'logistic_delivery',
+            'repository_id': backend.file_repository_id.id
+        })
+        return self.pool['file.document'].create(
+            cr, uid, vals, context=context)
 
 
 class StockPickingIn(orm.Model):
@@ -84,30 +92,18 @@ class StockPickingIn(orm.Model):
 
     def button_simulate_logistic_response(self, cr, uid, ids, context=None):
         "Override this method in your module"
-        parent = super(StockPickingIn, self).button_simulate_logistic_response(
-            cr, uid, ids, context=context)
-        if not parent:
-            picking = self.browse(cr, uid, ids[0], context=context)
-            tpl = str(picking.id) + ','
-            fbuffer = ''
-            for move in picking.move_lines:
-                fbuffer += tpl + str(move.product_id.id) + ','
-                fbuffer += str(move.product_qty) + ',_,\n'
-            name = 'my logistics center incoming' + \
-                datetime.now().strftime('%Y%m%d%H%M%S')
-            vals = {
-                'name': name,
-                'sequence': '250',
-                'datas': base64.encodestring(fbuffer),
-                'active': True,
-                'state': 'waiting',
-                'direction': 'input',
-                'file_type': 'logistic_incoming',
-                'type': 'binary',
-                'datas_fname': name + '.csv',
-                'date': datetime.now().strftime(DEFAULT_SERVER_DATE_FORMAT),
-            }
-            parent = self.pool['file.document'].create(
-                cr, uid, vals, context=context)
-        vals = {'log_in_file_doc_id': parent}
-        return self.write(cr, uid, ids, vals, context=context)
+        # TODO csv separator, repository
+        picking = self.browse(cr, uid, ids[0], context=context)
+        tpl = str(picking.id) + ','
+        fbuffer = ''
+        for move in picking.move_lines:
+            fbuffer += tpl + str(move.product_id.id) + ','
+            fbuffer += str(move.product_qty) + ',_,\n'
+        vals = self.set_vals4simulate(
+            cr, uid, 'my logistics center incoming', fbuffer, context=context)
+        vals.update({
+            'file_type': 'logistic_incoming',
+            'repository_id': picking.logistic_center,  # ###
+        })
+        return self.pool['file.document'].create(
+            cr, uid, vals, context=context)

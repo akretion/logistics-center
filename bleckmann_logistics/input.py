@@ -10,7 +10,6 @@ from openerp.addons.connector.session import ConnectorSession
 from .common import LogisticDialect as dialect, SKU_SUFFIX
 import logging
 import base64
-import os
 
 
 _logger = logging.getLogger(__name__)
