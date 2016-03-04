@@ -460,11 +460,11 @@ class Bleckmann(Logistic):
             for move in picking.move_lines:
                 if header:
                     backend.set_header_file(writer, 'RELATED', delivery_line)
-                if move.state in ['assigned']:
-                    vals = self.prepare_move(move, delivery_line)
-                    exceptions.update(
-                        self._check_field_length(vals, delivery_line, 'line'))
-                    data.append(self._get_values(vals, delivery_line))
+                # if move.state in ['assigned']:
+                vals = self.prepare_move(move, delivery_line)
+                exceptions.update(
+                    self._check_field_length(vals, delivery_line, 'line'))
+                data.append(self._get_values(vals, delivery_line))
             if exceptions:
                 self.notify_exceptions(picking, exceptions, 'stock.picking')
                 non_compliant_ids.append(picking.id)
