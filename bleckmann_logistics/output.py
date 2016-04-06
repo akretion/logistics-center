@@ -420,7 +420,7 @@ class Bleckmann(Logistic):
             vals = self.prepare_catalog(browse, sku)
             exceptions = self._check_field_length(vals, sku)
             if exceptions:
-                self.notify_exceptions(browse, exceptions, vals2write)
+                self.notify_exceptions(browse, exceptions, values=vals2write)
             else:
                 # logistics exception on product must be dropped
                 if browse.logistics_exception:
@@ -466,7 +466,8 @@ class Bleckmann(Logistic):
                     self._check_field_length(vals, delivery_line, 'line'))
                 data.append(self._get_values(vals, delivery_line))
             if exceptions:
-                self.notify_exceptions(picking, exceptions, 'stock.picking')
+                self.notify_exceptions(picking, exceptions,
+                                       model='stock.picking')
                 non_compliant_ids.append(picking.id)
             elif data:
                 picking.write({'logistics_exception': False})
