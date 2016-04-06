@@ -264,6 +264,8 @@ ORDER BY pp.default_code ASC """ % {'backend_id': backend_id,
             # some records are not compliant with logistics specs
             # they shouldn't be taken account
             model_ids = [x for x in model_ids if x not in ids_to_drop]
+            model.write(cr, uid, ids_to_drop,
+                        {'logistics_exception': True}, context=context)
         if file_datas:
             self._amend_file_data(file_datas)
             return self._prepare_doc_vals(cr, uid, backend_version, file_datas,
