@@ -482,22 +482,35 @@ class Bleckmann(Logistic):
             return False
 
     def export_incoming_shipment(self, pickings, writer, non_compliant_ids):
-        move_data = []
+        data_to_send = False
         header, backend = self._should_i_set_header(pickings[0])
         for picking in pickings:
+            data = []
+            exceptions = defaultdict(dict)
             if header:
                 backend.set_header_file(writer, 'MASTER', incoming_head)
             vals = self.prepare_incoming(picking, incoming_head)
-            incoming_data = self._get_values(vals, incoming_head)
-            writer.writerow(incoming_data)
+            exceptions.update(self._check_field_length(
+                    vals, incoming_head, 'head'))
+            data.append(self._get_values(vals, incoming_head))
             for move in picking.move_lines:
                 if header:
                     backend.set_header_file(writer, 'RELATED', incoming_line)
-                if move.state in ['assigned']:
-                    vals = self.prepare_incoming_line(move, incoming_line)
-                    move_data = self._get_values(vals, incoming_line)
-                    writer.writerow(move_data)
-        if move_data:
+                # if move.state in ['assigned']:
+                vals = self.prepare_incoming_line(move, incoming_line)
+                exceptions.update(
+                    self._check_field_length(vals, incoming_line, 'line'))
+                data.append(self._get_values(vals, incoming_line))
+            if exceptions:
+                self.notify_exceptions(picking, exceptions,
+                                       model='stock.picking')
+                non_compliant_ids.append(picking.id)
+            elif data:
+                picking.write({'logistics_exception': False})
+                data_to_send = True
+                for elm in data:
+                    writer.writerow(elm)
+        if data_to_send:
             _logger.info(" >>> 'export_incoming_shipment' ADD incoming data")
             return True
         else:
