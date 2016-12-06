@@ -271,6 +271,7 @@ ORDER BY pp.default_code ASC """ % {'backend_id': backend_id,
             return self._prepare_doc_vals(cr, uid, backend_version, file_datas,
                                           model_ids, flow, context=context)
         else:
+            cr.commit()
             flow_title = "Error in '%s': " % export_method
             if model_ids:
                 raise orm.except_orm(

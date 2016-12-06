@@ -249,8 +249,16 @@ class Bleckmann(Logistic):
             else:
                 value = ''
             vals.update({field: value})
-        vals['alpha3'] = pycountry.countries.get(
-            alpha2=browse_partner.country_id.code).alpha3
+        try:
+            # pycountry lib from 16.11
+            mycountry = pycountry.countries.get(
+                alpha_2=browse_partner.country_id.code)
+            vals['alpha3'] = mycountry.alpha_3
+        except:
+            # pycountry lib before 16.11
+            mycountry = pycountry.countries.get(
+                alpha2=browse_partner.country_id.code)
+            vals['alpha3'] = mycountry.alpha3
         return vals
 
     def _get_values(self, main_values, definition_fields):
@@ -455,7 +463,7 @@ class Bleckmann(Logistic):
                 backend.set_header_file(writer, 'MASTER', delivery_head)
             vals = self.prepare_picking(picking, delivery_head)
             exceptions.update(self._check_field_length(
-                    vals, delivery_head, 'head'))
+                vals, delivery_head, 'head'))
             data.append(self._get_values(vals, delivery_head))
             for move in picking.move_lines:
                 if header:
@@ -491,7 +499,7 @@ class Bleckmann(Logistic):
                 backend.set_header_file(writer, 'MASTER', incoming_head)
             vals = self.prepare_incoming(picking, incoming_head)
             exceptions.update(self._check_field_length(
-                    vals, incoming_head, 'head'))
+                vals, incoming_head, 'head'))
             data.append(self._get_values(vals, incoming_head))
             for move in picking.move_lines:
                 if header:
