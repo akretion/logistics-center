@@ -4,10 +4,8 @@
 import logging
 from csv import register_dialect, writer as csv_writer
 from io import StringIO
-import base64
-from datetime import datetime
 
-from odoo import api, models, fields, _
+from odoo import models, _
 
 
 _logger = logging.getLogger(__name__)

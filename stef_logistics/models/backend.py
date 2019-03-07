@@ -102,16 +102,3 @@ class LogisticsBackend(models.Model):
             'nomdos': 'LFG',
             'codgln': 999,  # code site 88B
         }
-
-
-class RepositoryTask(models.Model):
-    _name = 'repository.task'
-
-    def logistics_flow_trigger(self, flow):
-        """ Crons calls this method """
-        task = self.env.ref('stef_logistics.%s' % flow)
-        if task:
-            # context['logistics_id'] = task.repository_id.id
-            _logger.info(' >>> logistics_flow_trigger: flow %s, task %s, '
-                         'res %s', flow, task.name, task.id)
-            return self.generate_file_document(task)
