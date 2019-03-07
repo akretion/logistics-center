@@ -111,6 +111,7 @@ def get_logistics_parser(parser_name, *args, **kwargs):
 
 class AbstractLogisticsFlow(models.AbstractModel):
     _name = 'abstract.logistics.flow'
+    _description = 'Logistics Flow features'
 
     WAREHOUSE_LOGISTIC_EXCEPTION = _(
         "The warehouse '%s' have a wrong settings "
