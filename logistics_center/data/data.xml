@@ -9,7 +9,10 @@
 
 <record id="logistics_center_port" model="product.product">
     <field name="name">Logistics delivery charges</field>
+    <field name="purchase_ok">0</field>
+    <field name="sale_ok">0</field>
     <field name="type">service</field>
+    <field name="invoice_policy">order</field>
 </record>
 
 </odoo>
