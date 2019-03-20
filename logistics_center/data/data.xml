@@ -11,6 +11,7 @@
     <field name="name">Logistics delivery charges</field>
     <field name="purchase_ok">0</field>
     <field name="sale_ok">0</field>
+    <field name="service_to_purchase">0</field>
     <field name="type">service</field>
     <field name="invoice_policy">order</field>
 </record>
