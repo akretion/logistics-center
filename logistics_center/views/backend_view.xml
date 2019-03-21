@@ -26,6 +26,8 @@
               <separator/>
               <button name="export_catalog" string="Product Catalog" type="object"
                       help="Products definition to your Logistics center"/>
+              <new/>
+              <field name="last_message"/>
             </group>
           </page>
           <page name="infos" string="Informations"

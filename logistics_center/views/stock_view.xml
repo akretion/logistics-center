@@ -10,8 +10,10 @@
             </field> -->
             <xpath expr="//page[@name='extra']/group[1]" position="after">
               <group col="4" string="Logistics center" name="logistics_center">
-                <field name="log_out_file_doc_id"/>
+                <!-- <field name="log_out_file_doc_id"/> -->
+                <field name="log_out_file_doc_id" context="{'tree_view_ref': 'view_attachment_logistics_tree', 'default_external_type': 'stef'}"/>
                 <field name="log_in_file_doc_id"/>
+                <!-- <field name="log_in_file_doc_id" context="{'tree_view_ref': 'view_attachment_logistics_tree'}"/> -->
                 <field name="logistics_exception" readonly="1"/>
                 <field name="logistics_blocked"/>
                        <!-- attrs="{'invisible': [('type', '=', 'internal')]}"/> -->

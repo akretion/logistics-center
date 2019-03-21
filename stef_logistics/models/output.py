@@ -10,8 +10,15 @@ from odoo.addons.logistics_center.models.logistics import Logistic
 
 from .common import (
     LogisticDialect, DATE_FORMATS, BACKEND_VERSION)
-from ..data.flow_delivery import delivery_head, delivery_line
-from ..data.flow_incoming import incoming_head, incoming_line
+
+FLOW_TYPE = 'manual'
+
+if FLOW_TYPE == 'manual':
+    from ..data.flow_delivery_manual import delivery_head, delivery_line
+    from ..data.flow_incoming_manual import incoming_head, incoming_line
+else:
+    from ..data.flow_delivery import delivery_head, delivery_line
+    from ..data.flow_incoming import incoming_head, incoming_line
 
 _logger = logging.getLogger(__name__)
 

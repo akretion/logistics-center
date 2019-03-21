@@ -57,6 +57,7 @@ How to use
     },
     'data': [
         'data/delivery_data.xml',
+        'views/partner_view.xml',
         # 'data/sale_data.xml',
         # 'data/repository_data.xml',
         # 'data/repository.task.csv',
