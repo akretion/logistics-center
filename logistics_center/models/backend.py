@@ -30,6 +30,7 @@ class LogisticsBackend(models.Model):
         comodel_name='res.company',
         string='Company',
         ondelete="cascade")
+    last_message = fields.Text(readonly=True)
 
     _sql_constraints = [
         ('operation_uniq_per_product', 'unique(warehouse_id)',
