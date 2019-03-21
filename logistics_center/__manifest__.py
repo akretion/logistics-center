@@ -39,6 +39,7 @@ Import :
         'data/data.xml',
         'views/backend_view.xml',
         'views/stock_view.xml',
+        'views/attachment_view.xml',
         'security/ir.model.access.csv',
     ],
     'demo': [
