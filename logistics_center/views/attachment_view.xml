@@ -24,5 +24,7 @@
     <field name="view_id" ref="view_attachment_logistics_tree"/>
 </record>
 
+<menuitem id="attach_logistics_menu" name="Pièces jointes logistiques" sequence="110"
+          parent="stock.menu_warehouse_config" action="attach_logistics_action"/>
 
 </odoo>
