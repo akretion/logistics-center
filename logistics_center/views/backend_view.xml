@@ -17,17 +17,22 @@
         </group>
         <notebook>
           <page name="task" string="Tasks">
-            <group col="1">
-              <button name="incoming_shipment2export" string="🚚 Incoming Shipment" type="object"
-                      help="Goods that'll go to Logistics center"/>
-              <separator/>
-              <button name="delivery_order2export" string="🚚 Delivery Order" type="object"
-                      help="Goods that'll go to final customer"/>
-              <separator/>
-              <button name="export_catalog" string="Product Catalog" type="object"
-                      help="Products definition to your Logistics center"/>
-              <new/>
-              <field name="last_message"/>
+            <group>
+              <group col="2">
+                <button name="incoming_shipment2export" string="🚚 Incoming Shipment" type="object"
+                        help="Goods that'll go to Logistics center"/><span/>
+                <!-- <separator/> -->
+                <button name="delivery_order2export" string="🚚 Delivery Order" type="object"
+                        help="Goods that'll go to final customer"/><span/>
+                <field name="last_out_doc_id"/>
+                <!-- <separator/> -->
+                <button name="export_catalog" string="Product Catalog" type="object"
+                        help="Products definition to your Logistics center"/><span/>
+                <new/>
+              </group>
+              <group col="1">
+                <field name="last_message"/>
+              </group>
             </group>
           </page>
           <page name="infos" string="Informations"
