@@ -59,6 +59,10 @@ class StockPicking(models.Model):
         help="Refers the 'File document' object which "
              "contains infmodelsations sent by "
              "Logistics center in response from original message.")
+    drop_date = fields.Date(
+        string='Dépose marchandise',
+        help="Date à laquelle le destinataire prendra "
+             "possession des marchandises")
 
     def run_job(self, picking_id, file_doc_id, moves, picking_vals=None):
         # picking_id is extracted

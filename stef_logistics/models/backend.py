@@ -2,7 +2,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 import logging
-
+from datetime import datetime
 from odoo import models, fields
 
 from .common import (BACKEND_VERSION, BACKEND_VERSION_NAME)
@@ -54,10 +54,20 @@ class LogisticsBackend(models.Model):
         #  'sequence': 70, 'name': '1.1 delivery_order 2019-02-21_15-49-10',
         #  'datas_fname': 'del_order_2019-02-21_15-49-10.csv', 'active': True}
         attach = self.env['ir.attachment'].create({
+            'external_type': 'stef',
             'datas': kwargs['file_datas'],
             'name': kwargs['datas_fname'],
             'datas_fname': kwargs['datas_fname']})
-        kwargs['records'].write({'log_out_file_doc_id': attach.id})
+        kwargs['records'].write({
+            'log_out_file_doc_id': attach.id,
+        })
+        self.write({
+            'last_out_doc_id': attach.id,
+            'last_message': "Bons de livraison associés à la dernière "
+                            "demande de livraison: \n%s\n\n%s" % (
+                                [x.name for x in kwargs['records']],
+                                datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
+        })
 
     def delivery_order2export(self, last_exe_date):
         picking_m = self.env['stock.picking']
@@ -65,12 +75,15 @@ class LogisticsBackend(models.Model):
             ('state', 'in', READY_PICKING_STATE),
             ('picking_type_id.code', '=', 'outgoing'),
             ('picking_type_id.warehouse_id', '=', self.warehouse_id.id),
+            # ('logistics_blocked', '=', True),
             ('logistics_blocked', '=', False),
-            ('log_out_file_doc_id', '=', False)])
+            ('log_out_file_doc_id', '=', False)
+            ])
         if pickings:
             kwargs = self._get_data_to_export(
                 pickings, 'export_delivery_order',
-                FLOWS['export_delivery_order'], BACKEND_VERSION)
+                FLOWS['export_delivery_order'],
+                BACKEND_VERSION, type='build_your_own')
             self._tmp_create_file(kwargs)
             return kwargs
         return True
@@ -94,6 +107,10 @@ class LogisticsBackend(models.Model):
     def _set_header_file(self, writer, header_type,
                          definition_fields):
         "Only used in debug mode to display header in csv file"
+        pass
+
+    def _amend_file_data(self, data):
+        "Allow to modify data before to create file.document"
         pass
 
     def _logistics_center_settings(self):

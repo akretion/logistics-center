@@ -55,6 +55,9 @@ class Logistic(object):
         else:
             return (False, non_compliants)
 
+    def _build_your_own(self, *args, **kwargs):
+        return NotImplementedError
+
 
 def itersubclasses(cls, _seen=None):
     """
@@ -123,7 +126,7 @@ class AbstractLogisticsFlow(models.AbstractModel):
         """
         res = []
         res.append(('internal', 'Internal'))
-        log_m = self.pool['logistics.backend']
+        log_m = self.env['logistics.backend']
         log_backend_ids = log_m.search([])
         for log in log_m.browse(log_backend_ids):
             res.append((str(log.id), log.name))

@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo noupdate="1">
 
+<record id="stef_logistics_center" model="logistics.backend">
+    <field name="name">Stef</field>
+    <field name="warehouse_id" search="[]"/>
+    <field name="company_id" ref="base.main_company"/>
+</record>
 
 <record id="stef_delivery_carrier" model="delivery.carrier">
     <field name="name">STEF</field>

@@ -1,7 +1,6 @@
 # © 2019 David BEAL @ Akretion
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-import logging
 import base64
 
 from odoo import api, models, fields, _
@@ -31,6 +30,8 @@ class LogisticsBackend(models.Model):
         string='Company',
         ondelete="cascade")
     last_message = fields.Text(readonly=True)
+    last_out_doc_id = fields.Many2one(
+        comodel_name='ir.attachment', string="Dernier fichier sortant")
 
     _sql_constraints = [
         ('operation_uniq_per_product', 'unique(warehouse_id)',
@@ -63,11 +64,15 @@ class LogisticsBackend(models.Model):
         return vals
 
     def _get_data_to_export(
-            self, records, export_method, flow, backend_version):
+            self, records, export_method, flow, backend_version, type='csv'):
         self.ensure_one()
         logistics = get_logistics_parser(backend_version)
-        file_datas, non_compliants = logistics._build_csv(
-            records, export_method)
+        if type == 'build_your_own':
+            file_datas, non_compliants = logistics._build_your_own(
+                records, export_method)
+        else:
+            file_datas, non_compliants = logistics._build_csv(
+                records, export_method)
         model_ids = []
         if non_compliants:
             # some records are not compliant with logistics specs

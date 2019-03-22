@@ -1,10 +1,10 @@
 
 delivery_head = [
-{'seq': 1, 'position': 1, 'type': 'A', 'col': 'del_ord', 'req': True, 'comment': "Delivery Order number"},
-{'seq': 2, 'position': 1, 'type': 'A', 'col': 'cmdcli', 'req': False, 'comment': "N° de référence donneur d'ordre: cmde d'origine"},
-{'seq': 3, 'position': 1, 'type': 'A', 'col': 'trsdst', 'req': True, 'comment': "Code du tiers destinataire à livrer"},
-{'seq': 4, 'position': 1, 'type': 'D5', 'col': 'datdrop', 'req': True, 'comment': "Date destination"},
-{'seq': 4, 'position': 2, 'type': 'D5', 'col': 'datliv', 'req': True, 'comment': "Date livr"},
+{'seq': 1, 'type': 'A', 'col': 'del_ord', 'req': True, 'comment': "Delivery Order number"},
+{'seq': 2, 'type': 'A', 'col': 'cmdcli', 'req': False, 'comment': "N° de référence donneur d'ordre: cmde d'origine"},
+{'seq': 3, 'type': 'A', 'col': 'trsdst', 'req': True, 'comment': "Code du tiers destinataire à livrer"},
+{'seq': 4, 'type': 'D5', 'col': 'datliv', 'req': True, 'comment': "Date livr"},
+{'seq': 4, 'type': 'D5', 'col': 'dat_drop', 'req': True, 'comment': "Date destination"},
 ]
 
 
