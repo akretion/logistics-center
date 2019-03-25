@@ -3,7 +3,8 @@
 
 import logging
 from datetime import datetime
-from odoo import models, fields
+from odoo import models, fields, _
+from odoo.exceptions import UserError
 
 from .common import (BACKEND_VERSION, BACKEND_VERSION_NAME)
 
@@ -18,7 +19,7 @@ FLOWS = {
          'sequence': 100}
 }
 
-READY_PICKING_STATE = ('waiting', 'confirmed', 'assigned')
+READY_PICKING_STATE = ('confirmed', 'assigned')
 
 
 def sanitize(string):
@@ -56,6 +57,7 @@ class LogisticsBackend(models.Model):
         attach = self.env['ir.attachment'].create({
             'external_type': 'stef',
             'datas': kwargs['file_datas'],
+            'sending_date': self.last_logistics_date,
             'name': kwargs['datas_fname'],
             'datas_fname': kwargs['datas_fname']})
         kwargs['records'].write({
@@ -69,16 +71,31 @@ class LogisticsBackend(models.Model):
                                 datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
         })
 
-    def delivery_order2export(self, last_exe_date):
-        picking_m = self.env['stock.picking']
-        pickings = picking_m.search([
+    def button_impacted_delivery_order(self):
+        super().button_impacted_delivery_order()
+        return {
+            "name": _("Impacted delivery orders"),
+            'type': 'ir.actions.act_window',
+            'res_model': 'stock.picking',
+            'view_mode': 'tree,form',
+            'domain': self._get_delivery_order_domain(),
+            'target': 'current',
+        }
+
+    def _get_delivery_order_domain(self):
+        return [
             ('state', 'in', READY_PICKING_STATE),
             ('picking_type_id.code', '=', 'outgoing'),
             ('picking_type_id.warehouse_id', '=', self.warehouse_id.id),
-            # ('logistics_blocked', '=', True),
             ('logistics_blocked', '=', False),
             ('log_out_file_doc_id', '=', False)
-            ])
+        ]
+
+    def delivery_order2export(self, last_exe_date):
+        if not self.last_logistics_date:
+            raise UserError(_("You must define a date for exported data"))
+        picking_m = self.env['stock.picking']
+        pickings = picking_m.search(self._get_delivery_order_domain())
         if pickings:
             kwargs = self._get_data_to_export(
                 pickings, 'export_delivery_order',

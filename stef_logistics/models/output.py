@@ -259,7 +259,7 @@ alias produit;type ul;réf lot;qté;poids;date rotation;référence palette clie
                     picking, exceptions, model='stock.picking')
             elif data:
                 picking.write({'logistics_exception': False})
-            data.append('###')
+            data.append('###;;;;;;')
         return data
 
     def export_incoming_shipment(self, pickings, writer, non_compliants):
