@@ -18,19 +18,16 @@
         <notebook>
           <page name="task" string="Tasks">
             <group>
-              <group col="2">
-                <button name="incoming_shipment2export" string="🚚 Incoming Shipment" type="object"
-                        help="Goods that'll go to Logistics center"/><span/>
-                <!-- <separator/> -->
-                <button name="delivery_order2export" string="🚚 Delivery Order" type="object"
-                        help="Goods that'll go to final customer"/><span/>
-                <field name="last_out_doc_id"/>
-                <!-- <separator/> -->
-                <button name="export_catalog" string="Product Catalog" type="object"
-                        help="Products definition to your Logistics center"/><span/>
-                <new/>
-              </group>
               <group col="1">
+                <button name="button_impacted_delivery_order" type="object"
+                        string="see impacted Delivery Order" class="oe_highlight"
+                        help="Goods that'll go to final customer"/>
+                <button name="delivery_order2export" string="🚚 Delivery Order" type="object"
+                        help="Goods that'll go to final customer"/>
+              </group>
+              <group col="2">
+                <field name="last_logistics_date"/>
+                <field name="last_out_doc_id"/>
                 <field name="last_message"/>
               </group>
             </group>
