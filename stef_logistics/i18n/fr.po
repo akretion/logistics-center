@@ -1,0 +1,152 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* stef_logistics
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 12.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-03-25 13:03+0000\n"
+"PO-Revision-Date: 2019-03-25 14:08+0100\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"Language: fr\n"
+"X-Generator: Poedit 2.0.6\n"
+
+#. module: stef_logistics
+#: code:addons/stef_logistics/models/input.py:204
+#, python-format
+msgid ""
+"\n"
+"The File Document type (file_type) '%s' doesn't match these types %s\n"
+"Probably, you don't have correctly fill tasks in the 'logistics backend'\n"
+"with the right type.\n"
+"Fill the right type in Task and in File Document and click on run again"
+msgstr ""
+
+#. module: stef_logistics
+#: code:addons/stef_logistics/models/input.py:115
+#, python-format
+msgid " '%s' return by stef file (file.document id '%s' at line %s) should be numeric type"
+msgstr ""
+
+#. module: stef_logistics
+#: model:ir.model,name:stef_logistics.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: stef_logistics
+#: code:addons/stef_logistics/models/input.py:126
+#, python-format
+msgid "Delivery order id"
+msgstr "Bon de livraison"
+
+#. module: stef_logistics
+#: code:addons/stef_logistics/models/input.py:205
+#, python-format
+msgid "Error in file document type"
+msgstr ""
+
+#. module: stef_logistics
+#: code:addons/stef_logistics/models/input.py:100
+#, python-format
+msgid "Error in stef file"
+msgstr ""
+
+#. module: stef_logistics
+#: code:addons/stef_logistics/models/backend.py:78
+#, python-format
+msgid "Impacted delivery orders"
+msgstr "Bons de livraison de livraisons impactés"
+
+#. module: stef_logistics
+#: code:addons/stef_logistics/models/input.py:129
+#, python-format
+msgid "Incoming order id"
+msgstr ""
+
+#. module: stef_logistics
+#: model:ir.model,name:stef_logistics.model_logistics_backend
+msgid "Logistics Backend"
+msgstr "Backend  Logistique"
+
+#. module: stef_logistics
+#: code:addons/stef_logistics/models/input.py:125
+#: code:addons/stef_logistics/models/input.py:128
+#, python-format
+msgid "Order id error"
+msgstr ""
+
+#. module: stef_logistics
+#: code:addons/stef_logistics/models/input.py:121
+#, python-format
+msgid "Product id"
+msgstr ""
+
+#. module: stef_logistics
+#: code:addons/stef_logistics/models/input.py:121
+#, python-format
+msgid "Product id error"
+msgstr ""
+
+#. module: stef_logistics
+#: code:addons/stef_logistics/models/input.py:123
+#, python-format
+msgid "Quantity"
+msgstr ""
+
+#. module: stef_logistics
+#: code:addons/stef_logistics/models/input.py:123
+#, python-format
+msgid "Quantity error"
+msgstr ""
+
+#. module: stef_logistics
+#: model:ir.model.fields,help:stef_logistics.field_res_partner__stef_partner_id_string
+#: model:ir.model.fields,help:stef_logistics.field_res_users__stef_partner_id_string
+msgid "Reference du partenaire chez Stef utilisé pour se connecter à l'EDI"
+msgstr ""
+
+#. module: stef_logistics
+#: code:addons/stef_logistics/models/input.py:102
+#, python-format
+msgid ""
+"Sku column should have this suffix '%s'.\n"
+"'%s' found"
+msgstr ""
+
+#. module: stef_logistics
+#: model_terms:ir.ui.view,arch_db:stef_logistics.view_partner_form
+msgid "Stef"
+msgstr ""
+
+#. module: stef_logistics
+#: model:ir.model.fields,field_description:stef_logistics.field_res_partner__stef_partner_id_string
+#: model:ir.model.fields,field_description:stef_logistics.field_res_users__stef_partner_id_string
+msgid "Stef ref"
+msgstr ""
+
+#. module: stef_logistics
+#: model:ir.model.fields,field_description:stef_logistics.field_logistics_backend__version
+msgid "Version"
+msgstr ""
+
+#. module: stef_logistics
+#: model:ir.model.fields,help:stef_logistics.field_logistics_backend__version
+msgid "Version must be added by modules dealing with logistics center synchronization. Install one of these"
+msgstr ""
+
+#. module: stef_logistics
+#: code:addons/stef_logistics/models/backend.py:97
+#, python-format
+msgid "You must set 'Last export date' field"
+msgstr "Vous devez définit le Dernière date d'export"
+
+#. module: stef_logistics
+#: selection:logistics.backend,version:0
+msgid "stef 1.1"
+msgstr ""

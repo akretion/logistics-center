@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+<record id="view_logistics_backend_form" model="ir.ui.view">
+  <field name="model">logistics.backend</field>
+  <field name="arch" type="xml">
+    <form string="Logistics">
+      <sheet>
+        <h1>Logistics center
+          <field name="name"/>
+        </h1>
+        <group name="logistic" col="4"
+               string="Configuration">
+          <field name="warehouse_id"/>
+          <field name="version"/>
+          <field name="company_id"/>
+          <button name="button_logistics_portal" string="Logistics Portal" type="object"/>
+        </group>
+        <notebook>
+          <page name="task" string="Tasks">
+            <group>
+              <group col="1">
+                <button name="button_impacted_delivery_order" type="object"
+                        string="see impacted Delivery Order" class="oe_highlight"
+                        help="Goods that'll go to final customer"/>
+                <button name="delivery_order2export" string="🚚 Delivery Order" type="object"
+                        help="Goods that'll go to final customer"/>
+              </group>
+              <group col="2">
+                <field name="last_logistics_date"/>
+                <field name="last_out_doc_id"/>
+                <field name="last_message"/>
+              </group>
+            </group>
+          </page>
+          <page name="infos" string="Informations"
+                attrs="{'invisible': True}">
+          </page>
+        </notebook>
+      </sheet>
+    </form>
+  </field>
+</record>
+
+<record id="view_logistics_backend_tree" model="ir.ui.view">
+  <field name="model">logistics.backend</field>
+  <field name="arch" type="xml">
+    <tree string="Logistic Backend">
+      <field name="name"/>
+      <field name="warehouse_id"/>
+      <field name="version"/>
+    </tree>
+  </field>
+</record>
+
+
+<record id="action_logistics_backend" model="ir.actions.act_window">
+  <field name="name">Logistics Backends</field>
+  <field name="res_model">logistics.backend</field>
+  <field name="type">ir.actions.act_window</field>
+  <field name="view_mode">tree,form</field>
+</record>
+
+<menuitem id="menu_logistics_backend"
+          name="Logistics" sequence="100"
+          parent="stock.menu_warehouse_config"
+          action="action_logistics_backend"/>
+
+</odoo>
