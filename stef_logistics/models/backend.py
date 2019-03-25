@@ -65,11 +65,21 @@ class LogisticsBackend(models.Model):
         })
         self.write({
             'last_out_doc_id': attach.id,
+            'last_logistics_date': False,
             'last_message': "Bons de livraison associés à la dernière "
                             "demande de livraison: \n%s\n\n%s" % (
                                 [x.name for x in kwargs['records']],
                                 datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
         })
+
+    def button_logistics_portal(self):
+        super().button_logistics_portal
+        if self == self.env.ref('stef_logistics.stef_logistics_center'):
+            return {
+                'type': 'ir.actions.act_url',
+                'url': 'http://www.edifresh.com/modules/wmsweb/index.php',
+                'target': '_new',
+            }
 
     def button_impacted_delivery_order(self):
         super().button_impacted_delivery_order()
@@ -93,7 +103,7 @@ class LogisticsBackend(models.Model):
 
     def delivery_order2export(self, last_exe_date):
         if not self.last_logistics_date:
-            raise UserError(_("You must define a date for exported data"))
+            raise UserError(_("You must set 'Last export date' field"))
         picking_m = self.env['stock.picking']
         pickings = picking_m.search(self._get_delivery_order_domain())
         if pickings:

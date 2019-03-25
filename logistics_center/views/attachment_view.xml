@@ -9,8 +9,6 @@
         <tree editable="top" create="false" string="Logistics attachment">
             <field name="write_date" readonly="1"/>
             <field name="name" readonly="1"/>
-            <button name="get_logistics_file" string="Get" class="oe_highlight"
-                    attrs="{'invisible': [('sending_date', '=', False)]}"/>
             <field name="sending_date"/>
         </tree>
     </field>

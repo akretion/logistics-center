@@ -14,6 +14,7 @@
           <field name="warehouse_id"/>
           <field name="version"/>
           <field name="company_id"/>
+          <button name="button_logistics_portal" string="Logistics Portal" type="object"/>
         </group>
         <notebook>
           <page name="task" string="Tasks">
