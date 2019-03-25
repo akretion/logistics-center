@@ -32,7 +32,7 @@ class LogisticsBackend(models.Model):
     last_message = fields.Text(readonly=True)
     last_out_doc_id = fields.Many2one(
         comodel_name='ir.attachment', string="Dernier fichier sortant")
-    last_logistics_date = fields.Datetime('Dernier export')
+    last_logistics_date = fields.Datetime('Last export date')
 
     _sql_constraints = [
         ('operation_uniq_per_product', 'unique(warehouse_id)',
@@ -43,6 +43,9 @@ class LogisticsBackend(models.Model):
         return NotImplementedError
 
     def button_impacted_delivery_order(self):
+        return NotImplementedError
+
+    def button_logistics_portal(self):
         return NotImplementedError
 
     def export_catalog(self, *args, **kwargs):
