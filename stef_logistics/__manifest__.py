@@ -52,7 +52,6 @@ How to use
     ],
     'external_dependencies': {
         'Python': [
-            # 'pycountry',
         ],
     },
     'data': [
