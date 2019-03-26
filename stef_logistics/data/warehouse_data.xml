@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+
+<record id="stef_warehouse" model="stock.warehouse">
+    <field name="company_id" ref="base.main_company"/>
+    <field name="name">Stef</field>
+    <field name="code">STF</field>
+    <field name="buy_to_resupply">0</field>
+    <field name="manufacture_to_resupply">0</field>
+</record>
+
+<record id="stef_stk_location" model="stock.location">
+    <field name="company_id" ref="base.main_company"/>
+    <field name="name">Stock</field>
+    <field name="usage">internal</field>
+</record>
+
+
+<record id="main_cpny_stk_sub_location" model="stock.location">
+    <field name="company_id" ref="base.main_company"/>
+    <field name="name">STEF Preparation</field>
+    <field name="location_id" ref="stock.stock_location_stock"/>
+    <field name="usage">internal</field>
+</record>
+
+<record id="main_wh_goto_alternate_wh_loc_rte" model="stock.location.route">
+    <field name="name">Towards Stef</field>
+    <field name="company_id" ref="base.main_company"/>
+    <field name="product_selectable">1</field>
+</record>
+
+<record id="main_cpny2transit_stk_rule" model="stock.rule">
+    <field name="name">LFG -> Transit</field>
+    <field name="action">push</field>
+    <field name="route_id" ref="main_wh_goto_alternate_wh_loc_rte"/>
+    <field name="picking_type_id" ref="stock.picking_type_out"/>
+    <field name="location_src_id" ref="main_cpny_stk_sub_location"/>
+    <field name="location_id"
+           search="[('usage', '=', 'transit'), ('company_id', '=', 1)]"/>
+    <field name="auto">transparent</field>
+    <field name="sequence">10</field>
+    <field name="delay">1</field>
+    <field name="company_id" ref="base.main_company"/>
+</record>
+
+<record id="transit2stef_stk_rule" model="stock.rule">
+    <field name="name">Transit -> STEF</field>
+    <field name="action">push</field>
+    <field name="route_id" ref="main_wh_goto_alternate_wh_loc_rte"/>
+    <field name="picking_type_id"
+           search="[('code', '=', 'incoming'), ('warehouse_id', '>', 1), ('warehouse_id.company', '=', 1)]"/>
+    <field name="location_src_id"
+           search="[('usage', '=', 'transit'), ('company_id', '=', 1)]"/>
+    <field name="location_id" ref="stef_stk_location"/>
+    <field name="auto">transparent</field>
+    <field name="sequence">10</field>
+    <field name="delay">1</field>
+    <field name="company_id" ref="base.main_company"/>
+</record>
+
+
+</odoo>
