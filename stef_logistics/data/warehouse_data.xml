@@ -23,9 +23,39 @@
     <field name="usage">internal</field>
 </record>
 
+<!--
+Minimal proposed scenario : directly send Stef with only one internal transsfert
 
-<!-- Push rule proposed to manage goods delivery to Stef 
-    You can inactive it if you don't want to use them
+    Operation type dedicated to send goods to Stef warehouse
+
+    You can inactive it if you don't want to use
+-->
+<record id="stef_pick_type_seq" model="ir.sequence">
+    <field name="name">Goto Stef</field>
+    <field name="prefix">G/STEF</field>
+    <field name="implementation">standard</field>
+    <field name="padding">0</field>
+    <field name="company_id" ref="base.main_company"/>
+</record>
+
+<record id="stef_picking_type" model="stock.picking.type">
+    <field name="name">Goto Stef</field>
+    <field name="code">internal</field>
+    <field name="use_create_lots">0</field>
+    <field name="use_existing_lots">1</field>
+    <field name="sequence_id" ref="stef_pick_type_seq"/>
+    <field name="warehouse_id" ref="stock.warehouse0"/>
+    <field name="default_location_src_id" ref="stock.stock_location_stock"/>
+    <field name="default_location_dest_id" ref="stef_logistics.stef_stk_location"/>
+</record>
+
+
+
+<!-- 
+More advanced proposed scenario
+
+Push rule proposed to manage goods delivery to Stef 
+    You can inactive it if you don't want to use
 
     Pull rule can also be used but is not implemented here
 -->
