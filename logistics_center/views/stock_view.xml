@@ -10,8 +10,7 @@
             </field> -->
             <field name="scheduled_date" position="after">
                 <field name="drop_date" 
-                       />
-                       <!-- attrs="{'invisible': [('picking_type_id.code', '=', 'outgoing')]}" -->
+                       attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}" />
             </field>
             <xpath expr="//page[@name='extra']/group[1]" position="after">
               <group col="4" string="Logistics center" name="logistics_center">
