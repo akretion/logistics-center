@@ -1,5 +1,5 @@
 
-delivery_head = [
+portal_delivery_head = [
 {'seq': 1, 'type': 'A', 'col': 'del_ord', 'req': True, 'comment': "Delivery Order number"},
 {'seq': 2, 'type': 'A', 'col': 'cmdcli', 'req': False, 'comment': "N° de référence donneur d'ordre: cmde d'origine"},
 {'seq': 3, 'type': 'A', 'col': 'trsdst', 'req': True, 'comment': "Code du tiers destinataire à livrer"},
@@ -8,7 +8,7 @@ delivery_head = [
 ]
 
 
-delivery_line = [
+portal_delivery_line = [
 {'seq': 1, 'len': 16, 'type': 'A', 'col': 'codprd', 'req': True, 'comment': "alias produit"},
 {'seq': 2, 'len': 2, 'type': 'A', 'col': 'type_ul', 'req': True, 'comment': "type ul"},
 {'seq': 3, 'len': 20, 'type': 'A', 'col': 'num_lot', 'req': False, 'comment': "réf lot"},

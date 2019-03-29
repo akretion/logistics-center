@@ -1,12 +1,11 @@
 # © 2019 David BEAL @ Akretion
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
+import base64
 import logging
+from datetime import datetime
 from csv import register_dialect, writer as csv_writer
 from io import StringIO
-
-from odoo import models, _
-
 
 _logger = logging.getLogger(__name__)
 
@@ -28,15 +27,6 @@ class Logistic(object):
         """
         return False
 
-    def export_delivery_order(self, *args, **kwargs):
-        return NotImplementedError
-
-    def export_catalog(self, *args, **kwargs):
-        return NotImplementedError
-
-    def export_incoming_shipment(self, *args, **kwargs):
-        return NotImplementedError
-
     def _check_logistics_data(self, *args, **kwargs):
         "Write or Create on Products with logistics product comes here"
         pass
@@ -45,17 +35,57 @@ class Logistic(object):
         register_dialect("logistics_dialect", self._dialect)
         csv_file = StringIO()
         writer = csv_writer(csv_file, dialect=self._dialect)
-        non_compliants = []
-        res = getattr(self, method)(records, writer, non_compliants)
+        issue = []
+        res = getattr(self, method)(records, writer, issue)
         if res:
             csv_file.seek(0)
-            return (csv_file.read(), non_compliants)
+            return (csv_file.read(), issue)
             _logger.info("\nStart to read datas to put file "
                          "for the method '%s'" % method)
         else:
-            return (False, non_compliants)
+            return (False, issue)
 
     def _build_your_own(self, *args, **kwargs):
+        return NotImplementedError
+
+    def _amend_file_data(self, flow, file_data):
+        """ You may modify your file before store it
+        """
+        return NotImplementedError
+
+    def _get_data_to_export(self, records, flow, type='csv'):
+        if type == 'build_your_own':
+            file_data, issue = self._build_your_own(records, flow)
+        else:
+            file_data, issue = self._build_csv(records, flow)
+        if issue:
+            # some records are not compliant with logistics specs
+            # they shouldn't be taken account
+            records = set(records) - set(issue)
+            issue.write({'logistics_exception': True})
+            mess = "Error when playing flow '%s' from Logistics center '%s"
+            issue.message_post(body=mess % (
+                flow.name, flow.logistics_backend_id.name))
+        if file_data:
+            self._amend_file_data(flow, file_data)
+            return self._prepare_doc_vals(file_data, records, flow)
+
+    def _prepare_doc_vals(self, file_data, records, flow):
+        "You may inherit this method to override these values"
+        vals = {}
+        now = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        back_name = flow.logistics_backend_id.code
+        vals = {
+            'file_datas': base64.b64encode(file_data.encode('utf-8')),
+            'name': '%s %s %s' % (back_name, flow.flow, now),
+            'active': True,
+            # 'sequence': flow['sequence'],
+            'datas_fname': '%s_%s.csv' % (back_name, now),
+            # send records impacted by data exportation
+            'records': records}
+        return vals
+
+    def _get_portal_url(self):
         return NotImplementedError
 
 
@@ -110,27 +140,3 @@ def get_logistics_parser(parser_name, *args, **kwargs):
         if cls.parser_for(parser_name):
             return cls(parser_name, *args, **kwargs)
     raise ValueError
-
-
-class AbstractLogisticsFlow(models.AbstractModel):
-    _name = 'abstract.logistics.flow'
-    _description = 'Logistics Flow features'
-
-    WAREHOUSE_LOGISTIC_EXCEPTION = _(
-        "The warehouse '%s' have a wrong settings "
-        " in 'Location Stock' or 'Location Input'")
-
-    def get_logistics(self):
-        """ 'logistics_center' field is not a m2o because it must be a required
-        field but may be with no external logistics center : for internal use
-        """
-        res = []
-        res.append(('internal', 'Internal'))
-        log_m = self.env['logistics.backend']
-        log_backend_ids = log_m.search([])
-        for log in log_m.browse(log_backend_ids):
-            res.append((str(log.id), log.name))
-        return res
-
-    def _get_logistics(self):
-        return self.get_logistics()

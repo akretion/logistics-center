@@ -9,17 +9,14 @@ from collections import defaultdict
 
 from odoo.addons.logistics_center.models.logistics import Logistic
 
-from .common import (
-    LogisticDialect, DATE_FORMATS, BACKEND_VERSION)
+from .common import (LogisticDialect, DATE_FORMATS)
 
-FLOW_TYPE = 'manual'
-
-if FLOW_TYPE == 'manual':
-    from ..data.flow_delivery_manual import delivery_head, delivery_line
-    from ..data.flow_incoming_manual import incoming_head, incoming_line
-else:
-    from ..data.flow_delivery import delivery_head, delivery_line
-    from ..data.flow_incoming import incoming_head, incoming_line
+from ..data.flow_delivery_manual import (
+    portal_delivery_head, portal_delivery_line)
+# from ..data.flow_incoming_manual import (
+#     portal_incoming_head, portal_incoming_line)
+from ..data.flow_delivery import delivery_head, delivery_line
+from ..data.flow_incoming import incoming_head, incoming_line
 
 _logger = logging.getLogger(__name__)
 
@@ -30,7 +27,7 @@ FLOWS = {
         {'external_name': 'receive_order', 'sequence': 100}
 }
 
-READY_PICKING_STATE = ('waiting', 'confirmed', 'assigned')
+READY_PICKING_STATE = ('confirmed', 'assigned')
 
 
 def sanitize(string):
@@ -51,16 +48,39 @@ def sanitize(string):
 class Stef(Logistic):
     FROM_SITE_ID = 'FROM_SITE_ID'  # stef info
     CLIENT_ID = 'CLIENT_ID'        # stef info
-    LOGIS_DATE = '%Y%M'
 
     _dialect = LogisticDialect()
 
     @classmethod
     def parser_for(cls, parser_name):
-        return parser_name == BACKEND_VERSION
+        return parser_name == 'stef'
 
     def __init__(self, *args, **kwargs):
         "It fails if no __init__"
+
+    def _run_flow(self, flow):
+        # TODO move to Logistic class ?
+        if flow.direction == 'export':
+            records = flow._get_records_to_process()
+            if records:
+                return self._get_data_to_export(
+                    records, flow, type='build_your_own')
+            else:
+                # TODO move to backend
+                body = "No data to export with flow '%s'" % flow.name
+                flow.logistics_backend_id.message_post(body=body)
+
+    def _get_domain(self, flow):
+        if flow.flow == 'delivery':
+            return [
+                ('state', '=', 'assigned'),
+                ('picking_type_id.code', '=', 'outgoing'),
+                ('picking_type_id.warehouse_id',
+                    '=', flow.logistics_backend_id.warehouse_id.id),
+                ('logistics_blocked', '=', False),
+                ('log_out_file_doc_id', '=', False)
+            ]
+        return [('id', '=', -1)]
 
     def _convert_date(self, date, keydate=None, formats=None):
         if not date:
@@ -72,24 +92,10 @@ class Stef(Logistic):
             attrs = attrs and attrs[0] or {}
             if attrs.get('type') in DATE_FORMATS.keys():
                 return date.strftime(DATE_FORMATS[attrs['type']])
-        return date.strftime(self.LOGIS_DATE)
-
-    def _get_allowed_values(self, allowed):
-        """Allowed comes stef data"""
-        res = []
-        if allowed.strip() in ['Upper Case', 'Mixed Case']:
-            res.append('')
-        elif allowed == self.LOGIS_DATE:
-            res = ''
-        elif '|' in allowed:
-            res = [re.sub("[.!,;' ]", '', elm) for elm in allowed.split('|')]
-        else:
-            res.append(re.sub("[.!,;' ]", '', allowed))
-        return res
+        return date.strftime('%Y%M')
 
     def _get_default_value(self, field):
         res = ''
-        # alloweds = self._get_allowed_values(field['allowed'])
         alloweds = field.get('allowed')
         default = field.get('def')
         res = default
@@ -146,10 +152,10 @@ alias produit;type ul;réf lot;qté;poids;date rotation;référence palette clie
         return {
         }
 
-    def _prepare_picking(self, picking, delivery_head):
+    def _prepare_picking(self, picking, flow, delivery_head):
         settings = picking.picking_type_id.warehouse_id.logistics_id. \
             _logistics_center_settings()
-        if FLOW_TYPE == 'manual':
+        if flow.logistics_backend_id.version == 'stef-portail':
             res = {
                 'del_ord': picking.name,
                 'cmdcli': picking.origin,
@@ -173,8 +179,8 @@ alias produit;type ul;réf lot;qté;poids;date rotation;référence palette clie
                 'trsdst': picking.partner_id.stef_partner_id_string,
             }
 
-    def _prepare_move(self, move, delivery_line):
-        if FLOW_TYPE == 'manual':
+    def _prepare_move(self, move, flow, delivery_line):
+        if flow.logistics_backend_id.version == 'stef-portail':
             return {
                 'codprd': move.product_id.default_code,
                 'type_ul': 'C1',
@@ -229,30 +235,34 @@ alias produit;type ul;réf lot;qté;poids;date rotation;référence palette clie
     def _check_logistics_data(self, browse):
         pass
 
-    def _build_your_own(self, records, method):
+    def _build_your_own(self, records, flow):
         """ Here we don't use a csv format but a specific format
         """
-        data = getattr(self, method)(records)
+        if flow.direction == 'export':
+            data, issue = getattr(self, '_export_%s' % flow.flow)(
+                records, flow)
+        elif flow.direction == 'import':
+            return NotImplementedError
         if data:
             _logger.info(" >>> 'export_delivery_order' ADD picking data")
-            return ('\n'.join(data), False)
+            return ('\n'.join(data), issue)
         else:
             _logger.info(" >>> 'export_delivery_order' no data to export")
             return (False, False)
 
-    def export_delivery_order(self, pickings):
+    def _export_delivery(self, pickings, flow):
         data = []
         for picking in pickings:
             exceptions = defaultdict(dict)
-            vals = self._prepare_picking(picking, delivery_head)
+            head_data, line_data = self._guess_dict_data(flow)
+            vals = self._prepare_picking(picking, flow, head_data)
             exceptions.update(self._check_field_length(
-                vals, delivery_head, 'head'))
+                vals, head_data, 'head'))
             data.append(self._format_delivery_header(vals))
             for move in picking.move_lines:
-                # if move.state in ['assigned']:
-                vals = self._prepare_move(move, delivery_line)
+                vals = self._prepare_move(move, flow, line_data)
                 exceptions.update(
-                    self._check_field_length(vals, delivery_line, 'line'))
+                    self._check_field_length(vals, line_data, 'line'))
                 data.append(self._format_delivery_body(vals))
             if exceptions:
                 self._notify_exceptions(
@@ -260,9 +270,9 @@ alias produit;type ul;réf lot;qté;poids;date rotation;référence palette clie
             elif data:
                 picking.write({'logistics_exception': False})
             data.append('###;;;;;;')
-        return data
+        return (data, False)
 
-    def export_incoming_shipment(self, pickings, writer, non_compliants):
+    def _export_incoming(self, pickings, flow):
         data_to_send = False
         header, backend = self._should_i_set_header(pickings[0])
         for picking in pickings:
@@ -298,7 +308,18 @@ alias produit;type ul;réf lot;qté;poids;date rotation;référence palette clie
             _logger.info(" >>> 'export_incoming_shipment' no data")
             return False
 
+    def _guess_dict_data(self, flow):
+        """ Two mode with stef to exchange data then here
+            we switch between them
+        """
+        head_data, line_data = delivery_head, delivery_line
+        if flow.logistics_backend_id.version == 'stef-portail':
+            head_data, line_data = portal_delivery_head, portal_delivery_line
+        return (head_data, line_data)
+
     def _notify_exceptions(self, browse, exceptions, values=None, model=None):
+        """ TODO remove
+        """
         mess_vals = {
             'subject': "stef exceptions: Too wide data",
             'body': "Here is problematic keys <br/>\n%s"
@@ -310,3 +331,6 @@ alias produit;type ul;réf lot;qté;poids;date rotation;référence palette clie
             browse._cr, browse._uid, mess_vals, context=browse._context)
         if values:
             values['logistics_exception'] = True
+
+    def _get_portal_url(self):
+        return 'http://www.edifresh.com/modules/wmsweb/index.php'

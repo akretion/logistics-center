@@ -9,11 +9,14 @@ from .logistics import get_logistics_parser
 
 class LogisticsBackend(models.Model):
     _name = 'logistics.backend'
-    _description = 'Logistics Backend'
+    _inherit = 'mail.thread'
+    _description = "Logistics Backend to manage data exchange " \
+                   "with logistics center"
 
     LOGISTIC_DEBUG = False
 
     name = fields.Char('Name', required=True)
+    code = fields.Char(required=True, readonly=True)
     version = fields.Selection(
         selection=[],
         string='Version',
@@ -29,81 +32,32 @@ class LogisticsBackend(models.Model):
         comodel_name='res.company',
         string='Company',
         ondelete="cascade")
-    last_message = fields.Text(readonly=True)
-    last_out_doc_id = fields.Many2one(
-        comodel_name='ir.attachment', string="Dernier fichier sortant")
-    last_logistics_date = fields.Datetime('Last export date')
+    logistics_flow_ids = fields.One2many(
+        comodel_name='logistics.flow', inverse_name='logistics_backend_id',
+        string='Logistics flows', help="Logistics tasks flow")
 
     _sql_constraints = [
-        ('operation_uniq_per_product', 'unique(warehouse_id)',
+        ('operation_uniq_warehouse', 'unique(warehouse_id)',
          "Warehouse must be only used in only one Logistics Backend"),
     ]
 
     def delivery_order2export(self, *args, **kwargs):
         return NotImplementedError
 
-    def button_impacted_delivery_order(self):
-        return NotImplementedError
-
     def button_logistics_portal(self):
-        return NotImplementedError
+        self.ensure_one()
+        logistics = get_logistics_parser(self.code)
+        return {
+            'type': 'ir.actions.act_url',
+            'url': logistics._get_portal_url(),
+            'target': '_new',
+        }
 
     def export_catalog(self, *args, **kwargs):
         return NotImplementedError
 
     def incoming_shipment2export(self, *args, **kwargs):
         return NotImplementedError
-
-    def _prepare_doc_vals(self, backend_version, file_datas, records, flow):
-        "You may inherit this method to override these values"
-        vals = {}
-        now = fields.Datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        name = '%s %s %s' \
-            % (backend_version.capitalize(), flow['external_name'], now)
-        vals = {
-            'file_datas': base64.b64encode(file_datas.encode('utf-8')),
-            'name': name,
-            'active': True,
-            'sequence': flow['sequence'],
-            'datas_fname': '%s_%s.csv' % (flow['external_name'], now),
-            # send records impacted by data exportation
-            'records': records}
-        return vals
-
-    def _get_data_to_export(
-            self, records, export_method, flow, backend_version, type='csv'):
-        self.ensure_one()
-        logistics = get_logistics_parser(backend_version)
-        if type == 'build_your_own':
-            file_datas, non_compliants = logistics._build_your_own(
-                records, export_method)
-        else:
-            file_datas, non_compliants = logistics._build_csv(
-                records, export_method)
-        model_ids = []
-        if non_compliants:
-            # some records are not compliant with logistics specs
-            # they shouldn't be taken account
-            records = set(records) - set(non_compliants)
-            non_compliants.write({'logistics_exception': True})
-        if file_datas:
-            self._amend_file_data(file_datas)
-            return self._prepare_doc_vals(
-                backend_version, file_datas, records, flow)
-        else:
-            self.env.cr.commit()
-            flow_title = "Error in '%s': " % export_method
-            if model_ids:
-                raise models.except_models(
-                    flow_title,
-                    "Check backend '%s' with \n%s ids %s, "
-                    "there is no data to put in file, "
-                    % (backend.name, model._name, model_ids))
-            else:
-                raise models.except_models(
-                    flow_title,
-                    "No compliant data to send with '%s' backend"
-                    % backend.name)
 
     def _check_data(self, browse):
         "Allow to check"

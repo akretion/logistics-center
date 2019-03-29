@@ -14,12 +14,32 @@
           <field name="warehouse_id"/>
           <field name="version"/>
           <field name="company_id"/>
-          <button name="button_logistics_portal" string="Logistics Portal" type="object"/>
+          <button name="button_logistics_portal" string="Logistics Portal" 
+                  type="object" class="oe_highlight"/>
+          <field name="code" nolabel="1"/>
         </group>
         <notebook>
-          <page name="task" string="Tasks">
+          <page name="flow" string="Flows">
             <group>
-              <group col="1">
+              <field name="logistics_flow_ids" nolabel="1">
+                <tree create="0" readonly="1">
+                  <field name="logistics_backend_id" invisible="1"/>
+                  <field name="impacted_record" help="Record number to process"/>
+                  <button name="button_see_impacted_records" type="object"
+                          title="Click to see impacted records"
+                          class="btn btn-primary fa fa-eye"/>
+                  <button name="run" type="object"
+                          class="btn btn-primary fa fa-play"
+                          title="Process the flow"/>
+                  <field name="name"/>
+                  <field name="flow"/>
+                  <field name="direction"/>
+                  <field name="last_doc_id"/>
+                  <field name="last_message"/>
+                  <field name="last_date"/>
+                </tree>
+              </field>
+<!--               <group col="1">
                 <button name="button_impacted_delivery_order" type="object"
                         string="see impacted Delivery Order" class="oe_highlight"
                         help="Goods that'll go to final customer"/>
@@ -27,10 +47,10 @@
                         help="Goods that'll go to final customer"/>
               </group>
               <group col="2">
-                <field name="last_logistics_date"/>
+                <field name="last_date"/>
                 <field name="last_out_doc_id"/>
                 <field name="last_message"/>
-              </group>
+              </group> -->
             </group>
           </page>
           <page name="infos" string="Informations"
@@ -38,6 +58,10 @@
           </page>
         </notebook>
       </sheet>
+      <div class="oe_chatter">
+        <field name="message_follower_ids" widget="mail_followers"/>
+        <field name="message_ids" widget="mail_thread"/>
+      </div>
     </form>
   </field>
 </record>

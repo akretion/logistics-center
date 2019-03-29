@@ -3,9 +3,7 @@
 
 from csv import Dialect, QUOTE_NONE
 
-
-BACKEND_VERSION = '1.1'
-BACKEND_VERSION_NAME = 'stef'
+BACKEND_VERSION = 'stef-portail'
 ENCODING = 'utf-8'
 
 DATE_FORMATS = {
