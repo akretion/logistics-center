@@ -1,9 +1,8 @@
 # © 2019 David BEAL @ Akretion
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-import base64
 
-from odoo import api, models, fields, _
+from odoo import models, fields
 from .logistics import get_logistics_parser
 
 
@@ -12,8 +11,6 @@ class LogisticsBackend(models.Model):
     _inherit = 'mail.thread'
     _description = "Logistics Backend to manage data exchange " \
                    "with logistics center"
-
-    LOGISTIC_DEBUG = False
 
     name = fields.Char('Name', required=True)
     code = fields.Char(required=True, readonly=True)
@@ -41,8 +38,8 @@ class LogisticsBackend(models.Model):
          "Warehouse must be only used in only one Logistics Backend"),
     ]
 
-    def delivery_order2export(self, *args, **kwargs):
-        return NotImplementedError
+    def button_reload(self):
+        pass
 
     def button_logistics_portal(self):
         self.ensure_one()
@@ -52,27 +49,3 @@ class LogisticsBackend(models.Model):
             'url': logistics._get_portal_url(),
             'target': '_new',
         }
-
-    def export_catalog(self, *args, **kwargs):
-        return NotImplementedError
-
-    def incoming_shipment2export(self, *args, **kwargs):
-        return NotImplementedError
-
-    def _check_data(self, browse):
-        "Allow to check"
-        assert len(ids) == 1, "Will only take one resource id"
-        # TODO manage case with several browse values
-        # assert len(browse) == 1, (
-        #     "Will only take one browse to check logistics data")
-        backend = self.browse(ids)[0]
-        logistics = get_logistics_parser(backend.version)
-        return logistics.check_logistics_data(browse)
-
-    def _amend_file_data(self, data):
-        "Allow to modify data before to create file.document"
-        pass
-
-    def _logistics_debug_mode(self):
-        "To implement in your logistics center module"
-        return
