@@ -6,6 +6,9 @@ from csv import Dialect, QUOTE_NONE
 BACKEND_VERSION = 'stef-portail'
 ENCODING = 'utf-8'
 
+LOGISTICS_CODE = 'stef'
+LOGISTICS_NAME = 'Stef'
+
 DATE_FORMATS = {
     'D1': '%Y%M%D',
     'D2': '%Y%M%D%H%m',

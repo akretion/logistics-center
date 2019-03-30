@@ -1,10 +1,12 @@
 # © 2019 David BEAL @ Akretion
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from datetime import datetime
+import logging
 
 from odoo import _, api, models, fields
 from .logistics import get_logistics_parser
+
+_logger = logging.getLogger(__name__)
 
 
 class LogisticsFlow(models.Model):
@@ -41,7 +43,7 @@ class LogisticsFlow(models.Model):
     def run(self):
         self.ensure_one()
         logistics = self._get_logistics()
-        kwargs = logistics._run_flow(self)
+        kwargs = logistics.run_flow(self)
         attachment = self._save_attachment(kwargs)
         do = [x.name for x in kwargs['records']]
         body = ("Bons de livraison associés à la dernière "
@@ -63,7 +65,7 @@ class LogisticsFlow(models.Model):
         #  'sequence': 70, 'name': '1.1 delivery_order 2019-02-21_15-49-10',
         #  'datas_fname': 'del_order_2019-02-21_15-49-10.csv', 'active': True}
         attachment = self.env['ir.attachment'].create({
-            'external_type': 'stef',  # TODO make it generic
+            'external_type': self.logistics_backend_id.code,
             'datas': kwargs['file_datas'],
             'sending_date': self.last_date,
             'name': kwargs['datas_fname'],
@@ -72,7 +74,7 @@ class LogisticsFlow(models.Model):
 
     def button_see_impacted_records(self):
         self.ensure_one()
-        logistics = get_logistics_parser(self.logistics_backend_id.code)
+        logistics = self._get_logistics()
         return {
             "name": _("Impacted flow: %s" % self.name),
             'type': 'ir.actions.act_window',
@@ -83,11 +85,18 @@ class LogisticsFlow(models.Model):
         }
 
     def _get_records_to_process(self):
-        logistics = get_logistics_parser(self.logistics_backend_id.code)
-        return self.env['stock.picking'].search(logistics._get_domain(self))
+        logistics = self._get_logistics()
+        domain = logistics._get_domain(self)
+        records = self.env['stock.picking'].search(domain)
+        _logger.info("Flow '%s' retrieve '%s' records with domain %s " % (
+            self.name, len(records), domain))
+        return records
 
     def _compute_impacted_records(self):
         for rec in self:
-            logistics = get_logistics_parser(rec.logistics_backend_id.code)
+            logistics = rec._get_logistics()
+            domain = logistics._get_domain(rec)
             rec.impacted_record = self.env['stock.picking'].search_count(
-                logistics._get_domain(rec))
+                domain)
+            _logger.debug("Flow '%s' retrieve '%s' records with domain %s " % (
+                rec.name, rec.impacted_record, domain))

@@ -1,7 +1,6 @@
 # © 2019 David BEAL @ Akretion
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-import re
 import json
 import logging
 from datetime import datetime
@@ -20,35 +19,13 @@ from ..data.flow_incoming import incoming_head, incoming_line
 
 _logger = logging.getLogger(__name__)
 
-FLOWS = {
-    'export_delivery_order':
-        {'external_name': 'delivery_order', 'sequence': 70},
-    'export_incoming_shipment':
-        {'external_name': 'receive_order', 'sequence': 100}
-}
 
 READY_PICKING_STATE = ('confirmed', 'assigned')
 
 
-def sanitize(string):
-    "Make string compatible with stef files"
-    if isinstance(string, (str)):
-        if '\n' in string:
-            # \n can't be in string because there is
-            # QUOTING_NONE in csv dialect
-            string = string.replace('\n', ',')
-        if ';' in string:
-            # ; is the delimiter and must not be in string
-            string = string.replace(';', ',')
-    else:
-        string = ''
-    return string
-
-
 class Stef(Logistic):
-    FROM_SITE_ID = 'FROM_SITE_ID'  # stef info
-    CLIENT_ID = 'CLIENT_ID'        # stef info
 
+    # Used with csv, then not for this carrier
     _dialect = LogisticDialect()
 
     @classmethod
@@ -58,7 +35,7 @@ class Stef(Logistic):
     def __init__(self, *args, **kwargs):
         "It fails if no __init__"
 
-    def _run_flow(self, flow):
+    def run_flow(self, flow):
         # TODO move to Logistic class ?
         if flow.direction == 'export':
             records = flow._get_records_to_process()
@@ -71,16 +48,27 @@ class Stef(Logistic):
                 flow.logistics_backend_id.message_post(body=body)
 
     def _get_domain(self, flow):
+        domain = [
+            ('state', '=', 'assigned'),
+            ('logistics_blocked', '=', False),
+            ('log_out_file_doc_id', '=', False)
+        ]
         if flow.flow == 'delivery':
-            return [
-                ('state', '=', 'assigned'),
+            domain.extend([
                 ('picking_type_id.code', '=', 'outgoing'),
                 ('picking_type_id.warehouse_id',
                     '=', flow.logistics_backend_id.warehouse_id.id),
-                ('logistics_blocked', '=', False),
-                ('log_out_file_doc_id', '=', False)
-            ]
-        return [('id', '=', -1)]
+            ])
+        elif flow.flow == 'incoming':
+            domain.extend([
+                ('picking_type_id.code', '=', 'internal'),
+                ('picking_type_id', '=', flow.env.ref(
+                    'stef_logistics.stef_picking_type').id),
+            ])
+        else:
+            _logger.warning("No matching records for flow '%s'" % flow.name)
+            return [('id', '=', -1)]
+        return domain
 
     def _convert_date(self, date, keydate=None, formats=None):
         if not date:
@@ -171,7 +159,7 @@ alias produit;type ul;réf lot;qté;poids;date rotation;référence palette clie
         else:
             return {
                 'codenr': 'E',
-                'cmdcli': sanitize(picking.name),
+                'cmdcli': picking.name,
                 'nomdos': settings['nomdos'],
                 'codgln': settings['codgln'],
                 'datliv': self._convert_date(
@@ -198,9 +186,6 @@ alias produit;type ul;réf lot;qté;poids;date rotation;référence palette clie
                 'codprd': move.product_id.default_code,
                 'qliuc': move.product_uom_qty,
             }
-
-    def _should_i_set_header(self, backend):
-        return True
 
     def _check_field_length(self, vals, flow, flow_name=None):
         "Check if data doesn't overcome the length of the field"
@@ -232,10 +217,10 @@ alias produit;type ul;réf lot;qté;poids;date rotation;référence palette clie
                         'max_length': field.get('len')}}})
         return exceptions
 
-    def _check_logistics_data(self, browse):
+    def check_logistics_data(self, browse):
         pass
 
-    def _build_your_own(self, records, flow):
+    def build_your_own(self, records, flow):
         """ Here we don't use a csv format but a specific format
         """
         if flow.direction == 'export':
@@ -274,7 +259,6 @@ alias produit;type ul;réf lot;qté;poids;date rotation;référence palette clie
 
     def _export_incoming(self, pickings, flow):
         data_to_send = False
-        header, backend = self._should_i_set_header(pickings[0])
         for picking in pickings:
             data = []
             exceptions = defaultdict(dict)
@@ -318,7 +302,7 @@ alias produit;type ul;réf lot;qté;poids;date rotation;référence palette clie
         return (head_data, line_data)
 
     def _notify_exceptions(self, browse, exceptions, values=None, model=None):
-        """ TODO remove
+        """ TODO refactor
         """
         mess_vals = {
             'subject': "stef exceptions: Too wide data",
