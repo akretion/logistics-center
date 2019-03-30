@@ -14,9 +14,11 @@
           <field name="warehouse_id"/>
           <field name="version"/>
           <field name="company_id"/>
-          <button name="button_logistics_portal" string="Logistics Portal" 
-                  type="object" class="oe_highlight"/>
-          <field name="code" nolabel="1"/>
+          <button name="button_reload" title="Reload the page"
+                  type="object" class="btn btn-primary fa fa-refresh"/>
+          <button name="button_logistics_portal" string="Logistics Portal" class="oe_highlight"
+                  type="object" title="Access to the provider portal"/>
+          <field name="code" invisible="1"/>
         </group>
         <notebook>
           <page name="flow" string="Flows">

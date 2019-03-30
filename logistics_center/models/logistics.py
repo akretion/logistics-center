@@ -27,11 +27,14 @@ class Logistic(object):
         """
         return False
 
-    def _check_logistics_data(self, *args, **kwargs):
-        "Write or Create on Products with logistics product comes here"
-        pass
+    def run_flow(self, flow):
+        return NotImplementedError
 
-    def _build_csv(self, records, method, encoding='utf-8'):
+    def check_logistics_data(self, *args, **kwargs):
+        "Write or Create on Products with logistics product comes here"
+        return NotImplementedError
+
+    def build_csv(self, records, method, encoding='utf-8'):
         register_dialect("logistics_dialect", self._dialect)
         csv_file = StringIO()
         writer = csv_writer(csv_file, dialect=self._dialect)
@@ -45,19 +48,20 @@ class Logistic(object):
         else:
             return (False, issue)
 
-    def _build_your_own(self, *args, **kwargs):
-        return NotImplementedError
-
-    def _amend_file_data(self, flow, file_data):
-        """ You may modify your file before store it
+    def build_your_own(self, *args, **kwargs):
+        """ If your files are not csv, you may define your own format
         """
         return NotImplementedError
 
+    def import_data(self, *args, **kwargs):
+        """ """
+        return NotImplementedError
+
     def _get_data_to_export(self, records, flow, type='csv'):
-        if type == 'build_your_own':
-            file_data, issue = self._build_your_own(records, flow)
+        if type == 'csv':
+            file_data, issue = self.build_csv(records, flow)
         else:
-            file_data, issue = self._build_csv(records, flow)
+            file_data, issue = self.build_your_own(records, flow)
         if issue:
             # some records are not compliant with logistics specs
             # they shouldn't be taken account
@@ -67,11 +71,16 @@ class Logistic(object):
             issue.message_post(body=mess % (
                 flow.name, flow.logistics_backend_id.name))
         if file_data:
-            self._amend_file_data(flow, file_data)
-            return self._prepare_doc_vals(file_data, records, flow)
+            self.amend_file_data(flow, file_data)
+            return self.prepare_doc_vals(file_data, records, flow)
 
-    def _prepare_doc_vals(self, file_data, records, flow):
-        "You may inherit this method to override these values"
+    def amend_file_data(self, flow, file_data):
+        """ You may modify your file before store it
+        """
+        return NotImplementedError
+
+    def prepare_doc_vals(self, file_data, records, flow):
+        """ You may inherit this method to override these values """
         vals = {}
         now = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         back_name = flow.logistics_backend_id.code
@@ -79,13 +88,19 @@ class Logistic(object):
             'file_datas': base64.b64encode(file_data.encode('utf-8')),
             'name': '%s %s %s' % (back_name, flow.flow, now),
             'active': True,
-            # 'sequence': flow['sequence'],
             'datas_fname': '%s_%s.csv' % (back_name, now),
             # send records impacted by data exportation
             'records': records}
         return vals
 
+    def sanitize(string):
+        """ Some chars may be forbidden by your Logistics center
+            Implements your own rules"""
+        return NotImplementedError
+
     def _get_portal_url(self):
+        """ Used by button on backend to access Logistics website
+        """
         return NotImplementedError
 
 
