@@ -103,6 +103,42 @@ class Logistic(object):
         """
         return NotImplementedError
 
+    def _check_field_length_helper(self, vals, field_def, name='_'):
+        """ Check if data doesn't overcome the length of the field
+            Use only if you need
+            Provided field_def must be in the form:
+            {'seq': 4, 'len': 6, 'type': 'I', 'col': 'qty',
+             'req': True, 'comment': "qté"},
+             return Exception dict
+        """
+        # TODO improve or remove
+        exceptions = {}
+        for field in field_def:
+            to_collect = False
+            fname = field.get('col')
+            if vals.get(fname):
+                if field.get('type') in ('I') and field.get('len'):
+                    try:
+                        if vals[fname] > int('9' * field.get('len')):
+                            to_collect = True
+                    except Exception as e:
+                        _logger.warning(
+                            "Field length bug with key '%s' value '%s'\n%s" % (
+                                fname, vals[fname], e))
+                if field.get('type') in ('A') and field.get('len'):
+                    try:
+                        if len(vals[fname]) > field.get('len'):
+                            to_collect = True
+                    except Exception as e:
+                        _logger.warning(
+                            "Field length bug with key '%s' value '%s'\n%s" % (
+                                fname, vals[fname], e))
+                if to_collect:
+                    exceptions.update({name: {fname: {
+                        'data': vals[fname],
+                        'max_length': field.get('len')}}})
+        return exceptions
+
 
 def itersubclasses(cls, _seen=None):
     """

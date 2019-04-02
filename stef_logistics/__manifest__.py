@@ -57,7 +57,7 @@ How to use
     'data': [
         'data/delivery_data.xml',
         'data/warehouse_data.xml',
-        'data/logistics.flow.csv',
+        'data/logistics_flow_data.xml',
         'views/partner_view.xml',
         # 'data/sale_data.xml',
         # 'data/repository_data.xml',

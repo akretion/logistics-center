@@ -1,3 +1,0 @@
-id,logistics_backend_id/id,name,direction,flow
-stef_order,stef_logistics_center,Commandes 🛒,export,delivery
-stef_appro,stef_logistics_center,Appros 🚚,export,incoming

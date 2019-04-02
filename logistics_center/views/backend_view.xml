@@ -14,7 +14,7 @@
           <field name="warehouse_id"/>
           <field name="version"/>
           <field name="company_id"/>
-          <button name="button_reload" title="Reload the page"
+          <button name="button_reload" title="Reload the page" string=" "
                   type="object" class="btn btn-primary fa fa-refresh"/>
           <button name="button_logistics_portal" string="Logistics Portal" class="oe_highlight"
                   type="object" title="Access to the provider portal"/>
@@ -39,20 +39,12 @@
                   <field name="last_doc_id"/>
                   <field name="last_message"/>
                   <field name="last_date"/>
+                  <field name="picking_state" groups="base.group_erp_manager"/>
+                  <button name="button_learn" type="object"
+                          title="Display information on the query"
+                          class="fa fa-question-circle-o"/>
                 </tree>
               </field>
-<!--               <group col="1">
-                <button name="button_impacted_delivery_order" type="object"
-                        string="see impacted Delivery Order" class="oe_highlight"
-                        help="Goods that'll go to final customer"/>
-                <button name="delivery_order2export" string="🚚 Delivery Order" type="object"
-                        help="Goods that'll go to final customer"/>
-              </group>
-              <group col="2">
-                <field name="last_date"/>
-                <field name="last_out_doc_id"/>
-                <field name="last_message"/>
-              </group> -->
             </group>
           </page>
           <page name="infos" string="Informations"
