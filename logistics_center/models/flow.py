@@ -44,8 +44,8 @@ class LogisticsFlow(models.Model):
 
     def _get_logistics(self):
         if not self.logistics_backend_id.code:
-            raise("Missing code in '%s' Logitics backend" %
-                  self.logistics_backend_id.name)
+            raise UserError("Missing code in '%s' Logitics backend" %
+                            self.logistics_backend_id.name)
         return get_logistics_parser(self.logistics_backend_id.code)
 
     def run(self):
@@ -53,13 +53,16 @@ class LogisticsFlow(models.Model):
         logistics = self._get_logistics()
         kwargs = logistics.run_flow(self)
         attachment = self._save_attachment(kwargs)
-        do = [x.name for x in kwargs['records']]
-        body = ("Bons de livraison associés à la dernière "
-                "demande de livraison: %s\n\n%s" % (self.name, do))
+        records = [x.name for x in kwargs['records']]
+        body = (_("%(name)s %(flow)s has generated "
+                  "these pickings : %(records)s") % {
+                'name': self.name,
+                'flow': self.flow,
+                'records': records})
         self.write({
             'last_doc_id': attachment.id,
             'last_date': False,
-            'last_message': "BL %s" % do,
+            'last_message': _("Pickings %s") % records,
         })
         kwargs['records'].write({
             'log_out_file_doc_id': attachment.id,
@@ -76,18 +79,29 @@ class LogisticsFlow(models.Model):
             'external_type': self.logistics_backend_id.code,
             'datas': kwargs['file_datas'],
             'sending_date': self.last_date,
-            'name': kwargs['datas_fname'],
+            'name': '%s_%s' % (self.flow, kwargs['datas_fname']),
             'datas_fname': kwargs['datas_fname']})
         return attachment
 
     def button_see_impacted_records(self):
         self.ensure_one()
         return {
-            "name": _("Impacted flow: %s" % self.name),
+            "name": _("Transfert: impacted flow %s" % self.name),
             'type': 'ir.actions.act_window',
             'res_model': 'stock.picking',
             'view_mode': 'tree,form',
             'domain': self._get_domain(),
+            'target': 'current',
+        }
+
+    def button_records_matching_file(self):
+        self.ensure_one()
+        return {
+            "name": _("Transfert: impacted flow %s" % self.name),
+            'type': 'ir.actions.act_window',
+            'res_model': 'stock.picking',
+            'view_mode': 'tree,form',
+            'domain': [('log_out_file_doc_id', '=', self.last_doc_id.id)],
             'target': 'current',
         }
 
@@ -98,7 +112,7 @@ class LogisticsFlow(models.Model):
         self.env[model].search(domain)
         explain_dom = self._get_domain_info(domain, model)
         raise UserError(
-            _("Domain model: '%s' (%s)\n\Domain expression:\n - %s"
+            _("Domain model: '%s' (%s)\nDomain expression:\n - %s"
               "\n\nTechnical domain expression:\n%s")
             % (self.env[model]._description, self.env[model]._name,
                '\n - '.join([' '.join(map(str, x)) for x in explain_dom]),
