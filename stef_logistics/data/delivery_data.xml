@@ -4,6 +4,8 @@
 <record id="stef_logistics_center" model="logistics.backend">
     <field name="name">Stef</field>
     <field name="warehouse_id" search="[]"/>
+    <field name="code">stef</field>
+    <field name="version">stef-portail</field>
     <field name="company_id" ref="base.main_company"/>
 </record>
 

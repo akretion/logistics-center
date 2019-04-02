@@ -32,6 +32,7 @@ Import :
     'website': 'http://www.akretion.com',
     'depends': [
         'sale_stock',
+        'stock_usability',
     ],
     'external_dependencies': {
     },

@@ -10,13 +10,12 @@
             </field> -->
             <field name="scheduled_date" position="after">
                 <field name="drop_date" 
-                       />
-                       <!-- attrs="{'invisible': [('picking_type_id.code', '=', 'outgoing')]}" -->
+                       attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}" />
             </field>
             <xpath expr="//page[@name='extra']/group[1]" position="after">
               <group col="4" string="Logistics center" name="logistics_center">
                 <!-- <field name="log_out_file_doc_id"/> -->
-                <field name="log_out_file_doc_id" context="{'tree_view_ref': 'view_attachment_logistics_tree', 'default_external_type': 'stef'}"/>
+                <field name="log_out_file_doc_id" context="{'tree_view_ref': 'view_attachment_logistics_tree'}"/>
                 <field name="log_in_file_doc_id"/>
                 <!-- <field name="log_in_file_doc_id" context="{'tree_view_ref': 'view_attachment_logistics_tree'}"/> -->
                 <field name="logistics_exception" readonly="1"/>
