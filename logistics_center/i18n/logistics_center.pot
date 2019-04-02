@@ -1,21 +1,19 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* logistics_center
+#	* logistics_center
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-04-02 07:03+0000\n"
-"PO-Revision-Date: 2019-04-02 09:12+0200\n"
+"PO-Revision-Date: 2019-04-02 07:03+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
-"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
+"Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
-"X-Generator: Poedit 2.0.6\n"
 
 #. module: logistics_center
 #: model_terms:ir.ui.view,arch_db:logistics_center.view_logistics_backend_form
@@ -25,77 +23,75 @@ msgstr ""
 #. module: logistics_center
 #: model:ir.model.fields,field_description:logistics_center.field_logistics_backend__message_needaction
 msgid "Action Needed"
-msgstr "Nécessite une action"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.actions.act_window,name:logistics_center.attach_logistics_action
 msgid "Attach Logistics"
-msgstr "Pièces jointes logistiques"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model,name:logistics_center.model_ir_attachment
 msgid "Attachment"
-msgstr "Pièce jointe"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,field_description:logistics_center.field_logistics_backend__message_attachment_count
 msgid "Attachment Count"
-msgstr "Nombre de pièces jointes"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,field_description:logistics_center.field_logistics_flow__logistics_backend_id
 msgid "Backend logistics"
-msgstr "Backend  Logistique"
+msgstr ""
 
 #. module: logistics_center
 #: selection:logistics.flow,flow:0
 msgid "Catalog"
-msgstr "Catalogue"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,help:logistics_center.field_stock_picking__logistics_exception
-msgid ""
-"Checked if a wrong data prevent you to send the order to your logistics "
-"center"
+msgid "Checked if a wrong data prevent you to send the order to your logistics center"
 msgstr ""
 
 #. module: logistics_center
 #: model_terms:ir.ui.view,arch_db:logistics_center.view_logistics_backend_form
 msgid "Click to see impacted records"
-msgstr "Cliquer pour voir les enregistrements impactés"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,field_description:logistics_center.field_logistics_backend__code
 msgid "Code"
-msgstr "Code"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,field_description:logistics_center.field_logistics_backend__company_id
 msgid "Company"
-msgstr "Société"
+msgstr ""
 
 #. module: logistics_center
 #: model_terms:ir.ui.view,arch_db:logistics_center.view_logistics_backend_form
 msgid "Configuration"
-msgstr "Configuration"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,field_description:logistics_center.field_logistics_backend__create_uid
 #: model:ir.model.fields,field_description:logistics_center.field_logistics_flow__create_uid
 msgid "Created by"
-msgstr "Créé par"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,field_description:logistics_center.field_logistics_backend__create_date
 #: model:ir.model.fields,field_description:logistics_center.field_logistics_flow__create_date
 msgid "Created on"
-msgstr "Créé le"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,help:logistics_center.field_ir_attachment__sending_date
 #: model:ir.model.fields,help:logistics_center.field_mrp_document__sending_date
 msgid "Date to which the file has been transmit to the logistics center"
-msgstr "Date de transmission au centre logistique"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,help:logistics_center.field_stock_picking__drop_date
@@ -105,46 +101,39 @@ msgstr ""
 #. module: logistics_center
 #: selection:logistics.flow,flow:0
 msgid "Delivery"
-msgstr "Livraison"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,field_description:logistics_center.field_logistics_flow__direction
 msgid "Direction"
-msgstr "Sens"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,field_description:logistics_center.field_logistics_backend__display_name
 #: model:ir.model.fields,field_description:logistics_center.field_logistics_flow__display_name
 msgid "Display Name"
-msgstr "Nom affiché"
+msgstr ""
 
 #. module: logistics_center
 #: model_terms:ir.ui.view,arch_db:logistics_center.view_logistics_backend_form
 msgid "Display information on the query"
-msgstr "Affiche des informations sur la requête"
+msgstr ""
 
 #. module: logistics_center
 #: code:addons/logistics_center/models/flow.py:101
 #, python-format
-msgid ""
-"Domain model: '%s' (%s)\n"
+msgid "Domain model: '%s' (%s)\n"
 "\\Domain expression:\n"
 " - %s\n"
 "\n"
 "Technical domain expression:\n"
 "%s"
 msgstr ""
-"Model du domain: '%s' (%s)\n"
-"Domain expression:\n"
-" - %s\n"
-"\n"
-"Technical domain expression:\n"
-"%s"
 
 #. module: logistics_center
 #: selection:logistics.flow,picking_state:0
 msgid "Done"
-msgstr "Fait"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,field_description:logistics_center.field_stock_picking__drop_date
@@ -154,13 +143,13 @@ msgstr ""
 #. module: logistics_center
 #: selection:logistics.flow,direction:0
 msgid "Export"
-msgstr "Export"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,field_description:logistics_center.field_ir_attachment__external_type
 #: model:ir.model.fields,field_description:logistics_center.field_mrp_document__external_type
 msgid "External"
-msgstr "Externe"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,field_description:logistics_center.field_logistics_flow__flow
@@ -175,17 +164,17 @@ msgstr ""
 #. module: logistics_center
 #: model:ir.model.fields,field_description:logistics_center.field_logistics_backend__message_follower_ids
 msgid "Followers"
-msgstr "Abonnés"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,field_description:logistics_center.field_logistics_backend__message_channel_ids
 msgid "Followers (Channels)"
-msgstr "Abonnés (Canaux)"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,field_description:logistics_center.field_logistics_backend__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Abonnés (Partenaires)"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,field_description:logistics_center.field_logistics_backend__id
@@ -196,17 +185,17 @@ msgstr ""
 #. module: logistics_center
 #: model:ir.model.fields,help:logistics_center.field_logistics_backend__message_unread
 msgid "If checked new messages require your attention."
-msgstr "Si coché, de nouveaux messages demandent votre attention."
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,help:logistics_center.field_logistics_backend__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Si coché, de nouveaux messages demandent votre attention."
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,help:logistics_center.field_logistics_backend__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Si actif, certains messages ont une erreur de livraison."
+msgstr ""
 
 #. module: logistics_center
 #: selection:logistics.flow,direction:0
@@ -226,25 +215,25 @@ msgstr ""
 #. module: logistics_center
 #: model:ir.model.fields,field_description:logistics_center.field_logistics_backend__message_is_follower
 msgid "Is Follower"
-msgstr "Est un abonné"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,field_description:logistics_center.field_logistics_backend____last_update
 #: model:ir.model.fields,field_description:logistics_center.field_logistics_flow____last_update
 msgid "Last Modified on"
-msgstr "Dernière modification le"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,field_description:logistics_center.field_logistics_backend__write_uid
 #: model:ir.model.fields,field_description:logistics_center.field_logistics_flow__write_uid
 msgid "Last Updated by"
-msgstr "Dernière mise à jour par"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,field_description:logistics_center.field_logistics_backend__write_date
 #: model:ir.model.fields,field_description:logistics_center.field_logistics_flow__write_date
 msgid "Last Updated on"
-msgstr "Dernière mise à jour le"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,field_description:logistics_center.field_logistics_flow__last_date
@@ -264,14 +253,14 @@ msgstr ""
 #. module: logistics_center
 #: model_terms:ir.ui.view,arch_db:logistics_center.view_logistics_backend_tree
 msgid "Logistic Backend"
-msgstr "Backend  Logistique"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,field_description:logistics_center.field_stock_warehouse__logistics_id
 #: model:ir.ui.menu,name:logistics_center.menu_logistics_backend
 #: model_terms:ir.ui.view,arch_db:logistics_center.view_logistics_backend_form
 msgid "Logistics"
-msgstr "Logistique"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model,name:logistics_center.model_logistics_backend
@@ -286,32 +275,32 @@ msgstr ""
 #. module: logistics_center
 #: model:ir.actions.act_window,name:logistics_center.action_logistics_backend
 msgid "Logistics Backends"
-msgstr "Backend  Logistique"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,field_description:logistics_center.field_stock_picking__logistics_blocked
 msgid "Logistics Blocked"
-msgstr "Logistique bloqué"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,help:logistics_center.field_stock_picking__logistics_blocked
 msgid "Logistics Delivery Orders can be blocked manually"
-msgstr "Les bons de livraisons peuvent être bloqué manuellement"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,field_description:logistics_center.field_stock_picking__log_in_file_doc_id
 msgid "Logistics Doc. In"
-msgstr "Docs logistiques entrant"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,field_description:logistics_center.field_stock_picking__log_out_file_doc_id
 msgid "Logistics Doc. Out"
-msgstr "Docs logistiques sortant"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,field_description:logistics_center.field_stock_picking__logistics_exception
 msgid "Logistics Exception"
-msgstr "Exception logistique"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model,name:logistics_center.model_abstract_logistics_flow
@@ -326,13 +315,13 @@ msgstr ""
 #. module: logistics_center
 #: model_terms:ir.ui.view,arch_db:logistics_center.view_attachment_logistics_tree
 msgid "Logistics attachment"
-msgstr "Pièce jointe logistique"
+msgstr ""
 
 #. module: logistics_center
 #: model_terms:ir.ui.view,arch_db:logistics_center.view_logistics_backend_form
 #: model_terms:ir.ui.view,arch_db:logistics_center.view_picking_form
 msgid "Logistics center"
-msgstr "Centre logistique"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,field_description:logistics_center.field_logistics_backend__logistics_flow_ids
@@ -342,63 +331,63 @@ msgstr ""
 #. module: logistics_center
 #: model:ir.model,name:logistics_center.model_logistics_flow
 msgid "Logistics flows attached to logistics backend"
-msgstr "Flux logistiques attached au backend logistique"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,help:logistics_center.field_logistics_backend__logistics_flow_ids
 msgid "Logistics tasks flow"
-msgstr "Flux de tâches logistique"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,field_description:logistics_center.field_logistics_backend__message_main_attachment_id
 msgid "Main Attachment"
-msgstr "Pièce jointe principale"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,field_description:logistics_center.field_logistics_backend__message_has_error
 msgid "Message Delivery error"
-msgstr "Erreur d'envoi du message"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,field_description:logistics_center.field_logistics_backend__message_ids
 msgid "Messages"
-msgstr "Messages"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,field_description:logistics_center.field_logistics_backend__name
 #: model:ir.model.fields,field_description:logistics_center.field_logistics_flow__name
 msgid "Name"
-msgstr "Nom"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,field_description:logistics_center.field_logistics_backend__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Nombre d'actions"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,field_description:logistics_center.field_logistics_backend__message_has_error_counter
 msgid "Number of error"
-msgstr "Nombre d'erreurs"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,help:logistics_center.field_logistics_backend__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "Nombre de messages exigeant une action"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,help:logistics_center.field_logistics_backend__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Nombre de messages avec des erreurs d'envoi"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,help:logistics_center.field_logistics_backend__message_unread_counter
 msgid "Number of unread messages"
-msgstr "Nombre de messages non lus"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,field_description:logistics_center.field_logistics_flow__picking_state
 msgid "Picking State"
-msgstr "Etat du Transfert"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.ui.menu,name:logistics_center.attach_logistics_menu
@@ -408,61 +397,57 @@ msgstr ""
 #. module: logistics_center
 #: model_terms:ir.ui.view,arch_db:logistics_center.view_logistics_backend_form
 msgid "Process the flow"
-msgstr "Déclencher le flux"
+msgstr ""
 
 #. module: logistics_center
 #: selection:logistics.flow,picking_state:0
 msgid "Ready"
-msgstr "Prêt"
+msgstr ""
 
 #. module: logistics_center
 #: model_terms:ir.ui.view,arch_db:logistics_center.view_logistics_backend_form
 msgid "Record number to process"
-msgstr "Nombre d'enregistrement à traiter"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,help:logistics_center.field_stock_picking__log_in_file_doc_id
-msgid ""
-"Refers the 'File document' object which contains infmodelsations sent by "
-"Logistics center in response from original message."
+msgid "Refers the 'File document' object which contains infmodelsations sent by Logistics center in response from original message."
 msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,help:logistics_center.field_stock_picking__log_out_file_doc_id
-msgid ""
-"Refers the 'File document' object which contains infmodelsations to send to "
-"Logistics center for synchronisation purpose."
+msgid "Refers the 'File document' object which contains infmodelsations to send to Logistics center for synchronisation purpose."
 msgstr ""
 
 #. module: logistics_center
 #: model_terms:ir.ui.view,arch_db:logistics_center.view_logistics_backend_form
 msgid "Reload the page"
-msgstr "Recharger la page"
+msgstr ""
 
 #. module: logistics_center
 #: selection:ir.attachment,external_type:0
 msgid "Stef"
-msgstr "Stef"
+msgstr ""
 
 #. module: logistics_center
 #: selection:logistics.backend,version:0
 msgid "Stef EDI"
-msgstr "Stef EDI"
+msgstr ""
 
 #. module: logistics_center
 #: selection:logistics.backend,version:0
 msgid "Stef portail"
-msgstr "Stef portail"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model,name:logistics_center.model_stock_move
 msgid "Stock Move"
-msgstr "Mouvement de stock"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,field_description:logistics_center.field_logistics_flow__impacted_record
 msgid "Todo"
-msgstr "A traiter"
+msgstr ""
 
 #. module: logistics_center
 #: code:addons/logistics_center/models/stock.py:147
@@ -473,90 +458,84 @@ msgstr ""
 #. module: logistics_center
 #: model:ir.model,name:logistics_center.model_stock_picking
 msgid "Transfer"
-msgstr "Transfert"
+msgstr ""
 
 #. module: logistics_center
 #: code:addons/logistics_center/models/flow.py:86
 #, python-format
 msgid "Transfert: impacted flow %s"
-msgstr "Transfert: flux impactés %s"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,field_description:logistics_center.field_ir_attachment__sending_date
 #: model:ir.model.fields,field_description:logistics_center.field_mrp_document__sending_date
 msgid "Transmission Date"
-msgstr "Date de transmission"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,help:logistics_center.field_logistics_flow__flow
 msgid "Typical logistics flow to implement with an external logistics center"
-msgstr "Flux logistiques typique à implémenter avec un centre externe"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,field_description:logistics_center.field_logistics_backend__message_unread
 msgid "Unread Messages"
-msgstr "Messages non lus"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,field_description:logistics_center.field_logistics_backend__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "Compteur de messages non lus"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,help:logistics_center.field_logistics_flow__picking_state
 msgid "Used to select pickings to take in account"
-msgstr "Utilisé pour prendre en compte des transferts"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,field_description:logistics_center.field_logistics_backend__version
 msgid "Version"
-msgstr "Version"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,help:logistics_center.field_logistics_backend__version
-msgid ""
-"Version must be added by modules dealing with logistics center "
-"synchronization. Install one of these"
+msgid "Version must be added by modules dealing with logistics center synchronization. Install one of these"
 msgstr ""
-"La version doit être ajouté par les modules traitant de synchro avec des "
-"centres logistiques. Installer l'un d'eux"
 
 #. module: logistics_center
 #: model:ir.model,name:logistics_center.model_stock_warehouse
 #: model:ir.model.fields,field_description:logistics_center.field_logistics_backend__warehouse_id
 msgid "Warehouse"
-msgstr "Entrepôt"
+msgstr ""
 
 #. module: logistics_center
 #: sql_constraint:logistics.backend:0
 msgid "Warehouse must be only used in only one Logistics Backend"
-msgstr "L'entrepôt doit uniquement être utilisé sur un backend logistique"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,help:logistics_center.field_logistics_backend__warehouse_id
 msgid "Warehouse of the logistics center"
-msgstr "Entrepôt du centre logistique"
+msgstr ""
 
 #. module: logistics_center
 #: code:addons/logistics_center/models/stock.py:145
 #, python-format
 msgid "Warning !"
-msgstr "Alerte !"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,help:logistics_center.field_logistics_flow__direction
 msgid "Way followed by the flow"
-msgstr "Sens suivi par le flux"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,field_description:logistics_center.field_logistics_backend__website_message_ids
 msgid "Website Messages"
-msgstr "Messages du site web"
+msgstr ""
 
 #. module: logistics_center
 #: model:ir.model.fields,help:logistics_center.field_logistics_backend__website_message_ids
 msgid "Website communication history"
-msgstr "Historique de communication du site web"
+msgstr ""
 
-#~ msgid "Reload"
-#~ msgstr "Recharger"
