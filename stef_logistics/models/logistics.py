@@ -14,9 +14,6 @@ from ..data.flow_delivery_manual import portal_delivery_head
 _logger = logging.getLogger(__name__)
 
 
-READY_PICKING_STATE = ('confirmed', 'assigned')
-
-
 class Stef(Logistic):
 
     # Used with csv, then not for this provider
@@ -43,7 +40,7 @@ class Stef(Logistic):
 
     def _get_domain(self, flow):
         domain = [
-            ('state', '=', 'assigned'),
+            ('state', '=', flow.picking_state),
             ('logistics_blocked', '=', False),
             ('log_out_file_doc_id', '=', False)
         ]

@@ -5,7 +5,6 @@
     'name': 'Stef logistics center',
     'version': '12.0.0.0.0',
     'category': 'Warehouse',
-    'sequence': 10,
     'summary': "Stef logistics center",
     'description': """
 Stef logistics center
@@ -23,8 +22,7 @@ Export :
 
 Import :
 
-- received products
-- sent products
+- not implemented
 
 Settings
 --------
@@ -68,8 +66,6 @@ How to use
     'demo': [
     ],
     'installable': True,
-    'auto_install': False,
-    'application': False,
     'images': [
     ],
 }
