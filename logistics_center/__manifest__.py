@@ -6,28 +6,6 @@
     'version': '12.0.0.0.1',
     'category': 'Warehouse',
     'summary': "Common module for logistics center and external warehouse",
-    'description': """
-Connector logistics center
-==========================
-
-Description
------------
-
-Common module for logistics center and external warehouse management
-with csv file
-
-Export :
-
-- products to receive
-- products to deliver
-
-Import :
-
-- received products
-- sent products
-
-
-    """,
     'author': 'Akretion',
     'website': 'http://www.akretion.com',
     'depends': [

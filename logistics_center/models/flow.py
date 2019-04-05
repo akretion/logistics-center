@@ -33,7 +33,6 @@ class LogisticsFlow(models.Model):
         help="Way followed by the flow")
     picking_state = fields.Selection(
         selection=[('assigned', 'Ready'), ('done', 'Done')],
-        groups="base.group_erp_manager",
         help="Used to select pickings to take in account")
     impacted_record = fields.Integer(
         string='Todo', compute='_compute_impacted_records')
