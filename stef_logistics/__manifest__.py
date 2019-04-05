@@ -66,6 +66,4 @@ How to use
     'demo': [
     ],
     'installable': True,
-    'images': [
-    ],
 }

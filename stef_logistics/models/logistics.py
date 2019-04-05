@@ -148,7 +148,9 @@ alias produit;type ul;réf lot;qté;poids;date rotation;référence palette clie
             res = {
                 'del_ord': picking.name,
                 'cmdcli': picking.origin,
-                'trsdst': picking.partner_id.stef_partner_id_string or '',
+                'trsdst': (
+                    picking.partner_id and picking.partner_id.
+                    stef_partner_id_string or ''),
                 'datliv': self._convert_date(
                     picking.scheduled_date, 'datliv', delivery_head),
                 'dat_drop': self._convert_date(
