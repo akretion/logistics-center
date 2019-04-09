@@ -10,4 +10,12 @@
     <field name="invoice_policy">order</field>
 </record>
 
+<record id="domain_explain_filter" model="ir.filters">
+    <field name="name">Domain explain for logistics center</field>
+    <field name="model_id">stock.picking</field>
+    <field name="active">0</field>
+    <field name="user_id"></field>
+    <field name="domain"></field>
+</record>
+
 </odoo>
