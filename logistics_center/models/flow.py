@@ -49,6 +49,9 @@ class LogisticsFlow(models.Model):
 
     def run(self):
         self.ensure_one()
+        if self.impacted_record == 0:
+            raise UserError(
+                _("There is no data in this flow to convert in file"))
         logistics = self._get_logistics()
         kwargs = logistics.run_flow(self)
         attachment = self._save_attachment(kwargs)
@@ -96,7 +99,7 @@ class LogisticsFlow(models.Model):
     def button_records_matching_file(self):
         self.ensure_one()
         return {
-            "name": _("Transfert: impacted flow %s" % self.name),
+            'name': _("Transfert: impacted flow %s" % self.name),
             'type': 'ir.actions.act_window',
             'res_model': 'stock.picking',
             'view_mode': 'tree,form',
@@ -109,44 +112,20 @@ class LogisticsFlow(models.Model):
         domain = self._get_domain()
         model = 'stock.picking'
         self.env[model].search(domain)
-        explain_dom = self._get_domain_info(domain, model)
-        raise UserError(
-            _("Domain model: '%s' (%s)\nDomain expression:\n - %s"
-              "\n\nTechnical domain expression:\n%s")
-            % (self.env[model]._description, self.env[model]._name,
-               '\n - '.join([' '.join(map(str, x)) for x in explain_dom]),
-               domain))
-
-    def _get_domain_info(self, domain, model):
-        fields_name = [x[0] for x in domain if '.' not in x]
-        domain_adv = [x for x in domain if '.' in x[0]]
-        self._get_adv_domain(domain_adv, model)
-        mfields = self.env['ir.model.fields'].search([
-            ('model_id.model', '=', model),
-            ('name', 'in', fields_name),
-            ])
-        fields_info = {x.name: x for x in mfields}
-        dom = [(fields_info.get(x[0]) and
-                fields_info[x[0]].field_description or x[0],
-                x[1],
-                fields_info.get(x[0]) and
-                fields_info[x[0]].ttype == 'selection' and
-                fields_info.get(x[0]).selection or x[2]
-                )
-               for x in domain]
-        print(dom)
-        return dom
-
-    def _get_adv_domain(self, domain, model):
-        print(domain)
-        deff = {
-            x[0].split('.')[0]: {
-                'obj': x, 'field': x[0].split('.')[1],
-                'mod': self.env['stock.picking']._fields[x[0].split('.')[0]]
-                }
-            for x in domain
+        name = _("Flow %(name)s from %(backend)s" % {
+            'name': self.name, 'backend': self.logistics_backend_id.name})
+        self.env.ref('logistics_center.domain_explain_filter').write({
+            'domain': '%s' % domain,
+        })
+        return {
+            'name': name,
+            'type': 'ir.actions.act_window',
+            'res_model': 'ir.filters',
+            'res_id': self.env.ref(
+                'logistics_center.domain_explain_filter').id,
+            'view_mode': 'form',
+            'target': 'current',
         }
-        print(deff)
 
     def _get_records_to_process(self):
         domain = self._get_domain()
