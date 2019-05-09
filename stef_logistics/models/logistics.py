@@ -107,17 +107,11 @@ class Stef(Logistic):
 
     def _format_incoming_header(self, mapping):
         return """%(del_ord)s;;;;;;
-
 %(cmdcli)s;;;;;;
-
 %(trsdst)s;;;;;;
-
 %(dat_drop)s;%(datliv)s;;;;;
-
 ;;;;;;
-
-alias produit;type ul;réf lot;qté;poids;date rotation;référence palette client
-""" % mapping
+alias produit;type ul;réf lot;qté;poids;date rotation;référence palette client""" % mapping
 
     def _format_incoming_body(self, mapping):
         return "%(codprd)s;C1;%(num_lot)s;%(qty)s;%(weight)s;%(rotation)s" \
@@ -125,17 +119,11 @@ alias produit;type ul;réf lot;qté;poids;date rotation;référence palette clie
 
     def _format_delivery_header(self, mapping):
         return """%(del_ord)s;;;;;;
-
 %(cmdcli)s;;;;;;
-
 %(trsdst)s;;;;;;
-
 %(dat_drop)s;%(datliv)s;;;;;
-
 ;;;;;;
-
-alias produit;type ul;réf lot;qté;poids;date rotation;référence palette client
-""" % mapping
+alias produit;type ul;réf lot;qté;poids;date rotation;référence palette client""" % mapping
 
     def _format_delivery_body(self, mapping):
         return "%(codprd)s;C1;%(num_lot)s;%(qty)s;%(weight)s;%(rotation)s" \
@@ -147,10 +135,10 @@ alias produit;type ul;réf lot;qté;poids;date rotation;référence palette clie
         if flow.logistics_backend_id.version == 'stef-portail':
             res = {
                 'del_ord': picking.name,
-                'cmdcli': picking.origin,
+                'cmdcli': picking.origin or '',
                 'trsdst': (
-                    picking.partner_id and picking.partner_id.
-                    stef_partner_id_string or ''),
+                    picking.company_id.partner_id and picking.company_id.
+                    partner_id.stef_partner_id_string or ''),
                 'datliv': self._convert_date(
                     picking.scheduled_date, 'datliv', delivery_head),
                 'dat_drop': self._convert_date(
@@ -176,7 +164,7 @@ alias produit;type ul;réf lot;qté;poids;date rotation;référence palette clie
             return {
                 'codprd': move.product_id.default_code,
                 'type_ul': 'C1',
-                'num_lot': '',
+                'num_lot': hasattr(move, 'lot_id') and move.lot_id.name or "",
                 'qty': move.product_uom_qty,
                 'weight': move.product_id.weight * move.product_uom_qty,
                 'rotation': '',
@@ -215,13 +203,17 @@ alias produit;type ul;réf lot;qté;poids;date rotation;référence palette clie
             # exceptions.update(self._check_field_length(
             #     vals, head_data, 'head'))
             data.append(
-                getattr(self, '_format_%s_header' % flow.flow)(vals)
-            )
-            for move in picking.move_lines:
-                vals = self._prepare_line_data(move, flow)
-                data.append(
-                    getattr(self, '_format_%s_body' % flow.flow)(vals)
-                )
+                getattr(self, '_format_%s_header' % flow.flow)(vals))
+            if flow.flow == "delivery":
+                for move in picking.move_lines:
+                    vals = self._prepare_line_data(move, flow)
+                    data.append(
+                        getattr(self, '_format_%s_body' % flow.flow)(vals))
+            elif flow.flow == "incoming":
+                for move in picking.move_line_ids_without_package:
+                    vals = self._prepare_line_data(move, flow)
+                    data.append(
+                        getattr(self, '_format_%s_body' % flow.flow)(vals))
             if exceptions:
                 # Not used in this connector
                 self._notify_exceptions(picking, exceptions)
