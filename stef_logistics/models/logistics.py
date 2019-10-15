@@ -146,6 +146,8 @@ alias produit;type ul;réf lot;qté;poids;date rotation;référence palette clie
             }
             if not res['dat_drop']:
                 res['dat_drop'] = res['datliv']
+            if flow.flow == "delivery":
+                res["trsdst"] = picking.partner_id.stef_partner_id_string or ''
             return res
         else:
             # Real EDI: not implemented
