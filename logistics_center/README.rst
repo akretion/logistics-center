@@ -10,9 +10,9 @@ Logistics center
 .. |badge1| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
     :alt: Beta
-.. |badge2| image:: https://img.shields.io/badge/github-akretion%2Flogistics--center-lightgray.png?logo=github
-    :target: https://github.com/akretion/logistics-center/tree/12.0/logistics_center
-    :alt: akretion/logistics-center
+.. |badge2| image:: https://img.shields.io/badge/github-Akretion%2Flogistics--center-lightgray.png?logo=github
+    :target: https://github.com/Akretion/logistics-center/tree/12.0/logistics_center
+    :alt: Akretion/logistics-center
 
 |badge1| |badge2| 
 
@@ -47,7 +47,7 @@ Usage
 Here is the dashboard with a french carrier as example: module stef_logistics
 
 
-.. image:: https://raw.githubusercontent.com/akretion/logistics-center/12.0/logistics_center/static/description/log1.png
+.. image:: https://raw.githubusercontent.com/Akretion/logistics-center/12.0/logistics_center/static/description/log1.png
    :alt: No data to exchange
 
 1 Count of picking to process for this flow
@@ -58,8 +58,11 @@ Here is the dashboard with a french carrier as example: module stef_logistics
 
 4 Display informations on the query (domain)
 
-.. image:: https://raw.githubusercontent.com/akretion/logistics-center/12.0/logistics_center/static/description/log2.png
+.. image:: https://raw.githubusercontent.com/Akretion/logistics-center/12.0/logistics_center/static/description/log2.png
    :alt: output file
+
+----
+
 
 1 Generated file to send for logistics center
 
@@ -67,18 +70,21 @@ Here is the dashboard with a french carrier as example: module stef_logistics
 
 3 You can choose which state is taken account
 
-.. image:: https://raw.githubusercontent.com/akretion/logistics-center/12.0/logistics_center/static/description/log3.png
+
+----
+
+.. image:: https://raw.githubusercontent.com/Akretion/logistics-center/12.0/logistics_center/static/description/log3.png
    :alt: Picking type operation
 
-Module provide a dedicated operation with predefine locations
+Module provides a dedicated operation with predefine locations
 
 Bug Tracker
 ===========
 
-Bugs are tracked on `GitHub Issues <https://github.com/akretion/logistics-center/issues>`_.
+Bugs are tracked on `GitHub Issues <https://github.com/Akretion/logistics-center/issues>`_.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us smashing it by providing a detailed and welcomed
-`feedback <https://github.com/akretion/logistics-center/issues/new?body=module:%20logistics_center%0Aversion:%2012.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
+`feedback <https://github.com/Akretion/logistics-center/issues/new?body=module:%20logistics_center%0Aversion:%2012.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
 
 Do not contact contributors directly about support or help with technical issues.
 
@@ -93,11 +99,13 @@ Authors
 Contributors
 ~~~~~~~~~~~~
 
-David Béal <david.beal@akretion.com>
+Akretion:
+
+- David Béal <david.beal@akretion.com>
 
 Maintainers
 ~~~~~~~~~~~
 
-This module is part of the `akretion/logistics-center <https://github.com/akretion/logistics-center/tree/12.0/logistics_center>`_ project on GitHub.
+This module is part of the `Akretion/logistics-center <https://github.com/Akretion/logistics-center/tree/12.0/logistics_center>`_ project on GitHub.
 
 You are welcome to contribute.

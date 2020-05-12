@@ -1,1 +1,3 @@
-David Béal <david.beal@akretion.com>
+Akretion:
+
+- David Béal <david.beal@akretion.com>
