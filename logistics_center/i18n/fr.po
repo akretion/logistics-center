@@ -1,0 +1,453 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* logistics_center
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-05-12 10:47+0000\n"
+"PO-Revision-Date: 2020-05-12 10:47+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: logistics_center
+#: code:addons/logistics_center/models/flow.py:60
+#, python-format
+msgid "%(name)s %(flow)s has generated these pickings : %(records)s"
+msgstr "%(name)s %(flow)s a généré ces pickings : %(records)s"
+
+#. module: logistics_center
+#: model:ir.ui.view,arch_db:logistics_center.view_logistics_backend_form
+msgid "Access to the provider portal"
+msgstr "Accès au portail du fournisseur"
+
+#. module: logistics_center
+#: model:ir.model.fields,field_description:logistics_center.field_logistics_flow_logistics_backend_id
+msgid "Backend logistics"
+msgstr "Backend logistics"
+
+#. module: logistics_center
+#: selection:logistics.flow,flow:0
+msgid "Catalog"
+msgstr "Catalogue"
+
+#. module: logistics_center
+#: model:ir.model.fields,help:logistics_center.field_magento_stock_picking_logistics_exception
+#: model:ir.model.fields,help:logistics_center.field_stock_picking_logistics_exception
+msgid "Checked if a wrong data prevent you to send the order to your logistics center"
+msgstr "Coché si une donnée erronée vous empêche d'envoyer la commande à votre centre logistique"
+
+#. module: logistics_center
+#: model:ir.ui.view,arch_db:logistics_center.view_logistics_backend_form
+msgid "Click to see impacted records"
+msgstr "Cliquez pour voir les enregistrements concernés"
+
+#. module: logistics_center
+#: model:ir.model.fields,field_description:logistics_center.field_logistics_backend_code
+msgid "Code"
+msgstr "Code"
+
+#. module: logistics_center
+#: model:ir.model.fields,field_description:logistics_center.field_logistics_backend_company_id
+msgid "Company"
+msgstr "Société"
+
+#. module: logistics_center
+#: model:ir.ui.view,arch_db:logistics_center.view_logistics_backend_form
+msgid "Configuration"
+msgstr "Configuration"
+
+#. module: logistics_center
+#: model:ir.model.fields,field_description:logistics_center.field_logistics_backend_create_uid
+#: model:ir.model.fields,field_description:logistics_center.field_logistics_flow_create_uid
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: logistics_center
+#: model:ir.model.fields,field_description:logistics_center.field_logistics_backend_create_date
+#: model:ir.model.fields,field_description:logistics_center.field_logistics_flow_create_date
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: logistics_center
+#: model:ir.model.fields,help:logistics_center.field_stock_picking_drop_date
+msgid "Date on which the consignee will take possession of the goods."
+msgstr "Date à laquelle le destinataire prendra possession des marchandises."
+
+#. module: logistics_center
+#: model:ir.model.fields,help:logistics_center.field_ir_attachment_sending_date
+msgid "Date to which the file has been transmit to the logistics center"
+msgstr "Date à laquelle le fichier a été transmis au centre logistique"
+
+#. module: logistics_center
+#: model:ir.model.fields,help:logistics_center.field_magento_stock_picking_drop_date
+msgid "Date à laquelle le destinataire prendra possession des marchandises"
+msgstr "Date à laquelle le destinataire prendra possession des marchandises"
+
+#. module: logistics_center
+#: selection:logistics.flow,flow:0
+msgid "Delivery"
+msgstr "Livraison"
+
+#. module: logistics_center
+#: model:ir.model.fields,field_description:logistics_center.field_logistics_flow_direction
+msgid "Direction"
+msgstr "Direction"
+
+#. module: logistics_center
+#: model:ir.model.fields,field_description:logistics_center.field_logistics_backend_display_name
+#: model:ir.model.fields,field_description:logistics_center.field_logistics_flow_display_name
+msgid "Display Name"
+msgstr "Nom d’affichage"
+
+#. module: logistics_center
+#: model:ir.ui.view,arch_db:logistics_center.view_logistics_backend_form
+msgid "Display information on the query"
+msgstr "Afficher des informations sur la requête"
+
+#. module: logistics_center
+#: model:ir.filters,name:logistics_center.domain_explain_filter
+msgid "Domain explain for logistics center"
+msgstr "Explication du domaine pour le centre logistique"
+
+#. module: logistics_center
+#: selection:logistics.flow,picking_state:0
+msgid "Done"
+msgstr "Fait"
+
+#. module: logistics_center
+#: model:ir.model.fields,field_description:logistics_center.field_magento_stock_picking_drop_date
+msgid "Dépose marchandise"
+msgstr "Dépose marchandise"
+
+#. module: logistics_center
+#: selection:logistics.flow,direction:0
+msgid "Export"
+msgstr "Export"
+
+#. module: logistics_center
+#: model:ir.model.fields,field_description:logistics_center.field_ir_attachment_external_type
+msgid "External"
+msgstr "Externe"
+
+#. module: logistics_center
+#: model:ir.model.fields,field_description:logistics_center.field_logistics_flow_flow
+msgid "Flow"
+msgstr "Flux"
+
+#. module: logistics_center
+#: code:addons/logistics_center/models/flow.py:116
+#, python-format
+msgid "Flow %(name)s from %(backend)sname"
+msgstr "Flux %(name)s de %(backend)sname"
+
+#. module: logistics_center
+#: model:ir.ui.view,arch_db:logistics_center.view_logistics_backend_form
+msgid "Flows"
+msgstr "Flux"
+
+#. module: logistics_center
+#: model:ir.model.fields,field_description:logistics_center.field_logistics_backend_id
+#: model:ir.model.fields,field_description:logistics_center.field_logistics_flow_id
+msgid "ID"
+msgstr "ID du cas"
+
+#. module: logistics_center
+#: model:ir.ui.view,arch_db:logistics_center.view_logistics_backend_form
+msgid "Impacted records matching this file."
+msgstr "Enregistrements impactés correspondant à ce fichier."
+
+#. module: logistics_center
+#: selection:logistics.flow,direction:0
+msgid "Import"
+msgstr "Import"
+
+#. module: logistics_center
+#: selection:logistics.flow,flow:0
+msgid "Incoming"
+msgstr "Entrant"
+
+#. module: logistics_center
+#: model:ir.ui.view,arch_db:logistics_center.view_logistics_backend_form
+msgid "Informations"
+msgstr "Informations"
+
+#. module: logistics_center
+#: model:ir.model.fields,field_description:logistics_center.field_logistics_backend___last_update
+#: model:ir.model.fields,field_description:logistics_center.field_logistics_flow___last_update
+msgid "Last Modified on"
+msgstr "Dernière modification le"
+
+#. module: logistics_center
+#: model:ir.model.fields,field_description:logistics_center.field_logistics_backend_write_uid
+#: model:ir.model.fields,field_description:logistics_center.field_logistics_flow_write_uid
+msgid "Last Updated by"
+msgstr "Dernière modification par"
+
+#. module: logistics_center
+#: model:ir.model.fields,field_description:logistics_center.field_logistics_backend_write_date
+#: model:ir.model.fields,field_description:logistics_center.field_logistics_flow_write_date
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: logistics_center
+#: model:ir.model.fields,field_description:logistics_center.field_logistics_flow_last_date
+msgid "Last date"
+msgstr "Dernière date"
+
+#. module: logistics_center
+#: model:ir.model.fields,field_description:logistics_center.field_logistics_flow_last_doc_id
+msgid "Last file"
+msgstr "Dernier fichier"
+
+#. module: logistics_center
+#: model:ir.model.fields,field_description:logistics_center.field_logistics_flow_last_message
+msgid "Last message"
+msgstr "Dernier message"
+
+#. module: logistics_center
+#: model:ir.ui.view,arch_db:logistics_center.view_logistics_backend_tree
+msgid "Logistic Backend"
+msgstr "Backend logistique"
+
+#. module: logistics_center
+#: model:ir.actions.act_window,name:logistics_center.logistic_attachments_action
+#: model:ir.ui.menu,name:logistics_center.logistic_attachments_menu
+#: model:ir.ui.view,arch_db:logistics_center.view_logistic_attachments_tree
+msgid "Logistic attachments"
+msgstr "Pièces jointes logistiques"
+
+#. module: logistics_center
+#: model:ir.model.fields,field_description:logistics_center.field_stock_warehouse_logistics_id
+#: model:ir.ui.menu,name:logistics_center.menu_logistics_backend
+#: model:ir.ui.view,arch_db:logistics_center.view_logistics_backend_form
+msgid "Logistics"
+msgstr "Logistique"
+
+#. module: logistics_center
+#: model:ir.model,name:logistics_center.model_logistics_backend
+msgid "Logistics Backend to manage data exchange with logistics center"
+msgstr "Backend logistique pour gérer l'échange de données avec le centre logistique"
+
+#. module: logistics_center
+#: model:ir.model.fields,help:logistics_center.field_logistics_flow_logistics_backend_id
+msgid "Logistics Backend where flow is attached"
+msgstr "Logistics Backend where flow is attached"
+
+#. module: logistics_center
+#: model:ir.actions.act_window,name:logistics_center.action_logistics_backend
+msgid "Logistics Backends"
+msgstr "Backend  Logistique"
+
+#. module: logistics_center
+#: model:ir.model.fields,field_description:logistics_center.field_magento_stock_picking_logistics_blocked
+#: model:ir.model.fields,field_description:logistics_center.field_stock_picking_logistics_blocked
+msgid "Logistics Blocked"
+msgstr "Logistique bloquée"
+
+#. module: logistics_center
+#: model:ir.model.fields,help:logistics_center.field_magento_stock_picking_logistics_blocked
+#: model:ir.model.fields,help:logistics_center.field_stock_picking_logistics_blocked
+msgid "Logistics Delivery Orders can be blocked manually"
+msgstr "Les bons de livraison logistiques peuvent être bloqués manuellement"
+
+#. module: logistics_center
+#: model:ir.model.fields,field_description:logistics_center.field_magento_stock_picking_log_in_file_doc_id
+#: model:ir.model.fields,field_description:logistics_center.field_stock_picking_log_in_file_doc_id
+msgid "Logistics Doc. In"
+msgstr "Logistics Doc. In"
+
+#. module: logistics_center
+#: model:ir.model.fields,field_description:logistics_center.field_magento_stock_picking_log_out_file_doc_id
+#: model:ir.model.fields,field_description:logistics_center.field_stock_picking_log_out_file_doc_id
+msgid "Logistics Doc. Out"
+msgstr "Logistics Doc. Out"
+
+#. module: logistics_center
+#: model:ir.model.fields,field_description:logistics_center.field_magento_stock_picking_logistics_exception
+#: model:ir.model.fields,field_description:logistics_center.field_stock_picking_logistics_exception
+msgid "Logistics Exception"
+msgstr "Exception logistique"
+
+#. module: logistics_center
+#: model:ir.ui.view,arch_db:logistics_center.view_logistics_backend_form
+msgid "Logistics Portal"
+msgstr "Portail logistique"
+
+#. module: logistics_center
+#: model:ir.ui.view,arch_db:logistics_center.view_logistics_backend_form
+#: model:ir.ui.view,arch_db:logistics_center.view_picking_form
+msgid "Logistics center"
+msgstr "Centre logistique"
+
+#. module: logistics_center
+#: model:product.product,name:logistics_center.logistics_center_port
+#: model:product.template,name:logistics_center.logistics_center_port_product_template
+msgid "Logistics delivery charges"
+msgstr "Frais de livraison logistique"
+
+#. module: logistics_center
+#: model:ir.model.fields,field_description:logistics_center.field_logistics_backend_logistics_flow_ids
+msgid "Logistics flows"
+msgstr "Flux logistiques"
+
+#. module: logistics_center
+#: model:ir.model,name:logistics_center.model_logistics_flow
+msgid "Logistics flows attached to logistics backend"
+msgstr "Flux logistiques attachés au backend logistique"
+
+#. module: logistics_center
+#: model:ir.model.fields,help:logistics_center.field_logistics_backend_logistics_flow_ids
+msgid "Logistics tasks flow"
+msgstr "Flux des tâches logistiques"
+
+#. module: logistics_center
+#: model:ir.model.fields,field_description:logistics_center.field_stock_picking_drop_date
+msgid "Merchandise drop-off"
+msgstr "Dépôt de marchandises"
+
+#. module: logistics_center
+#: model:ir.model.fields,field_description:logistics_center.field_logistics_backend_name
+#: model:ir.model.fields,field_description:logistics_center.field_logistics_flow_name
+msgid "Name"
+msgstr "Nom"
+
+#. module: logistics_center
+#: model:ir.model.fields,field_description:logistics_center.field_logistics_flow_picking_state
+msgid "Picking state"
+msgstr "Statut Picking"
+
+#. module: logistics_center
+#: code:addons/logistics_center/models/flow.py:68
+#, python-format
+msgid "Pickings %s"
+msgstr "Pickings %s"
+
+#. module: logistics_center
+#: model:ir.ui.view,arch_db:logistics_center.view_logistics_backend_form
+msgid "Process the flow"
+msgstr "Traiter le flux"
+
+#. module: logistics_center
+#: selection:logistics.flow,picking_state:0
+msgid "Ready"
+msgstr "Prêt"
+
+#. module: logistics_center
+#: model:ir.ui.view,arch_db:logistics_center.view_logistics_backend_form
+msgid "Record number to process"
+msgstr "Numéro d'enregistrement à traiter"
+
+#. module: logistics_center
+#: model:ir.model.fields,help:logistics_center.field_magento_stock_picking_log_in_file_doc_id
+#: model:ir.model.fields,help:logistics_center.field_stock_picking_log_in_file_doc_id
+msgid "Refers the 'File document' object which contains infmodelsations sent by Logistics center in response from original message."
+msgstr "Refers the 'File document' object which contains infmodelsations sent by Logistics center in response from original message."
+
+#. module: logistics_center
+#: model:ir.model.fields,help:logistics_center.field_magento_stock_picking_log_out_file_doc_id
+#: model:ir.model.fields,help:logistics_center.field_stock_picking_log_out_file_doc_id
+msgid "Refers the 'File document' object which contains infmodelsations to send to Logistics center for synchronisation purpose."
+msgstr "Refers the 'File document' object which contains infmodelsations to send to Logistics center for synchronisation purpose."
+
+#. module: logistics_center
+#: model:ir.ui.view,arch_db:logistics_center.view_logistics_backend_form
+msgid "Reload the page"
+msgstr "Recharger la page"
+
+#. module: logistics_center
+#: model:ir.model,name:logistics_center.model_stock_move
+msgid "Stock Move"
+msgstr "Mouvement de stock"
+
+#. module: logistics_center
+#: code:addons/logistics_center/models/flow.py:55
+#, python-format
+msgid "There is no data in this flow to convert in file"
+msgstr "Il n'y a pas de données dans ce flux à convertir en fichier"
+
+#. module: logistics_center
+#: model:ir.model.fields,field_description:logistics_center.field_logistics_flow_impacted_record
+msgid "Todo"
+msgstr "Todo"
+
+#. module: logistics_center
+#: code:addons/logistics_center/models/stock.py:146
+#, python-format
+msgid "Too much product delivered for picking '%s' (id %s)"
+msgstr "Trop de produits livrés pour picking '%s' (id %s)"
+
+#. module: logistics_center
+#: model:ir.model,name:logistics_center.model_stock_picking
+msgid "Transfer"
+msgstr "Transfer"
+
+#. module: logistics_center
+#: code:addons/logistics_center/models/flow.py:92
+#: code:addons/logistics_center/models/flow.py:103
+#, python-format
+msgid "Transfert: impacted flow %s"
+msgstr "Transfert: flux impactés %s"
+
+#. module: logistics_center
+#: model:ir.model.fields,field_description:logistics_center.field_ir_attachment_sending_date
+msgid "Transmission Date"
+msgstr "Date de transmission"
+
+#. module: logistics_center
+#: model:ir.model.fields,help:logistics_center.field_logistics_flow_flow
+msgid "Typical logistics flow to implement with an external logistics center"
+msgstr "Flux logistique typique à mettre en œuvre avec un centre logistique externe"
+
+#. module: logistics_center
+#: model:ir.model.fields,help:logistics_center.field_logistics_flow_picking_state
+msgid "Used to select pickings to take in account"
+msgstr "Utilisé pour sélectionner les pickings à prendre en compte"
+
+#. module: logistics_center
+#: model:ir.model.fields,field_description:logistics_center.field_logistics_backend_version
+msgid "Version"
+msgstr "Version"
+
+#. module: logistics_center
+#: model:ir.model.fields,help:logistics_center.field_logistics_backend_version
+msgid "Version must be added by modules dealing with logistics center synchronization. Install one of these"
+msgstr "La version doit être ajoutée par des modules traitant de la synchronisation des centres logistiques. Installez l'un de ces modules"
+
+#. module: logistics_center
+#: model:ir.model,name:logistics_center.model_stock_warehouse
+#: model:ir.model.fields,field_description:logistics_center.field_logistics_backend_warehouse_id
+msgid "Warehouse"
+msgstr "Entrepôt"
+
+#. module: logistics_center
+#: sql_constraint:logistics.backend:0
+msgid "Warehouse must be only used in only one Logistics Backend"
+msgstr "L'entrepôt doit uniquement être utilisé sur un backend logistique"
+
+#. module: logistics_center
+#: model:ir.model.fields,help:logistics_center.field_logistics_backend_warehouse_id
+msgid "Warehouse of the logistics center"
+msgstr "L'entrepôt du centre logistique"
+
+#. module: logistics_center
+#: code:addons/logistics_center/models/stock.py:144
+#, python-format
+msgid "Warning !"
+msgstr "Alerte !"
+
+#. module: logistics_center
+#: model:ir.model.fields,help:logistics_center.field_logistics_flow_direction
+msgid "Way followed by the flow"
+msgstr "La voie suivie par le flux"
+
+#. module: logistics_center
+#: model:ir.model,name:logistics_center.model_ir_attachment
+msgid "ir.attachment"
+msgstr "ir.attachment"
+

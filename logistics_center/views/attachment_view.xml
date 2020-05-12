@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+
+<record id="view_attachment_logistics_tree" model="ir.ui.view">
+    <field name="priority">20</field>
+    <field name="model">ir.attachment</field>
+    <field name="arch" type="xml">
+        <tree editable="top" create="false" string="Logistics attachment">
+            <field name="write_date" readonly="1"/>
+            <field name="name" readonly="1"/>
+            <field name="sending_date"/>
+        </tree>
+    </field>
+</record>
+
+<record id="attach_logistics_action" model="ir.actions.act_window">
+    <field name="name">Attach Logistics</field>
+    <field name="res_model">ir.attachment</field>
+    <field name="view_mode">tree</field>
+    <field name="domain">[('external_type', '!=', False)]</field>
+    <field name="view_id" ref="view_attachment_logistics_tree"/>
+</record>
+
+<menuitem id="attach_logistics_menu" name="Pièces jointes logistiques" sequence="110"
+          parent="stock.menu_warehouse_config" action="attach_logistics_action"/>
+
+</odoo>
