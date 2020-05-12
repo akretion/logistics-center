@@ -3,8 +3,8 @@
 
 import base64
 import logging
-from datetime import datetime
 from csv import register_dialect, writer as csv_writer
+from datetime import datetime
 from io import StringIO
 
 _logger = logging.getLogger(__name__)
@@ -17,7 +17,8 @@ class Logistic(object):
     own. If your file is a .csv or .xls format, you should consider inherit
     from the FileParser instead.
     """
-    _dialect = None         # csv dialect
+
+    _dialect = None  # csv dialect
 
     @classmethod
     def parser_for(cls, parser_name):
@@ -34,7 +35,7 @@ class Logistic(object):
         "Write or Create on Products with logistics product comes here"
         return NotImplementedError
 
-    def build_csv(self, records, method, encoding='utf-8'):
+    def build_csv(self, records, method, encoding="utf-8"):
         register_dialect("logistics_dialect", self._dialect)
         csv_file = StringIO()
         writer = csv_writer(csv_file, dialect=self._dialect)
@@ -43,8 +44,9 @@ class Logistic(object):
         if res:
             csv_file.seek(0)
             return (csv_file.read(), issue)
-            _logger.info("\nStart to read datas to put file "
-                         "for the method '%s'" % method)
+            _logger.info(
+                "\nStart to read datas to put file " "for the method '%s'" % method
+            )
         else:
             return (False, issue)
 
@@ -57,8 +59,8 @@ class Logistic(object):
         """ """
         return NotImplementedError
 
-    def _get_data_to_export(self, records, flow, type='csv'):
-        if type == 'csv':
+    def _get_data_to_export(self, records, flow, type="csv"):
+        if type == "csv":
             file_data, issue = self.build_csv(records, flow)
         else:
             file_data, issue = self.build_your_own(records, flow)
@@ -66,10 +68,9 @@ class Logistic(object):
             # some records are not compliant with logistics specs
             # they shouldn't be taken account
             records = set(records) - set(issue)
-            issue.write({'logistics_exception': True})
+            issue.write({"logistics_exception": True})
             mess = "Error when playing flow '%s' from Logistics center '%s"
-            issue.message_post(body=mess % (
-                flow.name, flow.logistics_backend_id.name))
+            issue.message_post(body=mess % (flow.name, flow.logistics_backend_id.name))
         if file_data:
             self.amend_file_data(flow, file_data)
             return self.prepare_doc_vals(file_data, records, flow)
@@ -85,12 +86,13 @@ class Logistic(object):
         now = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         back_name = flow.logistics_backend_id.code
         vals = {
-            'file_datas': base64.b64encode(file_data.encode('utf-8')),
-            'name': '%s %s %s' % (back_name, flow.flow, now),
-            'active': True,
-            'datas_fname': '%s_%s.csv' % (back_name, now),
+            "file_datas": base64.b64encode(file_data.encode("utf-8")),
+            "name": "{} {} {}".format(back_name, flow.flow, now),
+            "active": True,
+            "datas_fname": "{}_{}.csv".format(back_name, now),
             # send records impacted by data exportation
-            'records': records}
+            "records": records,
+        }
         return vals
 
     def sanitize(string):
@@ -103,7 +105,7 @@ class Logistic(object):
         """
         return NotImplementedError
 
-    def _check_field_length_helper(self, vals, field_def, name='_'):
+    def _check_field_length_helper(self, vals, field_def, name="_"):
         """ Check if data doesn't overcome the length of the field
             Use only if you need
             Provided field_def must be in the form:
@@ -115,28 +117,37 @@ class Logistic(object):
         exceptions = {}
         for field in field_def:
             to_collect = False
-            fname = field.get('col')
+            fname = field.get("col")
             if vals.get(fname):
-                if field.get('type') in ('I') and field.get('len'):
+                if field.get("type") in ("I") and field.get("len"):
                     try:
-                        if vals[fname] > int('9' * field.get('len')):
+                        if vals[fname] > int("9" * field.get("len")):
                             to_collect = True
                     except Exception as e:
                         _logger.warning(
-                            "Field length bug with key '%s' value '%s'\n%s" % (
-                                fname, vals[fname], e))
-                if field.get('type') in ('A') and field.get('len'):
+                            "Field length bug with key '%s' value '%s'\n%s"
+                            % (fname, vals[fname], e)
+                        )
+                if field.get("type") in ("A") and field.get("len"):
                     try:
-                        if len(vals[fname]) > field.get('len'):
+                        if len(vals[fname]) > field.get("len"):
                             to_collect = True
                     except Exception as e:
                         _logger.warning(
-                            "Field length bug with key '%s' value '%s'\n%s" % (
-                                fname, vals[fname], e))
+                            "Field length bug with key '%s' value '%s'\n%s"
+                            % (fname, vals[fname], e)
+                        )
                 if to_collect:
-                    exceptions.update({name: {fname: {
-                        'data': vals[fname],
-                        'max_length': field.get('len')}}})
+                    exceptions.update(
+                        {
+                            name: {
+                                fname: {
+                                    "data": vals[fname],
+                                    "max_length": field.get("len"),
+                                }
+                            }
+                        }
+                    )
         return exceptions
 
 
@@ -165,8 +176,9 @@ def itersubclasses(cls, _seen=None):
     ['type', ...'tuple', ...]
     """
     if not isinstance(cls, type):
-        raise TypeError('itersubclasses must be called with '
-                        'new-style classes, not %.100r' % cls)
+        raise TypeError(
+            "itersubclasses must be called with " "new-style classes, not %.100r" % cls
+        )
     if _seen is None:
         _seen = set()
     try:

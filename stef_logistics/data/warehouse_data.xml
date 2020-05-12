@@ -51,10 +51,10 @@ Minimal proposed scenario : directly send Stef with only one internal transsfert
 
 
 
-<!-- 
+<!--
 More advanced proposed scenario
 
-Push rule proposed to manage goods delivery to Stef 
+Push rule proposed to manage goods delivery to Stef
     You can inactive it if you don't want to use
 
     Pull rule can also be used but is not implemented here
