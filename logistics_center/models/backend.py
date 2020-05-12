@@ -2,40 +2,47 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 
-from odoo import models, fields
+from odoo import fields, models
+
 from .logistics import get_logistics_parser
 
 
 class LogisticsBackend(models.Model):
-    _name = 'logistics.backend'
-    _inherit = 'mail.thread'
-    _description = "Logistics Backend to manage data exchange " \
-                   "with logistics center"
+    _name = "logistics.backend"
+    _inherit = "mail.thread"
+    _description = "Logistics Backend to manage data exchange " "with logistics center"
 
-    name = fields.Char('Name', required=True)
+    name = fields.Char("Name", required=True)
     code = fields.Char(required=True, readonly=True)
     version = fields.Selection(
         selection=[],
-        string='Version',
+        string="Version",
         help="Version must be added by modules dealing with "
-             "logistics center synchronization. Install one of these")
+        "logistics center synchronization. Install one of these",
+    )
     warehouse_id = fields.Many2one(
-        comodel_name='stock.warehouse',
-        string='Warehouse',
+        comodel_name="stock.warehouse",
+        string="Warehouse",
         required=True,
         ondelete="cascade",
-        help="Warehouse of the logistics center")
+        help="Warehouse of the logistics center",
+    )
     company_id = fields.Many2one(
-        comodel_name='res.company',
-        string='Company',
-        ondelete="cascade")
+        comodel_name="res.company", string="Company", ondelete="cascade"
+    )
     logistics_flow_ids = fields.One2many(
-        comodel_name='logistics.flow', inverse_name='logistics_backend_id',
-        string='Logistics flows', help="Logistics tasks flow")
+        comodel_name="logistics.flow",
+        inverse_name="logistics_backend_id",
+        string="Logistics flows",
+        help="Logistics tasks flow",
+    )
 
     _sql_constraints = [
-        ('operation_uniq_warehouse', 'unique(warehouse_id)',
-         "Warehouse must be only used in only one Logistics Backend"),
+        (
+            "operation_uniq_warehouse",
+            "unique(warehouse_id)",
+            "Warehouse must be only used in only one Logistics Backend",
+        )
     ]
 
     def button_reload(self):
@@ -45,7 +52,7 @@ class LogisticsBackend(models.Model):
         self.ensure_one()
         logistics = get_logistics_parser(self.code)
         return {
-            'type': 'ir.actions.act_url',
-            'url': logistics._get_portal_url(),
-            'target': '_new',
+            "type": "ir.actions.act_url",
+            "url": logistics._get_portal_url(),
+            "target": "_new",
         }
