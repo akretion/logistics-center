@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+<record id="view_logistics_backend_form" model="ir.ui.view">
+  <field name="model">logistics.backend</field>
+  <field name="arch" type="xml">
+    <form string="Logistics">
+      <sheet>
+        <h1>Logistics center
+          <field name="name"/>
+        </h1>
+        <group name="logistic" col="4"
+               string="Configuration">
+          <field name="warehouse_id"/>
+          <field name="version"/>
+          <field name="company_id"/>
+          <button name="button_reload" title="Reload the page" string=" "
+                  type="object" class="btn btn-primary fa fa-refresh"/>
+          <button name="button_logistics_portal" string="Logistics Portal" class="oe_highlight"
+                  type="object" title="Access to the provider portal"/>
+          <field name="code" invisible="1"/>
+        </group>
+        <notebook>
+          <page name="flow" string="Flows">
+            <group>
+              <field name="logistics_flow_ids" nolabel="1">
+                <tree create="0" delete="0" readonly="1" editable="bottom">
+                  <field name="logistics_backend_id" invisible="1"/>
+                  <field name="impacted_record" help="Record number to process"/>
+                  <button name="button_see_impacted_records" type="object"
+                          attrs="{'invisible': [('impacted_record', '=', 0)]}"
+                          title="Click to see impacted records"
+                          class="btn btn-primary fa fa-eye"/>
+                  <button name="run" type="object"
+                          class="btn btn-primary fa fa-play"
+                          title="Process the flow"/>
+                  <field name="name"/>
+                  <field name="flow"/>
+                  <field name="direction"/>
+                  <field name="last_doc_id" widget="selection"/>
+                  <button name="button_records_matching_file" type="object"
+                          attrs="{'invisible': [('last_doc_id', '=', False)]}"
+                          title="Impacted records matching this file."
+                          class="btn fa fa-eye"/>
+                  <field name="last_message"/>
+                  <field name="last_date"/>
+                  <field name="picking_state" groups="base.group_erp_manager"/>
+                  <button name="button_learn" type="object"
+                          title="Display information on the query"
+                          class="fa fa-question-circle-o"/>
+                </tree>
+              </field>
+            </group>
+          </page>
+          <page name="infos" string="Informations"
+                attrs="{'invisible': True}">
+          </page>
+        </notebook>
+      </sheet>
+      <div class="oe_chatter">
+        <field name="message_follower_ids" widget="mail_followers"/>
+        <field name="message_ids" widget="mail_thread"/>
+      </div>
+    </form>
+  </field>
+</record>
+
+<record id="view_logistics_backend_tree" model="ir.ui.view">
+  <field name="model">logistics.backend</field>
+  <field name="arch" type="xml">
+    <tree string="Logistic Backend">
+      <field name="name"/>
+      <field name="warehouse_id"/>
+      <field name="version"/>
+    </tree>
+  </field>
+</record>
+
+
+<record id="action_logistics_backend" model="ir.actions.act_window">
+  <field name="name">Logistics Backends</field>
+  <field name="res_model">logistics.backend</field>
+  <field name="type">ir.actions.act_window</field>
+  <field name="view_mode">tree,form</field>
+</record>
+
+<menuitem id="menu_logistics_backend"
+          name="Logistics" sequence="100"
+          parent="stock.menu_warehouse_config"
+          action="action_logistics_backend"/>
+
+</odoo>
