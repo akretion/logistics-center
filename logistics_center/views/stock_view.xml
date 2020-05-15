@@ -8,7 +8,7 @@
 <!--             <field name="move_lines" position="attributes">
                 <attribute name="context">{'logistics_center': logistics_center, 'address_in_id': partner_id, 'picking_type': 'in', 'form_view_ref':'stock.view_move_picking_form', 'tree_view_ref':'stock.view_move_picking_tree'}</attribute>
             </field> -->
-            <field name="scheduled_date" position="after">
+            <field name="min_date" position="after">
                 <field name="drop_date"
                        attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}" />
             </field>

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # © 2019 David BEAL @ Akretion
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
@@ -55,7 +56,10 @@ class LogisticsFlow(models.Model):
     def _get_logistics(self):
         if not self.logistics_backend_id.code:
             raise UserError(
-                "Missing code in '%s' Logitics backend" % self.logistics_backend_id.name
+                _(
+                    "Missing code in '%s' Logitics backend"
+                    % self.logistics_backend_id.name
+                )
             )
         return get_logistics_parser(self.logistics_backend_id.code)
 

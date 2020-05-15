@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # © 2019 David BEAL @ Akretion
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
@@ -42,11 +43,11 @@ class Logistic(object):
         issue = []
         res = getattr(self, method)(records, writer, issue)
         if res:
+            _logger.info(
+                "\nStart to read datas to put file for the method '%s'" % method
+            )
             csv_file.seek(0)
             return (csv_file.read(), issue)
-            _logger.info(
-                "\nStart to read datas to put file " "for the method '%s'" % method
-            )
         else:
             return (False, issue)
 
@@ -59,8 +60,8 @@ class Logistic(object):
         """ """
         return NotImplementedError
 
-    def _get_data_to_export(self, records, flow, type="csv"):
-        if type == "csv":
+    def _get_data_to_export(self, records, flow, file_type="csv"):
+        if file_type == "csv":
             file_data, issue = self.build_csv(records, flow)
         else:
             file_data, issue = self.build_your_own(records, flow)
@@ -95,7 +96,7 @@ class Logistic(object):
         }
         return vals
 
-    def sanitize(string):
+    def sanitize(self, string):
         """ Some chars may be forbidden by your Logistics center
             Implements your own rules"""
         return NotImplementedError

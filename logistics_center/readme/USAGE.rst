@@ -1,7 +1,7 @@
 Here is the dashboard with a french carrier as example: module stef_logistics
 
 
-.. image:: ../static/description/log1.png
+.. image:: static/description/log1.png
    :alt: No data to exchange
 
 1 Count of picking to process for this flow
@@ -12,7 +12,7 @@ Here is the dashboard with a french carrier as example: module stef_logistics
 
 4 Display informations on the query (domain)
 
-.. image:: ../static/description/log2.png
+.. image:: static/description/log2.png
    :alt: output file
 
 ----
@@ -27,7 +27,7 @@ Here is the dashboard with a french carrier as example: module stef_logistics
 
 ----
 
-.. image:: ../static/description/log3.png
+.. image:: static/description/log3.png
    :alt: Picking type operation
 
-Module provides a dedicated operation with predefine locations
+Module provide a dedicated operation with predefine locations

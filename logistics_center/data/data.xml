@@ -15,7 +15,7 @@
     <field name="model_id">stock.picking</field>
     <field name="active">0</field>
     <field name="user_id"></field>
-    <field name="domain"></field>
+    <field name="domain">[]</field>
 </record>
 
 </odoo>

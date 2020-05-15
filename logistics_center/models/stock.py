@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # © 2019 David BEAL @ Akretion
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
@@ -17,18 +18,17 @@ class StockMove(models.Model):
 
     def _select_location_dest_id(self):
         location_dest_id = False
-        ctx = self.env.context
-        logistics_center = ctx.get("logistics_center", False)
+        logistics_center = self.env.context.get("logistics_center", False)
         if (
-            ctx.get("picking_type") == "in"
+            self.env.context["picking_type"] == "in"
             and logistics_center
             and logistics_center != "internal"
         ):
-            backend = self.pool["logistics.backend"].browse(int(logistics_center))
+            backend = self.env["logistics.backend"].browse(int(logistics_center))
             location_dest_id = backend.warehouse_id.lot_stock_id.id
         return location_dest_id
 
-    _defaults = {"location_dest_id": _select_location_dest_id}
+    location_dest_id = fields.Many2one(default=_select_location_dest_id)
 
 
 class StockPicking(models.Model):
@@ -64,13 +64,14 @@ class StockPicking(models.Model):
         "Logistics center in response from original message.",
     )
     drop_date = fields.Date(
-        string="Dépose marchandise",
-        help="Date à laquelle le destinataire prendra " "possession des marchandises",
+        string="Merchandise drop-off",
+        help="Date on which the consignee will take possession of the goods.",
     )
 
     def run_job(self, picking_id, file_doc_id, moves, picking_vals=None):
         # picking_id is extracted
         picking_id = int(picking_id)
+        picking = self.env["stock.picking"].browse(picking_id)
         qty_by_prod = {}
         for move in moves:
             product_id = move["product_id"]
@@ -79,11 +80,10 @@ class StockPicking(models.Model):
                 qty_by_prod[product_id] += qty
             else:
                 qty_by_prod[product_id] = qty
-        self._validate_from_data(picking_id, qty_by_prod)
+        self._validate_from_data(picking, qty_by_prod)
         if not picking_vals:
             picking_vals = {}
         picking_vals["log_in_file_doc_id"] = file_doc_id
-        picking = self.browse(picking_id)
         linked_picking = picking
         if picking.log_out_file_doc_id:
             picking_vals["log_out_file_doc_id"] = picking.log_out_file_doc_id.id
@@ -93,11 +93,10 @@ class StockPicking(models.Model):
         linked_picking.write(picking_vals)
         return True
 
-    def _validate_from_data(self, picking_id, qty_by_prod):
+    def _validate_from_data(self, picking, qty_by_prod):
         # create partial delivery by validating picking move line
         # with qty for product taken from the buffer
         partial_datas = {}
-        picking = self.browse(picking_id)
         origin, dest = "", ""
         for move in picking.move_lines:
             origin = move.location_id.id
