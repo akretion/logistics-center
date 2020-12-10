@@ -6,7 +6,7 @@
     <field name="name">Commandes 🛒</field>
     <field name="direction">export</field>
     <field name="flow">delivery</field>
-    <field name="state">done</field>
+    <field name="picking_state">done</field>
 </record>
 
 <record id="stef_appro" model="logistics.flow">
@@ -14,7 +14,7 @@
     <field name="name">Appros 🚚</field>
     <field name="direction">export</field>
     <field name="flow">incoming</field>
-    <field name="state">done</field>
+    <field name="picking_state">done</field>
 </record>
 
 </odoo>
