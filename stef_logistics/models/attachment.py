@@ -10,5 +10,5 @@ class IrAttachment(models.Model):
     _inherit = "ir.attachment"
 
     external_type = fields.Selection(
-        string="External", selection=[(LOGISTICS_CODE, LOGISTICS_NAME)]
+        string="External", selection_add=[(LOGISTICS_CODE, LOGISTICS_NAME)]
     )
