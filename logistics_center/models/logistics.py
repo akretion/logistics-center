@@ -51,8 +51,7 @@ class Logistic(object):
             return (False, issue)
 
     def build_your_own(self, *args, **kwargs):
-        """ If your files are not csv, you may define your own format
-        """
+        """If your files are not csv, you may define your own format"""
         return NotImplementedError
 
     def import_data(self, *args, **kwargs):
@@ -76,8 +75,7 @@ class Logistic(object):
             return self.prepare_doc_vals(file_data, records, flow)
 
     def amend_file_data(self, flow, file_data):
-        """ You may modify your file before store it
-        """
+        """You may modify your file before store it"""
         return NotImplementedError
 
     def prepare_doc_vals(self, file_data, records, flow):
@@ -86,7 +84,7 @@ class Logistic(object):
         now = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         back_name = flow.logistics_backend_id.code
         vals = {
-            "file_datas": base64.b64encode(file_data.encode("utf-8")),
+            "file_datas": base64.b64encode(file_data.encode(self._get_encoding())),
             "name": "{} {} {}".format(back_name, flow.flow, now),
             "active": True,
             "datas_fname": "{}_{}.csv".format(back_name, now),
@@ -95,23 +93,25 @@ class Logistic(object):
         }
         return vals
 
+    def _get_encoding(self):
+        return "utf-8"
+
     def sanitize(string):
-        """ Some chars may be forbidden by your Logistics center
-            Implements your own rules"""
+        """Some chars may be forbidden by your Logistics center
+        Implements your own rules"""
         return NotImplementedError
 
     def _get_portal_url(self):
-        """ Used by button on backend to access Logistics website
-        """
+        """Used by button on backend to access Logistics website"""
         return NotImplementedError
 
     def _check_field_length_helper(self, vals, field_def, name="_"):
-        """ Check if data doesn't overcome the length of the field
-            Use only if you need
-            Provided field_def must be in the form:
-            {'seq': 4, 'len': 6, 'type': 'I', 'col': 'qty',
-             'req': True, 'comment': "qté"},
-             return Exception dict
+        """Check if data doesn't overcome the length of the field
+        Use only if you need
+        Provided field_def must be in the form:
+        {'seq': 4, 'len': 6, 'type': 'I', 'col': 'qty',
+         'req': True, 'comment': "qté"},
+         return Exception dict
         """
         # TODO improve or remove
         exceptions = {}
