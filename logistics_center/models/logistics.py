@@ -82,12 +82,13 @@ class Logistic(object):
         """ You may inherit this method to override these values """
         vals = {}
         now = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        back_name = flow.logistics_backend_id.code
+        back_name = flow.logistics_backend_id.code[:3]
+        flow_name = flow.prefix or flow.flow
         vals = {
             "file_datas": base64.b64encode(file_data.encode(self._get_encoding())),
-            "name": "{} {} {}".format(back_name, flow.flow, now),
+            "name": "{} {} {}".format(back_name, flow_name, now),
             "active": True,
-            "datas_fname": "{}_{}.csv".format(back_name, now),
+            "datas_fname": "{}_{}_{}.csv".format(back_name, flow_name, now),
             # send records impacted by data exportation
             "records": records,
         }

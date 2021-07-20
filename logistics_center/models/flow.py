@@ -42,7 +42,7 @@ class LogisticsFlow(models.Model):
         help="Way followed by the flow",
     )
     picking_state = fields.Selection(
-        selection=[("assigned", "Ready"), ("done", "Done")],
+        selection=[("confirmed", "En attente"), ("assigned", "Ready"), ("done", "Done")],
         help="Used to select pickings to take in account",
     )
     impacted_record = fields.Integer(string="Todo", compute="_compute_impacted_records")
@@ -51,6 +51,7 @@ class LogisticsFlow(models.Model):
         comodel_name="ir.attachment", readonly=True, string="Last file"
     )
     last_date = fields.Datetime(string="Last date", readonly=True)
+    prefix = fields.Char(help="Used as exported prefix filename ")
 
     def _get_logistics(self):
         if not self.logistics_backend_id.code:

@@ -3,7 +3,7 @@
 
 {
     "name": "Logistics center",
-    "version": "12.0.0.0.1",
+    "version": "12.0.1.0.0",
     "category": "Warehouse",
     "summary": "Common module for logistics center and external warehouse",
     "author": "Akretion",

@@ -45,6 +45,7 @@
                   <field name="last_message"/>
                   <field name="last_date"/>
                   <field name="picking_state" groups="base.group_erp_manager"/>
+                  <field name="prefix"/>
                   <button name="button_learn" type="object"
                           title="Display information on the query"
                           class="fa fa-question-circle-o"/>
